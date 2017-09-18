@@ -1,26 +1,32 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Calc;
 
 public class Bullet : MonoBehaviour {
 
-	private float m_speed = 500f;
+	public float m_speed = 20;
 
 	private Rigidbody2D m_rb;
-
-	// Use this for initialization
-	void Start () {
-	 m_rb = gameObject.GetComponent<Rigidbody2D>();
-	}
 	
-	// Update is called once per frame
-	void Update () {
-		
+	public void Initalize( Vector2 p_direction ){
+		m_rb = gameObject.GetComponent<Rigidbody2D>();
+		this.m_rb.velocity = p_direction * m_speed;
 	}
 
-	void FixedUpdate(){
-		Vector3 angle = gameObject.transform.rotation.ToEuler();
-		m_rb.velocity = new Vector2(angle.x * m_speed, angle.y*m_speed);
-	}
+	// Update is called once per frame
+    void OnBecameInvisible() {
+        Destroy(gameObject);
+    }
+
+	void OnCollisionEnter2D(Collision2D coll) {
+		if(coll.gameObject.CompareTag("Player")){
+			return;
+		}
+
+		Debug.Log("Happens");
+		Destroy(gameObject);
+    }
+
 
 }
