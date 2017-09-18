@@ -9,9 +9,6 @@ public class PlayerController : MonoBehaviour {
 	private Rigidbody2D m_rb;
 	public GameObject m_bullet;
 
-	
-	test a = new test();
-
 	// Use this for initialization
 	void Start () {
 		m_rb = gameObject.GetComponent<Rigidbody2D>();
@@ -46,10 +43,6 @@ public class PlayerController : MonoBehaviour {
 
 		if(Input.GetKey(KeyCode.S)){
 			toReturn += new Vector2(0, -1);
-		}
-
-		if(Input.GetKeyDown(KeyCode.Space)){
-			a.tester(gameObject);
 		}
 				
 		return toReturn * m_speed;

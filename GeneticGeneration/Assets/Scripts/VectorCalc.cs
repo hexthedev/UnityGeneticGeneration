@@ -17,9 +17,16 @@ namespace Calc{
       return !(p_vec1.x > p_vec2.x  || p_vec1.y > p_vec2.y);
     }
 
-    public static bool checkVec2(Vector2 p_first, Vector2 p_second, Vector2 threshold){
+    //Check difference in length. Returns false if difference greater than threshold. 
+    public static bool checkVec2Length(Vector2 p_first, Vector2 p_second, Vector2 threshold){
       Vector2 check = VectorAbs(p_first-p_second);
       return vectorGreaterThan(check, threshold);
+    }
+
+    //Check difference in angle.  Returns false if difference greater than threshold. 
+    public static bool checkVec2Angle(Vector2 p_first, Vector2 p_second, float threshold_degrees){
+      float check = Vector2.Angle(p_first, p_second);
+      return check < threshold_degrees;
     }
 
     public static Vector2 fromAngle(float p_deg){
