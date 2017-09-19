@@ -3,8 +3,9 @@ using System.Collections.Generic;
 using UnityEngine;
 using Calc;
 
-public class PlayerController : MonoBehaviour {
+public class PlayerController : MonoBehaviour, IDamagable {
 
+	public float m_hp = 100f;
 	public float m_speed = 20;
 	private Rigidbody2D m_rb;
 	public GameObject m_bullet;
@@ -52,6 +53,14 @@ public class PlayerController : MonoBehaviour {
 		GameObject bullet = Instantiate(m_bullet, gameObject.transform.position, Quaternion.identity);	
 		Vector3 position  = Camera.allCameras[0].ScreenToWorldPoint(Input.mousePosition);
 		Vector2 direction = VectorCalc.CalcVec3to2( position - gameObject.transform.position ).normalized;
-		bullet.GetComponent<Bullet>().Initalize(direction);
+		bullet.GetComponent<Bullet>().Initalize(direction, 15f, "Player");
 	}
+
+  public void damage(float damage)
+  {
+    m_hp -= damage;
+		if(m_hp <= 0 ){
+			Destroy(gameObject);
+		}
+  }
 }

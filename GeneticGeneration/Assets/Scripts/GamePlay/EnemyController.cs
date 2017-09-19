@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using Calc;
 
-public class EnemyController : MonoBehaviour {
+public class EnemyController : MonoBehaviour, IDamagable {
 
 	private float m_attack;
 	private float m_defense;
@@ -48,14 +48,10 @@ public class EnemyController : MonoBehaviour {
 		m_hp = p_hp*3;
 	}
 
-
-	// private Vector2 forwardVector(){
-	// 	return VectorCalc.fromAngle(gameObject.transform.rotation.eulerAngles.z + m_forward);
-	// }
-
-	void OnCollisionEnter2D(Collision2D coll) {
-		Destroy(gameObject);
-	}
-
-	
+	public void damage(float damage){
+		m_hp -= damage;
+		if(m_hp <= 0){
+			Destroy(gameObject);
+		}
+	}	
 }

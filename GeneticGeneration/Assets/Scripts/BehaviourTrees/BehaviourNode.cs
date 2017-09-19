@@ -60,6 +60,17 @@ public class BehaviourNode {
 		}
 	}
 
+	//STATIC 
+	// public static BehaviourNode evolove(BehaviourNode p_node1, BehaviourNode p_node2){
+		
+	// 	BehaviourNode master; 
+	// 	BehaviourNode lesser;
+
+	// 	if(Random.Range(0f,1f) > 0.5f){
+	// 		master = p_node1;
+	// 		lesser = p_node2;
+	// 	}
+	// }
 	
 	
 }

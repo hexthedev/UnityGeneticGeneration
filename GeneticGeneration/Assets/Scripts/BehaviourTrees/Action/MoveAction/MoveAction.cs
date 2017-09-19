@@ -19,7 +19,7 @@ public class MoveAction : IAction  {
 	}
 
 	public bool act(GameObject p_actor){
-		Debug.Log("MoveAction: " + m_speed);
+		//Debug.Log("MoveAction: " + m_speed);
 
 		p_actor.GetComponent<Rigidbody2D>().velocity = m_direction.direction()*m_speed;
 
