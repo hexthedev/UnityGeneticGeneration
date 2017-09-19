@@ -12,18 +12,32 @@ public class EnemyController : MonoBehaviour {
 
 	private float m_forward = -90;
 
-	private GameObject m_player;
+	private BehaviourNode m_current_behav;
 
 	// Use this for initialization
 	void Start () {
-		m_player = GameObject.FindGameObjectWithTag("Player");
+		GameObject player = GameObject.FindGameObjectWithTag("Player");
+		
+		IAction[] move = {
+			new MoveAction(3f, 1f, new TowardsPlayerDirection(player, gameObject)), 
+			new MoveAction(1f, 2f, new TowardsPlayerDirection(player, gameObject))  
+		};
+
+		IAction[] rotate = {
+			new RotateAction(new TowardsPlayerDirection(player, gameObject), m_forward, 3f) 
+		};
+		
+		m_current_behav = new BehaviourNode( null, ActionSequence.emptySequence(), new PointingAtDetector(gameObject, m_forward, player, 10f) );
+
+		m_current_behav.addChild(true, new ActionSequence(move), null);
+		m_current_behav.addChild(false, new ActionSequence(rotate), null);
+
 	}
 	
 	// Update is called once per frame
 	void Update () {
 	
-		gameObject.transform.rotation *= Quaternion.AngleAxis(VectorCalc.getAngle(vecToPlayer(), forwardVector()) * m_speed/10, new Vector3(0,0,1));
-		gameObject.GetComponent<Rigidbody2D>().velocity = VectorCalc.CalcVec3to2(vecToPlayer())*m_speed;
+		m_current_behav = m_current_behav.act(gameObject);
 
 	}
 
@@ -36,13 +50,9 @@ public class EnemyController : MonoBehaviour {
 	}
 
 
-	private Vector2 forwardVector(){
-		return VectorCalc.fromAngle(gameObject.transform.rotation.eulerAngles.z + m_forward);
-	}
-
-	private Vector3 vecToPlayer(){
-		return (m_player.transform.position - gameObject.transform.position).normalized;	
-	}
+	// private Vector2 forwardVector(){
+	// 	return VectorCalc.fromAngle(gameObject.transform.rotation.eulerAngles.z + m_forward);
+	// }
 
 	void OnCollisionEnter2D(Collision2D coll) {
 		Destroy(gameObject);
