@@ -12,15 +12,15 @@ public class ActionSequence {
 		m_actions = new IAction[p_actions.Length];
 		p_actions.CopyTo(m_actions, 0);
 		
-		m_sequence = new Stack<IAction>(p_actions);
+		loadSequence();
 	}
 
-	public void reset(){
-		m_sequence = new Stack<IAction>(m_actions);
-		
+	public void reset(){		
 		foreach(IAction action in m_actions){
 			action.reset();
 		}
+
+		loadSequence();
 	}
 
 	public bool act(GameObject p_actor){
@@ -33,6 +33,16 @@ public class ActionSequence {
 		}
 
 		return m_sequence.Count == 0;
+	}
+
+
+	private void loadSequence(){
+		m_sequence = new Stack<IAction>();
+		Stack<IAction> sequence = new Stack<IAction>(m_actions);
+
+		while(sequence.Count != 0){
+			m_sequence.Push(sequence.Pop());
+		}
 	}
 
 

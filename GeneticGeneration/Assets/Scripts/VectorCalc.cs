@@ -10,6 +10,11 @@ namespace Calc{
       return new Vector2(p_toCull.x, p_toCull.y);
     }
 
+    ///<summary>Turns a Vector3 into a Vector2 by making the z element 0</summary>
+    public static Vector3 CalcVec2to3(Vector2 p_toGrow){
+      return new Vector3(p_toGrow.x, p_toGrow.y, 0);
+    }
+
     ///<summary>Makes all vector elements positive</summary>  
     public static Vector2 VectorAbs(Vector2 p_vector){
       return new Vector2(Mathf.Abs(p_vector.x), Mathf.Abs(p_vector.y));

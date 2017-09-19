@@ -19,12 +19,11 @@ public class EnemyController : MonoBehaviour {
 		GameObject player = GameObject.FindGameObjectWithTag("Player");
 		
 		IAction[] move = {
-			new MoveAction(3f, 1f, new TowardsPlayerDirection(player, gameObject)), 
-			new MoveAction(1f, 2f, new TowardsPlayerDirection(player, gameObject))  
+			new MoveAction(0f, m_speed, new TowardsPlayerDirection(player, gameObject))
 		};
 
-		IAction[] rotate = {
-			new RotateAction(new TowardsPlayerDirection(player, gameObject), m_forward, 3f) 
+		IAction[] rotate = { 
+			new RotateAction(new TowardsPlayerDirection(player, gameObject), m_forward, m_speed) 
 		};
 		
 		m_current_behav = new BehaviourNode( null, ActionSequence.emptySequence(), new PointingAtDetector(gameObject, m_forward, player, 10f) );
