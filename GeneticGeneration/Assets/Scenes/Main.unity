@@ -460,7 +460,7 @@ SpriteRenderer:
   m_LightProbeUsage: 1
   m_ReflectionProbeUsage: 1
   m_Materials:
-  - {fileID: 10754, guid: 0000000000000000f000000000000000, type: 0}
+  - {fileID: 2100000, guid: 72ad6b678e096904c81ef0457ddf6c17, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -515,7 +515,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_hp: 100
   m_speed: 7
-  m_bullet: {fileID: 1100107308090896, guid: 929b0d1aafcc40642b42c4e74f55f09e, type: 2}
+  m_bullet: {fileID: 1122462939011534, guid: 929b0d1aafcc40642b42c4e74f55f09e, type: 2}
+  shot_rate: 0.2
 --- !u!50 &630540685
 Rigidbody2D:
   serializedVersion: 4
@@ -579,7 +580,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 24c623364785e7d4b97cc2348866705a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_enemy: {fileID: 1663040262089478, guid: bf1dcda3d1f509d44a7aeea5360466ee, type: 2}
+  m_enemy: {fileID: 1818656523597620, guid: bf1dcda3d1f509d44a7aeea5360466ee, type: 2}
 --- !u!4 &719835940
 Transform:
   m_ObjectHideFlags: 0
@@ -605,7 +606,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_birth_threshold: 0.5
-  m_mutation_percentage: 20
+  m_mutation_percentage: 3
 --- !u!1 &1013057973
 GameObject:
   m_ObjectHideFlags: 0

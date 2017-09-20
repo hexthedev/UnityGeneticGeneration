@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class DNA : MonoBehaviour {
+public class DNA {
 
 	private Dictionary<ETrait, Chromo> m_chromos = new Dictionary<ETrait, Chromo>();
 	

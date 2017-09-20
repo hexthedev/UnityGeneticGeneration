@@ -10,18 +10,24 @@ public class PlayerController : MonoBehaviour, IDamagable {
 	private Rigidbody2D m_rb;
 	public GameObject m_bullet;
 
+	private float shot_timer;
+	public float shot_rate;
+
 	// Use this for initialization
 	void Start () {
 		m_rb = gameObject.GetComponent<Rigidbody2D>();
-
+		shot_timer = shot_rate;
 	}
 	
 	// Update is called once per frame
 	void Update () {
+		shot_timer += Time.deltaTime;
+
 		m_rb.velocity = playerVelocityUpdate();
 
-		if(Input.GetKeyDown(KeyCode.Mouse0)){
+		if((shot_timer > shot_rate) && Input.GetKey(KeyCode.Mouse0)){
 			shoot();
+			shot_timer = 0;
 		}
 	}
 
