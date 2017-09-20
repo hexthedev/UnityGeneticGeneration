@@ -48,4 +48,21 @@ namespace Calc{
 
   }
 
+  public static class ArrayCalc {
+
+    ///<summary>Returns sum of all floats in array </summary>
+    public static float floatArraySum(float[] p_array){
+      
+      float to_return = 0;
+
+      foreach(float number in p_array){
+        to_return += number; 
+      }
+
+      return to_return;
+    }
+
+
+  }
+
 }

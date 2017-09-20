@@ -560,9 +560,10 @@ GameObject:
   m_Component:
   - component: {fileID: 719835940}
   - component: {fileID: 719835939}
+  - component: {fileID: 719835941}
   m_Layer: 0
   m_Name: GameController
-  m_TagString: Untagged
+  m_TagString: GameController
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -579,7 +580,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_enemy: {fileID: 1663040262089478, guid: bf1dcda3d1f509d44a7aeea5360466ee, type: 2}
-  m_timeToSpawn: 0.9
 --- !u!4 &719835940
 Transform:
   m_ObjectHideFlags: 0
@@ -593,6 +593,19 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &719835941
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 719835938}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 90e9b6b3ce48f9945801be803c4d20a0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_birth_threshold: 0.5
+  m_mutation_percentage: 20
 --- !u!1 &1013057973
 GameObject:
   m_ObjectHideFlags: 0

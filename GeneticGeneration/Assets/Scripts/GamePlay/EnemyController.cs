@@ -5,6 +5,10 @@ using Calc;
 
 public class EnemyController : MonoBehaviour, IDamagable {
 
+	private EvolutionController m_evolution_controller;
+
+	private DNA m_dna;
+
 	private float m_attack;
 	private float m_defense;
 	private float m_speed;
@@ -13,6 +17,10 @@ public class EnemyController : MonoBehaviour, IDamagable {
 	private float m_forward = -90;
 
 	private BehaviourNode m_current_behav;
+
+	private float m_fitness;
+	public float m_fitness_threshold;
+
 
 	// Use this for initialization
 	void Start () {
@@ -31,6 +39,7 @@ public class EnemyController : MonoBehaviour, IDamagable {
 		m_current_behav.addChild(true, new ActionSequence(move), null);
 		m_current_behav.addChild(false, new ActionSequence(rotate), null);
 
+		m_evolution_controller = GameObject.FindGameObjectWithTag("GameController").GetComponent<EvolutionController>();
 	}
 	
 	// Update is called once per frame
@@ -38,17 +47,27 @@ public class EnemyController : MonoBehaviour, IDamagable {
 	
 		m_current_behav = m_current_behav.act(gameObject);
 
+		m_fitness += Time.deltaTime;
+
+		if(m_fitness >= m_fitness_threshold){
+			m_fitness = 0;
+			m_evolution_controller.addDNA(m_dna.clone());
+		}
 	}
 
-	public void Initalize(float p_attack, float p_defense, float p_speed, float p_hp){
+	public void Initalize(DNA p_dna){
 		//All passed in float are between 1 and 10. They need converting for proper values
-		m_attack = p_attack;
-		m_defense = p_defense/3;
-		m_speed = p_speed;
-		m_hp = p_hp*3;
+		m_attack = p_dna.getTraitValue(ETrait.ATTACK)/2;
+		m_defense = p_dna.getTraitValue(ETrait.DEFENSE)/2;
+		m_speed = p_dna.getTraitValue(ETrait.SPEED);
+		m_hp = p_dna.getTraitValue(ETrait.HP)*2;
+
+		m_dna = p_dna;
 	}
 
-	public void damage(float damage){
+	public void damage(float p_damage){
+		float damage = p_damage - m_defense <= 0.5f? 0.5f: p_damage-m_defense;
+		
 		m_hp -= damage;
 		if(m_hp <= 0){
 			Destroy(gameObject);
