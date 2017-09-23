@@ -55,8 +55,6 @@ public class EvolutionController : MonoBehaviour {
 		}
 
 		m_game_controller.spawn(evolved);
-
-		Debug.Log(debug + evolved.print());
 	}
 
 	private void massSpawn(int p_amount){

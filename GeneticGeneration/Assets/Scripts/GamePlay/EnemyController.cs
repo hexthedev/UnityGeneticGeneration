@@ -5,6 +5,7 @@ using Calc;
 
 public class EnemyController : MonoBehaviour, IDamagable {
 
+	private ObjectLogger m_logger;
 	private EvolutionController m_evolution_controller;
 
 	private DNA m_dna;
@@ -55,7 +56,7 @@ public class EnemyController : MonoBehaviour, IDamagable {
 		}
 	}
 
-	public void Initalize(DNA p_dna){
+	public void Initalize(DNA p_dna, ObjectLogger p_logger){
 		//All passed in float are between 1 and 10. They need converting for proper values
 		m_attack = p_dna.getTraitValue(ETrait.ATTACK)/2;
 		m_defense = p_dna.getTraitValue(ETrait.DEFENSE)/2;
@@ -63,6 +64,9 @@ public class EnemyController : MonoBehaviour, IDamagable {
 		m_hp = p_dna.getTraitValue(ETrait.HP)*2;
 
 		m_dna = p_dna;
+
+		m_logger = p_logger;
+		m_logger.log(gameObject, EObjectTypes.ENEMY);
 	}
 
 	public void damage(float p_damage){
@@ -70,6 +74,7 @@ public class EnemyController : MonoBehaviour, IDamagable {
 		
 		m_hp -= damage;
 		if(m_hp <= 0){
+			m_logger.unlog(gameObject, EObjectTypes.ENEMY);
 			Destroy(gameObject);
 		}
 	}	
