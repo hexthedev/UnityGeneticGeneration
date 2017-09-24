@@ -46,6 +46,12 @@ namespace Calc{
       return fromAngle(p_local_rotation + p_forward_offset);
     }
 
+    ///<summary>Rotates a direction vector around the origin by degrees.!-- returns new vector </summary>
+    public static Vector3 rotateDirectionVector(Vector3 p_direction, float p_degrees){   
+      return Quaternion.Euler(0,0,p_degrees) * p_direction;
+    }
+
+
   }
 
   public static class ArrayCalc {

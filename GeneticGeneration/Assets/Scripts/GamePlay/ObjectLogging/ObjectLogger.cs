@@ -17,20 +17,20 @@ public class ObjectLogger : MonoBehaviour {
 
 	public void log(GameObject p_object, EObjectTypes p_type){
 		m_objects[p_type].Add(p_object);
-		debug(p_object.transform.position, Color.red, 1f);
-		Debug.Log("ADD: " +  m_objects[p_type].Count);
+		//debug(p_object.transform.position, Color.red, 1f);
+		//Debug.Log("ADD: " +  m_objects[p_type].Count);
 	}
 
 	public void unlog(GameObject p_object, EObjectTypes p_type){
 		m_objects[p_type].Remove(p_object);
-		debug(p_object.transform.position, Color.blue, 1f);
-		Debug.Log("REMOVE: " +  m_objects[p_type].Count);
+		//debug(p_object.transform.position, Color.blue, 1f);
+		//Debug.Log("REMOVE: " +  m_objects[p_type].Count);
 	}
 
 	public GameObject[] getByType(EObjectTypes p_type){
-		foreach(GameObject x in m_objects[p_type].ToArray()){
+		/*foreach(GameObject x in m_objects[p_type].ToArray()){
 			debug(x.transform.position, Color.cyan, 10f);
-		}
+		}*/
 
 		return m_objects[p_type].ToArray();
 	}
@@ -41,12 +41,10 @@ public class ObjectLogger : MonoBehaviour {
 		foreach(List<GameObject> list in m_objects.Values){
 			objects.AddRange(list);
 		}
-
-
-
-		foreach(GameObject x in objects.ToArray()){
+		
+		/*foreach(GameObject x in objects.ToArray()){
 			debug(x.transform.position, Color.magenta, 10f);
-		}
+		}*/
 
 		return objects.ToArray();
 	}

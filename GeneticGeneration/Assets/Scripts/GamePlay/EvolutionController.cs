@@ -9,14 +9,15 @@ public class EvolutionController : MonoBehaviour {
 	List<DNA> m_gene_pool = new List<DNA>();
 
 	float m_birth_timer = 0;
-	
+
+	public int m_start_spawn;	
 	public float m_birth_threshold;
 	public int m_mutation_percentage;
 
 	void Start(){
 		m_game_controller = gameObject.GetComponent<GameController>();
 
-		massSpawn(10);
+		massSpawn(m_start_spawn);
 	}
 
 	void Update(){

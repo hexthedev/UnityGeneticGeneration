@@ -17,7 +17,7 @@ public class EnemyController : MonoBehaviour, IDamagable {
 
 	private float m_forward = -90;
 
-	private BehaviourNode m_current_behav;
+	private BehaviourTree m_behav_tree;
 
 	private float m_fitness;
 	public float m_fitness_threshold;
@@ -35,10 +35,12 @@ public class EnemyController : MonoBehaviour, IDamagable {
 			new RotateAction(new TowardsPlayerDirection(player, gameObject), m_forward, m_speed) 
 		};
 		
-		m_current_behav = new BehaviourNode( null, ActionSequence.emptySequence(), new PointingAtDetector(gameObject, m_forward, player, 10f) );
+		BehaviourNode m_current_behav = new BehaviourNode( null, ActionSequence.emptySequence(), new DirectionDetector(gameObject, player, new Vector2(-1f,1f), 90) );
 
 		m_current_behav.addChild(true, new ActionSequence(move), null);
 		m_current_behav.addChild(false, new ActionSequence(rotate), null);
+
+
 
 		m_evolution_controller = GameObject.FindGameObjectWithTag("GameController").GetComponent<EvolutionController>();
 	}
@@ -46,6 +48,7 @@ public class EnemyController : MonoBehaviour, IDamagable {
 	// Update is called once per frame
 	void Update () {
 	
+		//FIX THIS!!!
 		m_current_behav = m_current_behav.act(gameObject);
 
 		m_fitness += Time.deltaTime;
