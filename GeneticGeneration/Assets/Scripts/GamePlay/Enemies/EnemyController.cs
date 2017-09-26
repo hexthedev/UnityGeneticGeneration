@@ -10,10 +10,7 @@ public class EnemyController : MonoBehaviour, IDamagable {
 
 	private DNA m_dna;
 
-	private float m_attack;
-	private float m_defense;
-	private float m_speed;
-	private float m_hp;
+	private Dictionary<ETrait, StatTuple> m_stats;
 
 	private float m_forward = -90;
 
@@ -27,26 +24,15 @@ public class EnemyController : MonoBehaviour, IDamagable {
 	void Start () {
 		GameObject player = GameObject.FindGameObjectWithTag("Player");
 		
-		IAction[] move = {
-			new MoveAction(0f, m_speed, new TowardsPlayerDirection(player, gameObject))
-		};
 
-		IAction[] rotate = { 
-			new RotateAction(new TowardsPlayerDirection(player, gameObject), m_forward, m_speed) 
-		};
+		m_behav_tree = BehaviourTree.random(m_logger, gameObject);
+
 		
-		IBehaviourNode root = new ProximityDetector(EObjectTypes.PLAYER, 1f, 
-		new DirectionDetector(player, Vector2.one, 20f, new ActionSequence(move, null), null), 
-		new ActionSequence(rotate, null));
-
-		m_evolution_controller = GameObject.FindGameObjectWithTag("GameController").GetComponent<EvolutionController>();
-
-		m_behav_tree = new BehaviourTree(root, m_logger, gameObject);
 	}
 	
 	// Update is called once per frame
 	void Update () {
-	
+
 		m_behav_tree.act();
 
 		m_fitness += Time.deltaTime;
@@ -58,11 +44,20 @@ public class EnemyController : MonoBehaviour, IDamagable {
 	}
 
 	public void Initalize(DNA p_dna, ObjectLogger p_logger){
+		m_stats = new Dictionary<ETrait, StatTuple>();
+		
 		//All passed in float are between 1 and 10. They need converting for proper values
-		m_attack = p_dna.getTraitValue(ETrait.ATTACK)/2;
-		m_defense = p_dna.getTraitValue(ETrait.DEFENSE)/2;
-		m_speed = p_dna.getTraitValue(ETrait.SPEED);
-		m_hp = p_dna.getTraitValue(ETrait.HP)*2;
+		float attack = p_dna.getTraitValue(ETrait.ATTACK)/2;
+		m_stats[ETrait.ATTACK] = new StatTuple(attack, attack);
+
+		float defense = p_dna.getTraitValue(ETrait.DEFENSE)/2;
+		m_stats[ETrait.DEFENSE] = new StatTuple(defense, defense);
+
+		float speed = p_dna.getTraitValue(ETrait.SPEED);
+		m_stats[ETrait.SPEED] = new StatTuple(speed, speed);
+
+		float hp = p_dna.getTraitValue(ETrait.HP)*2;
+		m_stats[ETrait.HP] = new StatTuple(hp, hp);
 
 		m_dna = p_dna;
 
@@ -71,12 +66,17 @@ public class EnemyController : MonoBehaviour, IDamagable {
 	}
 
 	public void damage(float p_damage){
-		float damage = p_damage - m_defense <= 0.5f? 0.5f: p_damage-m_defense;
+		float damage = p_damage - m_stats[ETrait.DEFENSE].m_current <= 0.5f? 0.5f: p_damage-m_stats[ETrait.DEFENSE].m_current;
 		
-		m_hp -= damage;
-		if(m_hp <= 0){
+		m_stats[ETrait.HP].m_current -= damage;
+		
+		if(m_stats[ETrait.HP].m_current <= 0){
 			m_logger.unlog(gameObject, EObjectTypes.ENEMY);
 			Destroy(gameObject);
 		}
 	}	
+
+	public float getTrait(ETrait p_trait, bool p_want_current ){
+		return p_want_current ? m_stats[p_trait].m_current : m_stats[p_trait].m_total;
+	}
 }

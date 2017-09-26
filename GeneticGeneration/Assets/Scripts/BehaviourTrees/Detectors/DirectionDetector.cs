@@ -5,26 +5,43 @@ using Calc;
 
 public class DirectionDetector : VDetector
 {
-	private GameObject m_target;
+	private EObjectTypes m_of;
 	private Vector2 m_direction;
 	private float m_angle_threshold;
+	private float m_count;
 
  
-  public DirectionDetector(GameObject p_target, Vector2 p_direction, float p_angle_threshold, IBehaviourNode p_true_child, IBehaviourNode p_false_child) : base(p_true_child, p_false_child)
+  public DirectionDetector(EObjectTypes p_of, Vector2 p_direction, float p_angle_threshold, float p_count, IBehaviourNode p_true_child, IBehaviourNode p_false_child) : base(p_true_child, p_false_child)
   {
-		m_target = p_target;
+		m_of = p_of;
 		m_direction = p_direction;
 		m_angle_threshold = p_angle_threshold;
+		m_count = p_count;
   }
 
   public override bool detect()
   {
-    //Vector representing direction actor should be pointing
-		Vector2 target_direction = m_target.transform.position - m_tree.getActor().transform.position;
+    GameObject[] objects = m_tree.GetLogger().getByType(m_of);
 
-		debug(m_direction, target_direction, Color.cyan, Time.deltaTime);
+		int count = 0;
 
-		return Vector2.Angle( target_direction, m_direction ) < m_angle_threshold;
+		for(int i = 0; i < objects.Length; i++){
+
+			//Vector representing direction of target from actor
+			Vector2 direction_of_target = objects[i].transform.position - m_tree.getActor().transform.position;
+
+			//debug(m_direction, direction_of_target, Color.cyan, Time.deltaTime);
+
+			if(Vector2.Angle( direction_of_target, m_direction ) < m_angle_threshold){
+				count++;
+			}
+
+			if(count >= m_count){
+				return true;
+			}
+		}
+
+		return false;
   }
 
 

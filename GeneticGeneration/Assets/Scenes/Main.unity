@@ -517,7 +517,8 @@ MonoBehaviour:
   m_hp: 100
   m_speed: 7
   m_bullet: {fileID: 1122462939011534, guid: 929b0d1aafcc40642b42c4e74f55f09e, type: 2}
-  shot_rate: 0.2
+  shot_rate: 0.1
+  m_damage: 5
 --- !u!50 &630540685
 Rigidbody2D:
   serializedVersion: 4
@@ -607,7 +608,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 90e9b6b3ce48f9945801be803c4d20a0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_start_spawn: 1
+  m_start_spawn: 10
   m_birth_threshold: 100
   m_mutation_percentage: 3
 --- !u!114 &719835942

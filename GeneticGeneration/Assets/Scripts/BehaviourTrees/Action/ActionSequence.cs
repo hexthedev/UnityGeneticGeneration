@@ -34,7 +34,7 @@ public class ActionSequence : IBehaviourNode{
 
 		//Debug.Log(m_tree);
 
-		if(m_sequence.Peek().act(m_tree.getActor())){
+		if(m_sequence.Peek().act(m_tree)){
 			m_sequence.Pop();
 		}
 
@@ -87,6 +87,22 @@ public class ActionSequence : IBehaviourNode{
 			m_child.initialize(p_tree);
 		}
 		
+	}
+
+	public static ActionSequence random(BehaviourTree p_tree, IBehaviourNode p_child){
+
+		List<IAction> actions = new List<IAction>();
+		actions.Add(RandomGen.IAction(p_tree));
+
+		int rand = Random.Range(0,2);
+
+		while(rand != 0){
+			actions.Add(RandomGen.IAction(p_tree));
+			rand = Random.Range(0,2);
+		}
+
+		return new ActionSequence(actions.ToArray(), p_child);
+
 	}
 
 }

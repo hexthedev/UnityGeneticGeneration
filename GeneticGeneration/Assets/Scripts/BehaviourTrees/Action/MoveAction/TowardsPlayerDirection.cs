@@ -21,4 +21,8 @@ public class TowardsPlayerDirection : IDirection
 		return VectorCalc.CalcVec3to2(vecToPlayer);
   }
 
+	public static IDirection random(BehaviourTree p_tree){
+		return new TowardsPlayerDirection(p_tree.GetLogger().getByType(EObjectTypes.PLAYER)[0], p_tree.getActor());
+	}
+
 }

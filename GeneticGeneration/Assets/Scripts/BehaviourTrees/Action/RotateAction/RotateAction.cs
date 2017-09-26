@@ -18,14 +18,16 @@ public class RotateAction : IAction
     m_speed = p_speed;
   }
 
-  public bool act(GameObject p_actor)
+  public bool act(BehaviourTree p_tree)
   {
-    Vector2 forwardVector = VectorCalc.forwardVector( p_actor.transform.rotation.eulerAngles.z, m_forward );
+    GameObject actor = p_tree.getActor();
+
+    Vector2 forwardVector = VectorCalc.forwardVector( actor.transform.rotation.eulerAngles.z, m_forward );
     float angle = VectorCalc.getAngle( forwardVector, m_rotate_target.direction() );
 
-    p_actor.transform.eulerAngles -= new Vector3(0,0, Mathf.Sign(angle))*m_speed;
+    actor.transform.eulerAngles -= new Vector3(0,0, Mathf.Sign(angle))*m_speed;
 
-    p_actor.GetComponent<Rigidbody2D>().velocity *= 0.99f;
+    actor.GetComponent<Rigidbody2D>().velocity *= 0.99f;
 
     return true;
   }

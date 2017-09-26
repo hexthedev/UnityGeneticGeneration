@@ -4,6 +4,8 @@ using UnityEngine;
 
 public interface IAction {
 
-	bool act(GameObject p_actor);
+	bool act(BehaviourTree p_tree);
 	void reset();
+
+
 }

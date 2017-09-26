@@ -5,26 +5,33 @@ using Calc;
 
 public class ProximityDetector : VDetector {
   
-	private EObjectTypes m_type;
+	private EObjectTypes m_of;
 	private float m_threshold;
+	private int m_count;
 
-	public ProximityDetector(EObjectTypes p_type, float p_threshold, IBehaviourNode p_true_node, IBehaviourNode p_false_node):base(p_true_node, p_false_node){
-		m_type = p_type;
+	public ProximityDetector(EObjectTypes p_of, float p_threshold, int p_count, IBehaviourNode p_true_node, IBehaviourNode p_false_node):base(p_true_node, p_false_node){
+		m_of = p_of;
+		m_count = p_count;
 		m_threshold = p_threshold;
 	}
 
 	public override bool detect()
   {
-    GameObject[] objects = m_tree.GetLogger().getByType(m_type);
+    GameObject[] objects = m_tree.GetLogger().getByType(m_of);
+		int count = 0;
 
 		for(int i = 0; i< objects.Length; i++){
 			Vector3 object_position = objects[i].transform.position;
 			
 			bool is_close = Vector3.Magnitude(object_position - m_tree.getActor().transform.position) < m_threshold;
 			
-			debug(object_position, is_close);
+			//debug(object_position, is_close);
 
 			if(is_close){
+				count++;
+			}
+
+			if(count >= m_count){
 				return true;
 			}
 		}

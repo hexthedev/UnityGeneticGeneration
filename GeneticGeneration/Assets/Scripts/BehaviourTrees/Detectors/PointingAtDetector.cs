@@ -5,27 +5,45 @@ using Calc;
 
 public class PointingAtDetector : VDetector, IBehaviourNode {
 
-	float m_forward;
-	float m_threshold;
-	GameObject m_pointing_at;
+	float m_forward_offset_angle;
+	float m_angle_threshold;
+	EObjectTypes m_pointing_at;
+	int m_count;
 
-  public PointingAtDetector(float p_forward, GameObject p_pointing_at, float p_threshold, IBehaviourNode p_true_child, IBehaviourNode p_false_child): base(p_true_child, p_false_child)
+  public PointingAtDetector(EObjectTypes p_pointing_at, float p_forward_offset_angle, float p_angle_threshold, int p_count, IBehaviourNode p_true_child, IBehaviourNode p_false_child): base(p_true_child, p_false_child)
   {
-		m_forward = p_forward;
+		m_forward_offset_angle = p_forward_offset_angle;
 		m_pointing_at = p_pointing_at;
-		m_threshold = p_threshold;
+		m_angle_threshold = p_angle_threshold;
+		m_count = p_count;
   }
 
   public override bool detect()
   {
  		//Vector Representing direction actor is pointing
-		Vector2 forward_vector = VectorCalc.forwardVector(m_tree.getActor().transform.rotation.eulerAngles.z, m_forward);
-		//Vector representing direction actor should be pointing
-		Vector2 pointing_vector = m_pointing_at.transform.position - m_tree.getActor().transform.position;
+		Vector2 forward_vector = VectorCalc.forwardVector(m_tree.getActor().transform.rotation.eulerAngles.z, m_forward_offset_angle);
 
-		debug(forward_vector, pointing_vector, Color.black, Time.deltaTime);
+		GameObject[] objects = m_tree.GetLogger().getByType(m_pointing_at);
 
-		return Vector2.Angle( forward_vector, pointing_vector ) < m_threshold;
+		int count = 0;
+
+		for(int i = 0; i<objects.Length; i++){
+			
+			Vector2 pointing_vector = objects[i].transform.position - m_tree.getActor().transform.position;
+
+			debug(forward_vector, pointing_vector, Color.black, Time.deltaTime);
+
+			if(Vector2.Angle( forward_vector, pointing_vector ) < m_angle_threshold){
+				count++;
+			}
+
+			if(count >= m_count){
+				return true;
+			}
+
+		}
+
+		return false;
   }
 
 

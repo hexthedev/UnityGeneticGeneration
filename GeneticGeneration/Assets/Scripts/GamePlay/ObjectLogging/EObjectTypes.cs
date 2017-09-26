@@ -3,5 +3,5 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public enum EObjectTypes {
-	PLAYER, ENEMY, RESOURCE, BULLET
+	PLAYER, ENEMY, RESOURCE, BULLET, ALL
 }

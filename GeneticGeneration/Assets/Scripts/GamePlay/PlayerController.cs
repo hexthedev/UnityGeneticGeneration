@@ -15,6 +15,7 @@ public class PlayerController : MonoBehaviour, IDamagable {
 
 	private float shot_timer;
 	public float shot_rate;
+	public float m_damage;
 
 	// Use this for initialization
 	void Start () {
@@ -73,7 +74,7 @@ public class PlayerController : MonoBehaviour, IDamagable {
 		GameObject bullet = Instantiate(m_bullet, gameObject.transform.position, Quaternion.identity);	
 		Vector3 position  = Camera.allCameras[0].ScreenToWorldPoint(Input.mousePosition);
 		Vector2 direction = VectorCalc.CalcVec3to2( position - gameObject.transform.position ).normalized;
-		bullet.GetComponent<Bullet>().Initalize(direction, 15f, "Player", m_logger);
+		bullet.GetComponent<Bullet>().Initalize(direction, m_damage, "Player", m_logger);
 	}
 
   public void damage(float damage)

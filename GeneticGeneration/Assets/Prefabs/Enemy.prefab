@@ -96,10 +96,10 @@ MonoBehaviour:
   m_GameObject: {fileID: 1818656523597620}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b2d8332ccea98134985e63fcfa5d3845, type: 3}
+  m_Script: {fileID: 11500000, guid: 0fb50086eaf43084c9d2b868b20b7df7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_fitness_threshold: 1
+  m_fitness_threshold: 100
 --- !u!212 &212857719909373686
 SpriteRenderer:
   m_ObjectHideFlags: 1

@@ -32,6 +32,10 @@ public class ObjectLogger : MonoBehaviour {
 			debug(x.transform.position, Color.cyan, 10f);
 		}*/
 
+		if(p_type == EObjectTypes.ALL){
+			return getAll();
+		}
+
 		return m_objects[p_type].ToArray();
 	}
 
