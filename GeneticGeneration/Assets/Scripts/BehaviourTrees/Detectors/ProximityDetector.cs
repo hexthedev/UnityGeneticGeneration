@@ -25,7 +25,9 @@ public class ProximityDetector : VDetector {
 			
 			bool is_close = Vector3.Magnitude(object_position - m_tree.getActor().transform.position) < m_threshold;
 			
-			//debug(object_position, is_close);
+			if(m_tree.getActor().GetComponent<EnemyController>().m_debug){
+				debug(object_position, is_close);
+			}
 
 			if(is_close){
 				count++;
@@ -42,11 +44,30 @@ public class ProximityDetector : VDetector {
 	private void debug( Vector3 p_tested_position, bool p_answer ){
 
 		if(p_answer){
-			Debug.DrawLine( m_tree.getActor().transform.position, p_tested_position, Color.green, 2f );
+			Debug.DrawLine( m_tree.getActor().transform.position, p_tested_position, Color.green, Time.deltaTime );
 		} else {
-			Debug.DrawLine( m_tree.getActor().transform.position, p_tested_position, Color.red, 2f );
+			Debug.DrawLine( m_tree.getActor().transform.position, p_tested_position, Color.red, Time.deltaTime );
 		}
 
+	}
+
+
+
+
+	public static ProximityDetector random(BehaviourTree p_tree){
+		EObjectTypes of = EnumCalc.randomValue<EObjectTypes>();
+		float threshold = Random.Range(0.5f, 10f);
+		int count = Random.Range(0,6);
+
+		return new ProximityDetector(of, threshold, count, RandomGen.IBehaviourNode(p_tree), RandomGen.IBehaviourNode(p_tree));
+	}
+
+	public static ProximityDetector random(BehaviourTree p_tree, IBehaviourNode p_true_node, IBehaviourNode p_false_node){
+		EObjectTypes of = EnumCalc.randomValue<EObjectTypes>();
+		float threshold = Random.Range(0.5f, 10f);
+		int count = Random.Range(0,6);
+
+		return new ProximityDetector(of, threshold, count, p_true_node, p_false_node);
 	}
 
 }

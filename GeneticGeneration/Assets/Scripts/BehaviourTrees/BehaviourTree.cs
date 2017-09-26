@@ -11,19 +11,33 @@ public class BehaviourTree {
 	private ObjectLogger m_logger;
 	private GameObject m_actor;	
 
+	private EnemyController m_actor_controller;
+
 	public BehaviourTree(IBehaviourNode p_root, ObjectLogger p_logger, GameObject p_actor){
 		m_root = p_root;
 		m_current_behav = m_root;
 		m_logger = p_logger;
 		m_actor = p_actor;
 
+		m_actor_controller = m_actor.GetComponent<EnemyController>();
+
 		m_root.initialize(this);
 	}
 
+
+
+	//Required to take apart the Behaviour Trees properly
 	private BehaviourTree(ObjectLogger p_logger, GameObject p_actor){
 		m_logger = p_logger;
 		m_actor = p_actor;
+
+		m_actor_controller = m_actor.GetComponent<EnemyController>();
 	}
+
+
+
+
+
 
 	public void act(){
 		m_current_behav = m_current_behav.act();
@@ -31,6 +45,10 @@ public class BehaviourTree {
 
 	public GameObject getActor(){
 		return m_actor;
+	}
+
+	public EnemyController getActorController(){
+		return m_actor_controller;
 	}
 
 	public IBehaviourNode getRoot(){
@@ -41,13 +59,17 @@ public class BehaviourTree {
 		return m_logger;
 	}
 
+
+
+
+
+
+
 	public static BehaviourTree random(ObjectLogger p_logger, GameObject p_actor){
 		
 		BehaviourTree creating = new BehaviourTree(p_logger, p_actor);
 
-		IBehaviourNode root = new DirectionDetector(EObjectTypes.PLAYER, Vector2.one, 90f, 1,  
-		ActionSequence.random(creating, null), 
-		ActionSequence.random(creating, null));
+		IBehaviourNode root = RandomGen.BehaviourTreeRoot(creating);
 
 		root.initialize(creating);
 

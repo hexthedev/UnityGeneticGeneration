@@ -609,7 +609,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_start_spawn: 10
-  m_birth_threshold: 100
+  m_birth_threshold: 1
   m_mutation_percentage: 3
 --- !u!114 &719835942
 MonoBehaviour:

@@ -89,7 +89,7 @@ public class ActionSequence : IBehaviourNode{
 		
 	}
 
-	public static ActionSequence random(BehaviourTree p_tree, IBehaviourNode p_child){
+	public static ActionSequence random(BehaviourTree p_tree){
 
 		List<IAction> actions = new List<IAction>();
 		actions.Add(RandomGen.IAction(p_tree));
@@ -101,7 +101,9 @@ public class ActionSequence : IBehaviourNode{
 			rand = Random.Range(0,2);
 		}
 
-		return new ActionSequence(actions.ToArray(), p_child);
+		//Debug.Log(actions.Count);
+
+		return new ActionSequence(actions.ToArray(), RandomGen.IBehaviourNode(p_tree));
 
 	}
 

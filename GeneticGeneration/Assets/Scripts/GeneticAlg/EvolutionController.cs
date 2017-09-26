@@ -6,7 +6,7 @@ public class EvolutionController : MonoBehaviour {
 
 	GameController m_game_controller;
 
-	List<DNA> m_gene_pool = new List<DNA>();
+	List<EvoObject> m_gene_pool = new List<EvoObject>();
 
 	float m_birth_timer = 0;
 
@@ -29,8 +29,8 @@ public class EvolutionController : MonoBehaviour {
 		}
 	}
 
-	public void addDNA(DNA p_dna){
-		m_gene_pool.Add(p_dna);
+	public void addDNA(DNA p_dna, BehaviourTree p_behaviour){
+		m_gene_pool.Add(new EvoObject(p_dna, p_behaviour));
 		//Debug.Log("GenePool: " + m_gene_pool.Count);
 	} 
 
@@ -40,13 +40,13 @@ public class EvolutionController : MonoBehaviour {
 			return;
 		}
 
-		DNA dna1 = m_gene_pool[Random.Range(0, m_gene_pool.Count)];
-		m_gene_pool.Remove(dna1);
-		DNA dna2 = m_gene_pool[Random.Range(0, m_gene_pool.Count)];
-		m_gene_pool.Remove(dna2);
+		EvoObject evo1 = m_gene_pool[Random.Range(0, m_gene_pool.Count)];
+		m_gene_pool.Remove(evo1);
+		EvoObject evo2 = m_gene_pool[Random.Range(0, m_gene_pool.Count)];
+		m_gene_pool.Remove(evo2);
 
 
-		DNA evolved = DNA.evolove(dna1, dna2);
+		DNA evolved = DNA.evolove(evo1.getDNA(), evo2.getDNA());
 
 		string debug = "";
 
@@ -55,12 +55,12 @@ public class EvolutionController : MonoBehaviour {
 			evolved = evolved.mutate();
 		}
 
-		m_game_controller.spawn(evolved);
+		m_game_controller.spawn(new EvoObject(evolved, null));
 	}
 
 	private void massSpawn(int p_amount){
 		for(int i = 0; i<p_amount; i++){
-			m_game_controller.spawn(new DNA());
+			m_game_controller.spawn(new EvoObject(new DNA(), null));
 		}
 	}
 

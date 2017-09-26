@@ -51,6 +51,10 @@ namespace Calc{
       return Quaternion.Euler(0,0,p_degrees) * p_direction;
     }
 
+    public static Vector2 randomDirection(){
+      return new Vector2(Random.Range(-1f,1f), Random.Range(-1f,1f));
+    }
+
 
   }
 
@@ -68,6 +72,25 @@ namespace Calc{
       return to_return;
     }
 
+
+  }
+
+  public static class EnumCalc{
+
+    ///<summary>Return Random enum value </summary>
+    public static T randomValue<T>(){
+      System.Array array = System.Enum.GetValues(typeof(T));
+      return (T)array.GetValue(Random.Range(0, array.Length));
+    }
+
+  }
+
+  public static class BoolCalc{
+
+    ///<summary>Return Random enum value </summary>
+    public static bool random(){
+      return Random.Range(0,2) == 1? true: false;
+    }
 
   }
 

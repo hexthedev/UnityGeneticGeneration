@@ -31,7 +31,9 @@ public class PointingAtDetector : VDetector, IBehaviourNode {
 			
 			Vector2 pointing_vector = objects[i].transform.position - m_tree.getActor().transform.position;
 
-			debug(forward_vector, pointing_vector, Color.black, Time.deltaTime);
+			if(m_tree.getActor().GetComponent<EnemyController>().m_debug){
+				debug(forward_vector, pointing_vector, Time.deltaTime);
+			}
 
 			if(Vector2.Angle( forward_vector, pointing_vector ) < m_angle_threshold){
 				count++;
@@ -47,7 +49,7 @@ public class PointingAtDetector : VDetector, IBehaviourNode {
   }
 
 
-	public void debug(Vector3 p_forward, Vector3 p_pointing, Color p_color, float duration){
+	public void debug(Vector3 p_forward, Vector3 p_pointing, float duration){
 		
 		Vector3 origin = m_tree.getActor().transform.position;
 
@@ -58,9 +60,28 @@ public class PointingAtDetector : VDetector, IBehaviourNode {
 		Vector3 pointingNormal = m_tree.getActor().transform.position+(p_pointing.normalized);
 		
 		
-		Debug.DrawLine(origin, forwardBig, p_color, duration);
-		Debug.DrawLine(origin, pointing, p_color, duration);
-		Debug.DrawLine(forward, pointingNormal, p_color, duration);
+		Debug.DrawLine(origin, forwardBig, Color.cyan, duration);
+		Debug.DrawLine(origin, pointing, Color.red, duration);
+		Debug.DrawLine(forward, pointingNormal, Color.cyan, duration);
+	}
+
+
+	public static PointingAtDetector random(BehaviourTree p_tree){
+		EObjectTypes pointing_at = EnumCalc.randomValue<EObjectTypes>();
+		float forward_offset_angle = p_tree.getActorController().getForward();
+		float angle_threshold = Random.Range(0f, 180f);
+		int count = Random.Range(0,10);
+
+		return new PointingAtDetector(pointing_at, forward_offset_angle, angle_threshold, count, RandomGen.IBehaviourNode(p_tree), RandomGen.IBehaviourNode(p_tree));
+	}
+
+	public static PointingAtDetector random(BehaviourTree p_tree, IBehaviourNode p_true_child, IBehaviourNode p_false_child){
+		EObjectTypes pointing_at = EnumCalc.randomValue<EObjectTypes>();
+		float forward_offset_angle = p_tree.getActorController().getForward();
+		float angle_threshold = Random.Range(0f, 180f);
+		int count = Random.Range(0,10);
+
+		return new PointingAtDetector(pointing_at, forward_offset_angle, angle_threshold, count, p_true_child, p_false_child);
 	}
 
 }
