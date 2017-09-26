@@ -3,38 +3,34 @@ using System.Collections.Generic;
 using UnityEngine;
 using Calc;
 
-public class DirectionDetector : IDetector
+public class DirectionDetector : VDetector
 {
-	private GameObject m_actor;
 	private GameObject m_target;
 	private Vector2 m_direction;
 	private float m_angle_threshold;
 
  
-  public DirectionDetector(GameObject p_actor, GameObject p_target, Vector2 p_direction, float p_angle_threshold)
+  public DirectionDetector(GameObject p_target, Vector2 p_direction, float p_angle_threshold, IBehaviourNode p_true_child, IBehaviourNode p_false_child) : base(p_true_child, p_false_child)
   {
-		m_actor = p_actor;
 		m_target = p_target;
 		m_direction = p_direction;
 		m_angle_threshold = p_angle_threshold;
   }
 
-  public bool detect()
+  public override bool detect()
   {
     //Vector representing direction actor should be pointing
-		Vector2 target_direction = m_target.transform.position - m_actor.transform.position;
+		Vector2 target_direction = m_target.transform.position - m_tree.getActor().transform.position;
 
 		debug(m_direction, target_direction, Color.cyan, Time.deltaTime);
 
 		return Vector2.Angle( target_direction, m_direction ) < m_angle_threshold;
-
-
   }
 
 
 	public void debug(Vector3 p_actual_direction, Vector3 p_target_direction, Color p_color, float p_duration){
 		
-		Vector3 origin = m_actor.transform.position;
+		Vector3 origin = m_tree.getActor().transform.position;
 		Vector3 actual_direction = origin + p_actual_direction;
 		Vector3 actual_direction_big = origin + p_actual_direction*5;
 
@@ -50,4 +46,6 @@ public class DirectionDetector : IDetector
 		Debug.DrawLine(origin, origin+VectorCalc.rotateDirectionVector(p_actual_direction, -m_angle_threshold), p_color, p_duration);
 
 	}
+
+  
 }

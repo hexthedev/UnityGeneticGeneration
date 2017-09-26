@@ -29,7 +29,7 @@ public class BehaviourNode {
 		}
 	}
 
-	public BehaviourNode act(GameObject p_actor){
+	/*public BehaviourNode act(GameObject p_actor){
 		//if m_action.act is true, then action sequence is over
 		if(m_actions.act(p_actor)){
 
@@ -50,7 +50,7 @@ public class BehaviourNode {
 		}
 
 		return this;
-	}
+	}*/
 
 	private BehaviourNode returnToRoot(){
 		if(m_parent == null){

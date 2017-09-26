@@ -35,21 +35,19 @@ public class EnemyController : MonoBehaviour, IDamagable {
 			new RotateAction(new TowardsPlayerDirection(player, gameObject), m_forward, m_speed) 
 		};
 		
-		BehaviourNode m_current_behav = new BehaviourNode( null, ActionSequence.emptySequence(), new DirectionDetector(gameObject, player, new Vector2(-1f,1f), 90) );
-
-		m_current_behav.addChild(true, new ActionSequence(move), null);
-		m_current_behav.addChild(false, new ActionSequence(rotate), null);
-
-
+		IBehaviourNode root = new ProximityDetector(EObjectTypes.PLAYER, 1f, 
+		new DirectionDetector(player, Vector2.one, 20f, new ActionSequence(move, null), null), 
+		new ActionSequence(rotate, null));
 
 		m_evolution_controller = GameObject.FindGameObjectWithTag("GameController").GetComponent<EvolutionController>();
+
+		m_behav_tree = new BehaviourTree(root, m_logger, gameObject);
 	}
 	
 	// Update is called once per frame
 	void Update () {
 	
-		//FIX THIS!!!
-		m_current_behav = m_current_behav.act(gameObject);
+		m_behav_tree.act();
 
 		m_fitness += Time.deltaTime;
 
