@@ -517,8 +517,8 @@ MonoBehaviour:
   m_hp: 100
   m_speed: 7
   m_bullet: {fileID: 1122462939011534, guid: 929b0d1aafcc40642b42c4e74f55f09e, type: 2}
-  shot_rate: 0.1
-  m_damage: 5
+  shot_rate: 0.4
+  m_damage: 20
 --- !u!50 &630540685
 Rigidbody2D:
   serializedVersion: 4

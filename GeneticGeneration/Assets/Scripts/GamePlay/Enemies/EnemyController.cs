@@ -9,13 +9,12 @@ public class EnemyController : MonoBehaviour, IDamagable {
 	private EvolutionController m_evolution_controller;
 
 	private DNA m_dna;
-
 	private Dictionary<ETrait, StatTuple> m_stats;
-
-	private float m_forward = -90;
-
 	private BehaviourTree m_behav_tree;
 
+
+
+	private float m_forward = -90;
 	private float m_fitness;
 	public float m_fitness_threshold;
 	public bool m_debug;
@@ -25,8 +24,6 @@ public class EnemyController : MonoBehaviour, IDamagable {
 	void Start () {
 		m_evolution_controller = GameObject.FindGameObjectWithTag("GameController").GetComponent<EvolutionController>();
 		GameObject player = GameObject.FindGameObjectWithTag("Player");
-		
-		m_behav_tree = BehaviourTree.random(m_logger, gameObject);
 	}
 	
 	// Update is called once per frame
@@ -38,11 +35,14 @@ public class EnemyController : MonoBehaviour, IDamagable {
 
 		if(m_fitness >= m_fitness_threshold){
 			m_fitness = 0;
-			m_evolution_controller.addDNA(m_dna.clone(), m_behav_tree);		//SHOUDL PROBBALY CLONE THIS. DO LATER
+
+			//NEED TO COPY TREE -----------------------------
+			m_evolution_controller.addDNA(m_dna.clone(), m_behav_tree.clone());		//SHOUDL PROBBALY CLONE THIS. DO LATER
 		}
 	}
 
 	public void Initalize(EvoObject p_evo, ObjectLogger p_logger){
+		//Setup stats with DNA
 		m_stats = new Dictionary<ETrait, StatTuple>();
 		
 		DNA dna = p_evo.getDNA();
@@ -62,8 +62,13 @@ public class EnemyController : MonoBehaviour, IDamagable {
 
 		m_dna = dna;
 
+		//Setup Logger
 		m_logger = p_logger;
 		m_logger.log(gameObject, EObjectTypes.ENEMY);
+
+		//Setup Behaviour
+		m_behav_tree = p_evo.GetBehaviour();
+		m_behav_tree.load(m_logger, gameObject);
 	}
 
 	public void damage(float p_damage){
@@ -73,6 +78,7 @@ public class EnemyController : MonoBehaviour, IDamagable {
 		
 		if(m_stats[ETrait.HP].m_current <= 0){
 			m_logger.unlog(gameObject, EObjectTypes.ENEMY);
+			m_behav_tree.unload();
 			Destroy(gameObject);
 		}
 	}	

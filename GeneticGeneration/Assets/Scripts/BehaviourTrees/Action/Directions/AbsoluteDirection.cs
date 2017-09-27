@@ -12,6 +12,19 @@ public class AbsoluteDirection : IDirection
 		m_direction = p_direction;
   }
 
+  //LOADING
+  public void load(BehaviourTree p_tree)
+  {
+    return;
+  }
+
+  public void unload()
+  {
+    return;
+  }
+
+
+  //COMPUTATION
   public Vector2 direction()
   {
     return m_direction;
@@ -21,4 +34,8 @@ public class AbsoluteDirection : IDirection
     return new AbsoluteDirection(new Vector2(Random.Range(-1f, 1f), Random.Range(-1f, 1f)));
   }
 
+  public IDirection clone()
+  {
+    return new AbsoluteDirection(m_direction);
+  }
 }

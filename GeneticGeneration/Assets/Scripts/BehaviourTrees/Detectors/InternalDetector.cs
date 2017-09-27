@@ -24,20 +24,21 @@ public class InternalDetector : VDetector
 
   public override bool detect()
   {
-
 		
+		float trait = m_tree.getActorController().getTrait(m_trait, m_is_current);
+
 		if(m_is_above){
-			if( m_tree.getActor().GetComponent<EnemyController>().getTrait(m_trait, m_is_current) >= m_threshold ){
-				if(m_tree.getActor().GetComponent<EnemyController>().m_debug){
+			if( trait >= m_threshold ){
+				if(m_tree.getActorController().m_debug){
 					debug(true);
 				}
 				
 				return true;
 			}
 		} else {
-			if( m_tree.getActor().GetComponent<EnemyController>().getTrait(m_trait, m_is_current) <= m_threshold ){
+			if( trait <= m_threshold ){
 				
-				if(m_tree.getActor().GetComponent<EnemyController>().m_debug){
+				if(m_tree.getActorController().m_debug){
 					debug(true);
 				}
 
@@ -45,7 +46,7 @@ public class InternalDetector : VDetector
 			}
 		}
 		
-		if(m_tree.getActor().GetComponent<EnemyController>().m_debug){
+		if(m_tree.getActorController().m_debug){
 			debug(false);
 		}
 
@@ -60,17 +61,18 @@ public class InternalDetector : VDetector
 		Debug.Log(cur + " " + m_trait + " " + above + " " + m_threshold + ": " + answer);
 	}
 
-
-	public static InternalDetector random(BehaviourTree p_tree){
+	//RANDOM
+	public static InternalDetector random(){
 		ETrait trait = EnumCalc.randomValue<ETrait>();
 		bool is_current = BoolCalc.random();
 		float threshold = Random.Range(0f, 10f);
 		bool is_above = BoolCalc.random();
 
-		return new InternalDetector(trait, is_current, threshold, is_above, RandomGen.IBehaviourNode(p_tree), RandomGen.IBehaviourNode(p_tree));
+		return new InternalDetector(trait, is_current, threshold, is_above, RandomGen.IBehaviourNode(), RandomGen.IBehaviourNode());
 	}
 
-	public static InternalDetector random(BehaviourTree p_tree, IBehaviourNode p_true_child, IBehaviourNode p_false_child){
+	//RANDOM WITH CHILDREN
+	public static InternalDetector random(IBehaviourNode p_true_child, IBehaviourNode p_false_child){
 		ETrait trait = EnumCalc.randomValue<ETrait>();
 		bool is_current = BoolCalc.random();
 		float threshold = Random.Range(0f, 10f);
@@ -78,4 +80,12 @@ public class InternalDetector : VDetector
 
 		return new InternalDetector(trait, is_current, threshold, is_above, p_true_child, p_false_child);
 	}
+
+  public override IBehaviourNode clone()
+  {
+  	IBehaviourNode true_child = m_true_child == null ? null : m_true_child.clone();
+		IBehaviourNode false_child = m_true_child == null ? null : m_true_child.clone();
+
+		return new InternalDetector(m_trait, m_is_current, m_threshold, m_is_above, true_child, false_child);
+  }
 }

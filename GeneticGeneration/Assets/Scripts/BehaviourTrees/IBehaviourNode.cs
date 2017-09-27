@@ -5,7 +5,11 @@ using UnityEngine;
 public interface IBehaviourNode {
 
 	IBehaviourNode act();
-	BehaviourTree GetTree();
-	void initialize(BehaviourTree p_tree);
+	//BehaviourTree GetTree();
+	void load(BehaviourTree p_tree);
+	void unload();
+
+	IBehaviourNode clone();
+
 	
 }

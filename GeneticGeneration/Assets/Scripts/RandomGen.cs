@@ -4,64 +4,64 @@ using UnityEngine;
 
 public static class RandomGen {
 
-	public static IDirection IDirection(BehaviourTree p_tree){
+	public static IDirection IDirection(){
 		
 		int percent = Random.Range(0,101);
 
 		if(percent <= 50){
 			return AbsoluteDirection.random();
 		} else {
-			return TowardsPlayerDirection.random(p_tree);
+			return TowardsPlayerDirection.random();
 		}
 	}
 
-	public static IAction IAction(BehaviourTree p_tree){
-		return MoveAction.random(p_tree);
+	public static IAction IAction(){
+		return MoveAction.random();
 	}
 
-	public static IBehaviourNode Detector(BehaviourTree p_tree){
+	public static IBehaviourNode Detector(){
 
 		int percent = Random.Range(0, 101);
 
 		if(percent <= 25){
-			return DirectionDetector.random(p_tree);
+			return DirectionDetector.random();
 		} else if (percent <= 50){
-			return InternalDetector.random(p_tree);
+			return InternalDetector.random();
 		}	else if (percent <= 75){
-			return PointingAtDetector.random(p_tree);
+			return PointingAtDetector.random();
 		}	else{
-			return ProximityDetector.random(p_tree);
+			return ProximityDetector.random();
 		}
 
 	}
 
-		public static IBehaviourNode Detector(BehaviourTree p_tree, IBehaviourNode p_true_child, IBehaviourNode p_false_child){
+		public static IBehaviourNode Detector(IBehaviourNode p_true_child, IBehaviourNode p_false_child){
 
 		int percent = Random.Range(0, 101);
 
 		if(percent <= 25){
-			return DirectionDetector.random(p_tree, p_true_child, p_false_child);
+			return DirectionDetector.random(p_true_child, p_false_child);
 		} else if (percent <= 50){
-			return InternalDetector.random(p_tree, p_true_child, p_false_child);
+			return InternalDetector.random(p_true_child, p_false_child);
 		}	else if (percent <= 75){
-			return PointingAtDetector.random(p_tree, p_true_child, p_false_child);
+			return PointingAtDetector.random(p_true_child, p_false_child);
 		}	else{
-			return ProximityDetector.random(p_tree, p_true_child, p_false_child);
+			return ProximityDetector.random(p_true_child, p_false_child);
 		}
 
 	}
 
-	public static IBehaviourNode IBehaviourNode(BehaviourTree p_tree){
+	public static IBehaviourNode IBehaviourNode(){
 
 		if(Random.Range(0,2) == 1){
 			return null;
 		}
 
-		return Random.Range(0,2) == 1 ? Detector(p_tree) : ActionSequence.random(p_tree); 
+		return Random.Range(0,2) == 1 ? Detector() : ActionSequence.random(); 
 	}
 
-	public static IBehaviourNode BehaviourTreeRoot(BehaviourTree p_tree){
-		return Detector(p_tree, ActionSequence.random(p_tree), ActionSequence.random(p_tree) );
+	public static IBehaviourNode BehaviourTreeRoot(){
+		return Detector(ActionSequence.random(), ActionSequence.random() );
 	}
 
 

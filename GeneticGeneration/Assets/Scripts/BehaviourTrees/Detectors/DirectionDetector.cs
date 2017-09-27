@@ -8,7 +8,7 @@ public class DirectionDetector : VDetector
 	private EObjectTypes m_of;
 	private Vector2 m_direction;
 	private float m_angle_threshold;
-	private float m_count;
+	private int m_count;
 
  
   public DirectionDetector(EObjectTypes p_of, Vector2 p_direction, float p_angle_threshold, int p_count, IBehaviourNode p_true_child, IBehaviourNode p_false_child) : base(p_true_child, p_false_child)
@@ -30,10 +30,9 @@ public class DirectionDetector : VDetector
 			//Vector representing direction of target from actor
 			Vector2 direction_of_target = objects[i].transform.position - m_tree.getActor().transform.position;
 
-			if(m_tree.getActor().GetComponent<EnemyController>().m_debug){
+			if(m_tree.getActorController().m_debug){
 				debug(m_direction, direction_of_target, Time.deltaTime);
 			}
-			
 
 			if(Vector2.Angle( direction_of_target, m_direction ) < m_angle_threshold){
 				count++;
@@ -67,17 +66,19 @@ public class DirectionDetector : VDetector
 
 	}
 
-	public static DirectionDetector random(BehaviourTree p_tree){
+	//RANDOM
+	public static DirectionDetector random(){
 
 		EObjectTypes of = EnumCalc.randomValue<EObjectTypes>();
 		Vector2 direction = VectorCalc.randomDirection();
 		float angle_threshold = Random.Range(0.1f, 179.9f);
 		int count = (of == EObjectTypes.PLAYER) ? 1 : Random.Range(0, 10);
 
-		return new DirectionDetector(of, direction, angle_threshold, count, RandomGen.IBehaviourNode(p_tree), RandomGen.IBehaviourNode(p_tree));
+		return new DirectionDetector(of, direction, angle_threshold, count, RandomGen.IBehaviourNode(), RandomGen.IBehaviourNode());
 	}
 
-	public static DirectionDetector random(BehaviourTree p_tree, IBehaviourNode p_true_child, IBehaviourNode p_false_child){
+	//RANDOM WITH KNOWN CHILDREN
+	public static DirectionDetector random(IBehaviourNode p_true_child, IBehaviourNode p_false_child){
 
 		EObjectTypes of = EnumCalc.randomValue<EObjectTypes>();
 		Vector2 direction = VectorCalc.randomDirection();
@@ -87,4 +88,11 @@ public class DirectionDetector : VDetector
 		return new DirectionDetector(of, direction, angle_threshold, count, p_true_child, p_false_child);
 	}
 
+  public override IBehaviourNode clone()
+  {
+    IBehaviourNode true_child = m_true_child == null ? null : m_true_child.clone();
+		IBehaviourNode false_child = m_true_child == null ? null : m_true_child.clone();
+
+		return new DirectionDetector(m_of, m_direction, m_angle_threshold, m_count, true_child, false_child);
+  }
 }

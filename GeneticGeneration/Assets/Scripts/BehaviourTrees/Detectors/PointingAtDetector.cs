@@ -5,14 +5,12 @@ using Calc;
 
 public class PointingAtDetector : VDetector, IBehaviourNode {
 
-	float m_forward_offset_angle;
 	float m_angle_threshold;
 	EObjectTypes m_pointing_at;
 	int m_count;
 
-  public PointingAtDetector(EObjectTypes p_pointing_at, float p_forward_offset_angle, float p_angle_threshold, int p_count, IBehaviourNode p_true_child, IBehaviourNode p_false_child): base(p_true_child, p_false_child)
+  public PointingAtDetector(EObjectTypes p_pointing_at, float p_angle_threshold, int p_count, IBehaviourNode p_true_child, IBehaviourNode p_false_child): base(p_true_child, p_false_child)
   {
-		m_forward_offset_angle = p_forward_offset_angle;
 		m_pointing_at = p_pointing_at;
 		m_angle_threshold = p_angle_threshold;
 		m_count = p_count;
@@ -20,8 +18,10 @@ public class PointingAtDetector : VDetector, IBehaviourNode {
 
   public override bool detect()
   {
- 		//Vector Representing direction actor is pointing
-		Vector2 forward_vector = VectorCalc.forwardVector(m_tree.getActor().transform.rotation.eulerAngles.z, m_forward_offset_angle);
+ 		float forward = m_tree.getActorController().getForward();
+
+		 //Vector Representing direction actor is pointing
+		Vector2 forward_vector = VectorCalc.forwardVector(m_tree.getActor().transform.rotation.eulerAngles.z, forward);
 
 		GameObject[] objects = m_tree.GetLogger().getByType(m_pointing_at);
 
@@ -31,7 +31,7 @@ public class PointingAtDetector : VDetector, IBehaviourNode {
 			
 			Vector2 pointing_vector = objects[i].transform.position - m_tree.getActor().transform.position;
 
-			if(m_tree.getActor().GetComponent<EnemyController>().m_debug){
+			if(m_tree.getActorController().m_debug){
 				debug(forward_vector, pointing_vector, Time.deltaTime);
 			}
 
@@ -66,22 +66,29 @@ public class PointingAtDetector : VDetector, IBehaviourNode {
 	}
 
 
-	public static PointingAtDetector random(BehaviourTree p_tree){
+	//RANDOM
+	public static PointingAtDetector random(){
 		EObjectTypes pointing_at = EnumCalc.randomValue<EObjectTypes>();
-		float forward_offset_angle = p_tree.getActorController().getForward();
 		float angle_threshold = Random.Range(0f, 180f);
 		int count = Random.Range(0,10);
 
-		return new PointingAtDetector(pointing_at, forward_offset_angle, angle_threshold, count, RandomGen.IBehaviourNode(p_tree), RandomGen.IBehaviourNode(p_tree));
+		return new PointingAtDetector(pointing_at, angle_threshold, count, RandomGen.IBehaviourNode(), RandomGen.IBehaviourNode());
 	}
 
-	public static PointingAtDetector random(BehaviourTree p_tree, IBehaviourNode p_true_child, IBehaviourNode p_false_child){
+	// RANDOM WITH CHILDREN
+	public static PointingAtDetector random(IBehaviourNode p_true_child, IBehaviourNode p_false_child){
 		EObjectTypes pointing_at = EnumCalc.randomValue<EObjectTypes>();
-		float forward_offset_angle = p_tree.getActorController().getForward();
 		float angle_threshold = Random.Range(0f, 180f);
 		int count = Random.Range(0,10);
 
-		return new PointingAtDetector(pointing_at, forward_offset_angle, angle_threshold, count, p_true_child, p_false_child);
+		return new PointingAtDetector(pointing_at, angle_threshold, count, p_true_child, p_false_child);
 	}
 
+  public override IBehaviourNode clone()
+  {
+		IBehaviourNode true_child = m_true_child == null ? null : m_true_child.clone();
+		IBehaviourNode false_child = m_true_child == null ? null : m_true_child.clone();
+
+		return new PointingAtDetector(m_pointing_at, m_angle_threshold, m_count, true_child, false_child);
+  }
 }

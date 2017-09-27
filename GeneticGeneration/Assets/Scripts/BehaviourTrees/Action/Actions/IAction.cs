@@ -4,8 +4,12 @@ using UnityEngine;
 
 public interface IAction {
 
-	bool act(BehaviourTree p_tree);
+	bool act();
 	void reset();
 
 
+	void load(BehaviourTree p_tree);
+	void unload();
+
+	IAction clone();
 }
