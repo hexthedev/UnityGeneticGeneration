@@ -17,7 +17,12 @@ public class ProximityDetector : VDetector {
 
 	public override bool detect()
   {
-    GameObject[] objects = m_tree.GetLogger().getByType(m_of);
+		if(!m_tree.isLoaded()){
+			Debug.LogError("TREE UNLOADED: THIS CANNOT HAPPEN");
+			return true;
+		}
+
+		GameObject[] objects = m_tree.GetLogger().getByType(m_of);
 		int count = 0;
 
 		for(int i = 0; i< objects.Length; i++){

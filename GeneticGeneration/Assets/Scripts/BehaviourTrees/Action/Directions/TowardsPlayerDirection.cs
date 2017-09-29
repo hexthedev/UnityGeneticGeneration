@@ -23,7 +23,7 @@ public class TowardsPlayerDirection : IDirection
 
   public void unload()
   {
-    m_tree = null;
+//  m_tree = null;
 		m_player = null;
 		m_actor = null;
   }

@@ -56,7 +56,7 @@ public class EvolutionController : MonoBehaviour {
 		}
 
 		//BEHAVIOUR SEQUENCE
-		BehaviourTree evo_behav = Random.Range(0,2) == 1 ? evo1.GetBehaviour() : evo2.GetBehaviour();
+		BehaviourTree evo_behav = BehaviourTree.crossover(evo1.GetBehaviour(), evo2.GetBehaviour());
 
 		m_game_controller.spawn(new EvoObject(evolved, evo_behav));
 	}

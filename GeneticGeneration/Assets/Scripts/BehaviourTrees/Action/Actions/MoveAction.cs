@@ -32,7 +32,7 @@ public class MoveAction : IAction  {
 
   public void unload()
   {
-    m_tree = null;
+    //m_tree = null;
 		m_rb = null;
 		m_direction.unload();
   }

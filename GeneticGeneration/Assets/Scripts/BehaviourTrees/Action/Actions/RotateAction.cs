@@ -32,7 +32,7 @@ public class RotateAction : IAction
 
   public void unload()
   {
-    m_tree = null;
+    //m_tree = null;
     m_rb = null;
     m_rotate_target.unload();
   }

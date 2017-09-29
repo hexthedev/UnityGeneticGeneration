@@ -4,15 +4,15 @@ using UnityEngine;
 
 public class BehaviourTree {
 
+	//State information
 	private IBehaviourNode m_root;
-
 	private IBehaviourNode m_current_behav;
-
-
 	bool m_is_loaded;
+
+	
+	//Reference Infomation
 	private ObjectLogger m_logger;
 	private GameObject m_actor;	
-
 	private EnemyController m_actor_controller;
 
 
@@ -22,6 +22,8 @@ public class BehaviourTree {
 	public BehaviourTree(IBehaviourNode p_root, ObjectLogger p_logger, GameObject p_actor){
 		m_root = p_root;
 		m_current_behav = m_root;
+		m_root.setParent(null);
+
 		m_logger = p_logger;
 		m_actor = p_actor;
 
@@ -32,23 +34,12 @@ public class BehaviourTree {
 	}
 
 
-
-	//Required to take apart the Behaviour Trees properly
-	/*private BehaviourTree(ObjectLogger p_logger, GameObject p_actor){
-		m_logger = p_logger;
-		m_actor = p_actor;
-
-		m_actor_controller = m_actor.GetComponent<EnemyController>();
-	}*/
-
 	//For creating unloaded random behaviour trees
 	private BehaviourTree(IBehaviourNode p_root){
 		m_root = p_root;
 		m_current_behav = p_root;
 		m_is_loaded = false;
 	}
-
-
 
 	//LOADING
 	public void load(ObjectLogger p_logger, GameObject p_actor){
@@ -67,10 +58,21 @@ public class BehaviourTree {
 		m_root.unload();
 	}
 
+	public bool isLoaded(){
+		return m_is_loaded;
+	}
+
 	//BEHAVIOUR
 	public void act(){
 		if(!m_is_loaded){
 			Debug.Log("CANNOT ACT: BEHAVIOUR TREE NOT LOADED");
+			return;
+		}
+
+		if(m_current_behav == null){
+			Debug.LogError("Behaviour Tree cannot Act: Behaviour = null");
+			unload();
+			return;
 		}
 
 		m_current_behav = m_current_behav.act();
@@ -83,10 +85,6 @@ public class BehaviourTree {
 
 	public EnemyController getActorController(){
 		return m_actor_controller;
-	}
-
-	public IBehaviourNode getRoot(){
-		return m_root;
 	}
 
 	public ObjectLogger GetLogger(){
@@ -103,4 +101,22 @@ public class BehaviourTree {
 		return new BehaviourTree(m_root.clone());
 	}
 
+
+	//EVOLUTION
+	public IBehaviourNode getRandomNode(){
+		return m_root.getRandomNode();
+	}
+
+	public void insertAtRandom(IBehaviourNode p_node){
+		m_root.insertAtRandom(p_node);
+	}
+
+	public static BehaviourTree crossover(BehaviourTree p_tree1, BehaviourTree p_tree2){
+		return Random.Range(0,2) == 1 ? crossoverHelper(p_tree1, p_tree2) : crossoverHelper(p_tree2, p_tree1);
+	}
+
+	private static BehaviourTree crossoverHelper(BehaviourTree p_tree1, BehaviourTree p_tree2){
+		p_tree1.insertAtRandom(p_tree2.getRandomNode());
+		return p_tree1;
+	}
 }

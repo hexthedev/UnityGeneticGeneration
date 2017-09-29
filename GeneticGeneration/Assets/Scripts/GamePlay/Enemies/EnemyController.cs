@@ -29,6 +29,8 @@ public class EnemyController : MonoBehaviour, IDamagable {
 	// Update is called once per frame
 	void Update () {
 
+		if(!m_behav_tree.isLoaded()) { return; }
+
 		m_behav_tree.act();
 
 		m_fitness += Time.deltaTime;
@@ -36,8 +38,7 @@ public class EnemyController : MonoBehaviour, IDamagable {
 		if(m_fitness >= m_fitness_threshold){
 			m_fitness = 0;
 
-			//NEED TO COPY TREE -----------------------------
-			m_evolution_controller.addDNA(m_dna.clone(), m_behav_tree.clone());		//SHOUDL PROBBALY CLONE THIS. DO LATER
+			m_evolution_controller.addDNA(m_dna.clone(), m_behav_tree.clone());
 		}
 	}
 

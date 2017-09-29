@@ -4,7 +4,10 @@ using UnityEngine;
 
 public class ActionSequence : IBehaviourNode{
 
+
 	BehaviourTree m_tree;
+	IBehaviourNode m_parent;
+
 	IBehaviourNode m_child;
 	IAction[] m_actions;
 
@@ -14,6 +17,15 @@ public class ActionSequence : IBehaviourNode{
 		m_actions = new IAction[p_actions.Length];
 		p_actions.CopyTo(m_actions, 0);
 		m_child = p_child;
+	}
+
+	public void setParent(IBehaviourNode p_parent){
+		m_parent = p_parent;
+		if(m_child != null) { m_child.setParent(this); }
+	}
+
+	public IBehaviourNode returnToRoot(){
+		return m_parent == null ? this : m_parent.returnToRoot(); 
 	}
 
 	//Resets the action sequence
@@ -27,6 +39,11 @@ public class ActionSequence : IBehaviourNode{
 
 	//Does an action for a frame and then return if action is complete
 	public bool performAction(){
+		if(!m_tree.isLoaded()){
+			Debug.LogError("CANNOT HAPPEN: ACTION SEQUENCE NOT LOADED");
+			return true;
+		}
+
 		if(m_sequence.Count == 0){
 			return true;
 		}
@@ -40,6 +57,10 @@ public class ActionSequence : IBehaviourNode{
 
   public IBehaviourNode act()
   {
+		if(m_tree == null){
+			Debug.LogError("ActionSequence cannot act, unloaded");
+			return null;
+		}
 
 		if(performAction()){
 			
@@ -48,7 +69,7 @@ public class ActionSequence : IBehaviourNode{
 			if(m_child != null){
 				return m_child.act();
 			} else {
-				return m_tree.getRoot(); 
+				return returnToRoot(); 
 			}
 			
 		} else {
@@ -78,7 +99,7 @@ public class ActionSequence : IBehaviourNode{
 	public void unload()
   {
 		
-		m_tree = null;
+		//m_tree = null;
 
 		if(m_child != null){
 			m_child.unload();
@@ -119,7 +140,7 @@ public class ActionSequence : IBehaviourNode{
 		}
 	}
 
-	//
+	//CLONING
   public IBehaviourNode clone()
   {
     if(m_child != null){
@@ -138,4 +159,29 @@ public class ActionSequence : IBehaviourNode{
 
 		return actions.ToArray();
 	}
+
+	//EVOLUTION
+  public IBehaviourNode getRandomNode()
+  {
+    if(m_child == null){
+			return Random.Range(0,2) == 1 ? returnToRoot() : returnToRoot().getRandomNode();
+		} else {
+			return Random.Range(0,2) == 1 ? m_child : m_child.getRandomNode();
+		}
+  }
+
+  public void insertAtRandom(IBehaviourNode p_node)
+  {
+    if(Random.Range(0,2) == 1){
+			m_child = p_node;
+		} else{
+			if(m_child == null) { returnToRoot().insertAtRandom(p_node); } else { m_child.insertAtRandom(p_node); };
+		}
+  }
+
+
+
+
+
+
 }

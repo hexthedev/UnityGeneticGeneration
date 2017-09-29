@@ -35,7 +35,7 @@ public static class RandomGen {
 
 	}
 
-		public static IBehaviourNode Detector(IBehaviourNode p_true_child, IBehaviourNode p_false_child){
+	public static IBehaviourNode Detector(IBehaviourNode p_true_child, IBehaviourNode p_false_child){
 
 		int percent = Random.Range(0, 101);
 

@@ -24,7 +24,6 @@ public class InternalDetector : VDetector
 
   public override bool detect()
   {
-		
 		float trait = m_tree.getActorController().getTrait(m_trait, m_is_current);
 
 		if(m_is_above){
