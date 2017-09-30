@@ -9,6 +9,7 @@ public class EnemyController : MonoBehaviour, IDamagable {
 	private EvolutionController m_evolution_controller;
 
 	private DNA m_dna;
+	private BehaviourDNA m_behav_dna;
 	private Dictionary<ETrait, StatTuple> m_stats;
 	private BehaviourTree m_behav_tree;
 
@@ -23,7 +24,7 @@ public class EnemyController : MonoBehaviour, IDamagable {
 	void Start () {
 		m_evolution_controller = GameObject.FindGameObjectWithTag("GameController").GetComponent<EvolutionController>();
 		GameObject player = GameObject.FindGameObjectWithTag("Player");
-		m_debug = true;
+		m_debug = false;
 	}
 	
 	// Update is called once per frame
@@ -35,7 +36,7 @@ public class EnemyController : MonoBehaviour, IDamagable {
 		if(m_fitness >= m_fitness_threshold){
 			m_fitness = 0;
 
-		//	m_evolution_controller.addDNA(m_dna.clone(), m_behav_tree.clone());
+			m_evolution_controller.addDNA(m_dna.clone(), m_behav_dna.clone());
 		}
 	}
 
@@ -66,6 +67,7 @@ public class EnemyController : MonoBehaviour, IDamagable {
 
 		//Setup Behaviour
 		m_behav_tree = new BehaviourTree(p_logger, gameObject, p_evo.GetBehaviour());
+		m_behav_dna = p_evo.GetBehaviour();
 	}
 
 	public void damage(float p_damage){

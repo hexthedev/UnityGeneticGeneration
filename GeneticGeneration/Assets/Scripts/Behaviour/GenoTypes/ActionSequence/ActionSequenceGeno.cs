@@ -42,4 +42,20 @@ public class ActionSequenceGeno :  VTreeNode<IBehaviourGenoType>, IBehaviourGeno
    return sequence;
   }
 
+  public VTreeNode<IBehaviourGenoType> clone(VTreeNode<IBehaviourGenoType> p_parent)
+  {    
+    ActionSequenceGeno sequence = new ActionSequenceGeno(p_parent);
+
+    foreach(IActionGenoType action in m_actions){
+      sequence.addAction(action.clone(sequence));
+    }
+
+    if(existsChild(0)){
+      sequence.addChild(getChild(0).getSelf().clone(sequence), 0);
+    } else {
+      sequence.addChild(null, 0);
+    }
+
+    return sequence;
+  }
 }

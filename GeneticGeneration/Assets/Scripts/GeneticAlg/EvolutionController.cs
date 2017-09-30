@@ -22,7 +22,7 @@ public class EvolutionController : MonoBehaviour {
 		}*/
 		
 
-		//massSpawn(m_start_spawn);		
+		massSpawn(m_start_spawn);		
 	}
 
 	void Update(){
@@ -63,12 +63,12 @@ public class EvolutionController : MonoBehaviour {
 		//BEHAVIOUR SEQUENCE
 		//BehaviourTree evo_behav = BehaviourTree.crossover(evo1.GetBehaviour(), evo2.GetBehaviour());
 
-		//m_game_controller.spawn(new EvoObject(evolved, evo_behav));
+		m_game_controller.spawn(new EvoObject(evolved, new BehaviourDNA(RandomGen.BehaviourDNARoot())));
 	}
 
 	private void massSpawn(int p_amount){
 		for(int i = 0; i<p_amount; i++){
-			//m_game_controller.spawn(new EvoObject(new DNA(), BehaviourTree.random()));
+			m_game_controller.spawn(new EvoObject(new DNA(), new BehaviourDNA(RandomGen.BehaviourDNARoot())));
 		}
 	}
 

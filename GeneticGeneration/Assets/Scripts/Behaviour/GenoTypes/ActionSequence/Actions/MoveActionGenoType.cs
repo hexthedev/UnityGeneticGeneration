@@ -34,8 +34,16 @@ public class MoveActionGenoType : IActionGenoType
   public void randomize()
   {
     m_direction.randomize();
-    m_timeLimit = Random.Range(0f, 4f);
+    m_timeLimit = Random.Range(0f, 1f);
     m_speed_percentage = Random.Range(20f, 100f);
     m_sudden = BoolCalc.random();
   }
+
+
+  public IActionGenoType clone(ActionSequenceGeno p_parent)
+  {
+    return new MoveActionGenoType(m_timeLimit, m_speed_percentage, m_sudden, m_direction.clone());
+  }
+
+
 }

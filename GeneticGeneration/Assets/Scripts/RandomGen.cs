@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Calc;
 
 public static class RandomGen {
 
@@ -40,9 +41,27 @@ public static class RandomGen {
 	}
 
 	private static VTreeNode<IBehaviourGenoType> Detector(VTreeNode<IBehaviourGenoType> p_parent){
-		DirectionDetectorGenoType detector = new DirectionDetectorGenoType(0, Vector2.zero, 0, 0, p_parent );
-		detector.randomize();
-		return detector;
+		
+		switch(Random.Range(0, 4)){
+			case 0: 
+				DirectionDetectorGenoType det0 = new DirectionDetectorGenoType(0, Vector2.zero, 0, 0, p_parent );
+				det0.randomize();
+				return det0;
+			case 1:
+				InternalDetectorGenoType det1 = new InternalDetectorGenoType(0, false, 0, false, p_parent);
+				det1.randomize();
+				return det1;
+			case 2:
+				PointingAtDetectorGenoType det2 = new PointingAtDetectorGenoType(0, 0, 0, p_parent);
+				det2.randomize();
+				return det2;
+			case 3:
+				ProximityDetectorGenoType det3 = new ProximityDetectorGenoType(0, 0, 0, p_parent);
+				det3.randomize();
+				return det3;
+		}
+	
+		return null;
 	}
 
 	private static VTreeNode<IBehaviourGenoType> ActionSequence(VTreeNode<IBehaviourGenoType> p_parent){
@@ -65,7 +84,15 @@ public static class RandomGen {
 	}
 
 	private static IDirectionGenoType Direction(){
-		return new TowardsPlayerGenoType();
+		switch(Random.Range(0,2)){
+			case 0:
+				return new TowardsPlayerGenoType();
+			case 1:
+				return new AbsoluteDirectionGenoType(VectorCalc.randomDirection());
+		}
+		
+		return null;
+		
 	}
 	
 }

@@ -4,4 +4,6 @@ using UnityEngine;
 
 public interface IDirectionGenoType: IMutatable, IRandomizable{
 	IDirection phenotype(VSequenceAction p_parent);
+
+	IDirectionGenoType clone();
 }

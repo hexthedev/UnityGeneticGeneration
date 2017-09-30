@@ -59,6 +59,10 @@ namespace Calc{
       return new Vector2(p_mutate.x * Random.Range(0.5f, 1.5f), p_mutate.y * Random.Range(0.5f, 1.5f));
     }
 
+    public static Vector2 clone(Vector2 to_clone){
+      return new Vector2(to_clone.x, to_clone.y);
+    }
+
 
   }
 

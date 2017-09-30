@@ -5,4 +5,6 @@ using UnityEngine;
 
 public interface IActionGenoType: IMutatable, IRandomizable{
 	IAction phenotype(ActionSequence p_parent);
+
+	IActionGenoType clone(ActionSequenceGeno p_parent);
 }

@@ -17,4 +17,8 @@ public class BehaviourDNA {
 	public VTreeNode<IBehaviourGenoType> getRoot(){
 		return m_root;
 	}
+
+	public BehaviourDNA clone(){
+		return new BehaviourDNA(m_root.getSelf().clone(null));
+	}
 }

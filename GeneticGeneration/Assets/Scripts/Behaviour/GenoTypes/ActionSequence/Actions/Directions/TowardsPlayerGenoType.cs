@@ -18,4 +18,9 @@ public class TowardsPlayerGenoType : IDirectionGenoType
   {
     return;
   }
+
+  public IDirectionGenoType clone()
+  {
+    return new TowardsPlayerGenoType();
+  }
 }

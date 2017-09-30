@@ -40,5 +40,19 @@ public class DirectionDetectorGenoType : VTreeNode<IBehaviourGenoType>, IBehavio
     m_count = Random.Range(1, 8);
   }
 
+  public VTreeNode<IBehaviourGenoType> clone(VTreeNode<IBehaviourGenoType> p_parent)
+  {
+    VTreeNode<IBehaviourGenoType> copy = new DirectionDetectorGenoType(m_of, VectorCalc.clone(m_direction), m_angle_threshold, m_count, p_parent);
+
+    for(int i = 0; i<copy.numChildren(); i++){
+      if(existsChild(i)){ 
+        copy.addChild(getChild(i).getSelf().clone(copy) , i);
+      } else {
+        copy.addChild(null, i);
+      }
+    }
+
+    return copy;
+  }
   
 }
