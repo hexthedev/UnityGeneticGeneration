@@ -53,15 +53,15 @@ public class EvolutionController : MonoBehaviour {
 		//DNA SEQUENCE
 		DNA evolved = DNA.evolove(evo1.getDNA(), evo2.getDNA());
 
-		string debug = "";
-
-		if(Random.Range(0,100) < m_mutation_percentage){
-			debug += "MUTATION :: ";
-			evolved = evolved.mutate();
-		}
-
 		//BEHAVIOUR SEQUENCE
 		BehaviourDNA evo_behav = BehaviourDNA.crossover(evo1.GetBehaviour(), evo2.GetBehaviour());
+		
+		if(Random.Range(0,100) < m_mutation_percentage){
+			Debug.Log("MUTATE");
+			//evolved = evolved.mutate();
+			evo_behav.mutate();
+		}
+
 		m_game_controller.spawn(new EvoObject(evolved, evo_behav));
 	}
 

@@ -23,6 +23,10 @@ public class BehaviourDNA {
 		return new BehaviourDNA(m_root.getSelf().clone(null));
 	}
 
+	public void mutate(){
+		m_root.getSelf().mutate();
+	}
+
 	public static BehaviourDNA crossover(BehaviourDNA p_dna1, BehaviourDNA p_dna2){
 
 		BehaviourDNA master;
@@ -46,7 +50,6 @@ public class BehaviourDNA {
 
 		return master.clone();
 	}
-
 
 	private static VTreeNode<IBehaviourGenoType>[] getRandomPath(VTreeNode<IBehaviourGenoType> m_root){
 

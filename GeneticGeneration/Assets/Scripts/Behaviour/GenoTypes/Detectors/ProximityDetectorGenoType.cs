@@ -21,6 +21,12 @@ public class ProximityDetectorGenoType : VTreeNode<IBehaviourGenoType>, IBehavio
     m_of = EnumCalc.randomValue<EObjectTypes>();
     m_threshold = FloatCalc.mutate(m_threshold, 0.1f, 8f);
     m_count = IntCalc.mutate(m_count, 1, 5);
+
+    VTreeNode<IBehaviourGenoType> child = getRandomChild();
+
+    if(child != null){
+      child.getSelf().mutate();
+    }
   }
 
   public VTreeNode<IBehaviourNode> phenotype(VTreeNode<IBehaviourNode> p_parent, BehaviourTree p_tree)

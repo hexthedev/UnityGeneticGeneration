@@ -19,9 +19,16 @@ public class ActionSequenceGeno :  VTreeNode<IBehaviourGenoType>, IBehaviourGeno
 
   public void mutate()
   {
-    foreach(IBehaviourGenoType action in m_actions){
+    foreach(IActionGenoType action in m_actions){
 			action.mutate();
 		} 
+
+    VTreeNode<IBehaviourGenoType> child = getRandomChild();
+
+    if(child != null){
+      child.getSelf().mutate();
+    }
+
   }
 
   public void randomize()

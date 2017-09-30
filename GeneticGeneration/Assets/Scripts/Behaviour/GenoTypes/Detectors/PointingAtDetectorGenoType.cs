@@ -22,6 +22,12 @@ public class PointingAtDetectorGenoType : VTreeNode<IBehaviourGenoType>, IBehavi
     m_angle_threshold = FloatCalc.mutate(m_angle_threshold, 0f, 108f);
     m_pointing_at = EnumCalc.randomValue<EObjectTypes>();
     m_count = IntCalc.mutate(m_count, 1, 5);
+
+    VTreeNode<IBehaviourGenoType> child = getRandomChild();
+
+    if(child != null){
+      child.getSelf().mutate();
+    }
   }
 
   public VTreeNode<IBehaviourNode> phenotype(VTreeNode<IBehaviourNode> p_parent, BehaviourTree p_tree)

@@ -25,6 +25,12 @@ public class DirectionDetectorGenoType : VTreeNode<IBehaviourGenoType>, IBehavio
     m_direction = VectorCalc.mutateVector2(m_direction);
     m_angle_threshold = FloatCalc.mutate(m_angle_threshold, 0, 180f);
     m_count = IntCalc.mutate(m_count, 1, 7);
+
+    VTreeNode<IBehaviourGenoType> child = getRandomChild();
+
+    if(child != null){
+      child.getSelf().mutate();
+    }
   }
 
   public VTreeNode<IBehaviourNode> phenotype(VTreeNode<IBehaviourNode> p_parent, BehaviourTree p_tree)

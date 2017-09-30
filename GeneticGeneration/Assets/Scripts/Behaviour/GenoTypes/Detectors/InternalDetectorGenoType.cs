@@ -29,6 +29,12 @@ public class InternalDetectorGenoType : VTreeNode<IBehaviourGenoType>, IBehaviou
 		m_is_current = BoolCalc.random();
 		m_threshold = FloatCalc.mutate(m_threshold, 0, 10);
 		m_is_above = BoolCalc.random();
+
+    VTreeNode<IBehaviourGenoType> child = getRandomChild();
+
+    if(child != null){
+      child.getSelf().mutate();
+    }
   }
 
   public VTreeNode<IBehaviourNode> phenotype(VTreeNode<IBehaviourNode> p_parent, BehaviourTree p_tree)
