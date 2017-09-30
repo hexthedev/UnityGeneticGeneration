@@ -17,7 +17,12 @@ public class EvolutionController : MonoBehaviour {
 	void Start(){
 		m_game_controller = gameObject.GetComponent<GameController>();
 
-		massSpawn(m_start_spawn);
+		/*for(int i = 0; i<1000; i++ ){
+			Debug.Log(new BehaviourTree(m_game_controller.GetComponent<ObjectLogger>(), gameObject, new BehaviourDNA(RandomGen.BehaviourDNARoot()) ));
+		}*/
+		
+
+		//massSpawn(m_start_spawn);		
 	}
 
 	void Update(){
@@ -29,7 +34,7 @@ public class EvolutionController : MonoBehaviour {
 		}
 	}
 
-	public void addDNA(DNA p_dna, BehaviourTree p_behaviour){
+	public void addDNA(DNA p_dna, BehaviourDNA p_behaviour){
 		m_gene_pool.Add(new EvoObject(p_dna, p_behaviour));
 	} 
 
@@ -56,14 +61,14 @@ public class EvolutionController : MonoBehaviour {
 		}
 
 		//BEHAVIOUR SEQUENCE
-		BehaviourTree evo_behav = BehaviourTree.crossover(evo1.GetBehaviour(), evo2.GetBehaviour());
+		//BehaviourTree evo_behav = BehaviourTree.crossover(evo1.GetBehaviour(), evo2.GetBehaviour());
 
-		m_game_controller.spawn(new EvoObject(evolved, evo_behav));
+		//m_game_controller.spawn(new EvoObject(evolved, evo_behav));
 	}
 
 	private void massSpawn(int p_amount){
 		for(int i = 0; i<p_amount; i++){
-			m_game_controller.spawn(new EvoObject(new DNA(), BehaviourTree.random()));
+			//m_game_controller.spawn(new EvoObject(new DNA(), BehaviourTree.random()));
 		}
 	}
 

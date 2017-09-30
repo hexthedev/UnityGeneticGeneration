@@ -55,6 +55,10 @@ namespace Calc{
       return new Vector2(Random.Range(-1f,1f), Random.Range(-1f,1f));
     }
 
+    public static Vector2 mutateVector2(Vector2 p_mutate){
+      return new Vector2(p_mutate.x * Random.Range(0.5f, 1.5f), p_mutate.y * Random.Range(0.5f, 1.5f));
+    }
+
 
   }
 
@@ -72,7 +76,23 @@ namespace Calc{
       return to_return;
     }
 
+    public static T2[] map<T1, T2>(T1[] p_to_convert, DConversion<T1, T2> p_converter){
+      T2[] to_return = new T2[p_to_convert.Length];
 
+      for(int i = 0; i<p_to_convert.Length; i++){
+        to_return[i] = p_converter(p_to_convert[i]);
+      }
+
+      return to_return;
+    }
+
+    public static T randomElement<T>(T[] p_array){
+      return p_array[randomIndex<T>(p_array)];
+    }
+
+    public static int randomIndex<T>(T[] p_array){
+      return Random.Range(0,p_array.Length);
+    }
   }
 
   public static class EnumCalc{
@@ -90,6 +110,31 @@ namespace Calc{
     ///<summary>Return Random enum value </summary>
     public static bool random(){
       return Random.Range(0,2) == 1? true: false;
+    }
+
+  }
+
+  public static class FloatCalc{
+
+    public static float mutate(float p_value, float min, float max){
+      float to_return =  p_value * Random.Range(0.5f, 1.5f);
+
+      if(to_return > max){
+        return max;
+      } else if (to_return < min){
+        return min;
+      } else {
+        return to_return;
+      }
+    }
+
+  }
+
+  public static class IntCalc{
+
+    public static int mutate(int p_value, int min, int max){
+      float to_return = FloatCalc.mutate((float)p_value, (float)min, (float)max);
+      return (int) to_return;
     }
 
   }

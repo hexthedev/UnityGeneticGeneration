@@ -13,7 +13,6 @@ public class EnemyController : MonoBehaviour, IDamagable {
 	private BehaviourTree m_behav_tree;
 
 
-
 	private float m_forward = -90;
 	private float m_fitness;
 	public float m_fitness_threshold;
@@ -24,13 +23,11 @@ public class EnemyController : MonoBehaviour, IDamagable {
 	void Start () {
 		m_evolution_controller = GameObject.FindGameObjectWithTag("GameController").GetComponent<EvolutionController>();
 		GameObject player = GameObject.FindGameObjectWithTag("Player");
+		m_debug = true;
 	}
 	
 	// Update is called once per frame
 	void Update () {
-
-		if(!m_behav_tree.isLoaded()) { return; }
-
 		m_behav_tree.act();
 
 		m_fitness += Time.deltaTime;
@@ -38,7 +35,7 @@ public class EnemyController : MonoBehaviour, IDamagable {
 		if(m_fitness >= m_fitness_threshold){
 			m_fitness = 0;
 
-			m_evolution_controller.addDNA(m_dna.clone(), m_behav_tree.clone());
+		//	m_evolution_controller.addDNA(m_dna.clone(), m_behav_tree.clone());
 		}
 	}
 
@@ -68,8 +65,7 @@ public class EnemyController : MonoBehaviour, IDamagable {
 		m_logger.log(gameObject, EObjectTypes.ENEMY);
 
 		//Setup Behaviour
-		m_behav_tree = p_evo.GetBehaviour();
-		m_behav_tree.load(m_logger, gameObject);
+		m_behav_tree = new BehaviourTree(p_logger, gameObject, p_evo.GetBehaviour());
 	}
 
 	public void damage(float p_damage){
@@ -79,7 +75,6 @@ public class EnemyController : MonoBehaviour, IDamagable {
 		
 		if(m_stats[ETrait.HP].m_current <= 0){
 			m_logger.unlog(gameObject, EObjectTypes.ENEMY);
-			m_behav_tree.unload();
 			Destroy(gameObject);
 		}
 	}	

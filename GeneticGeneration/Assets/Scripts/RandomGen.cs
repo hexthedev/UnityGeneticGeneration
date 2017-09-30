@@ -4,65 +4,68 @@ using UnityEngine;
 
 public static class RandomGen {
 
-	public static IDirection IDirection(){
-		
-		int percent = Random.Range(0,101);
-
-		if(percent <= 50){
-			return AbsoluteDirection.random();
-		} else {
-			return TowardsPlayerDirection.random();
-		}
+	public static VTreeNode<IBehaviourGenoType> BehaviourDNARoot(){
+		return genStepper(null, 100);
 	}
+	
+	private static VTreeNode<IBehaviourGenoType> genStepper(VTreeNode<IBehaviourGenoType> p_parent, int p_chance){
 
-	public static IAction IAction(){
-		return MoveAction.random();
-	}
+		/*switch (p_chance){
+			case 100: Debug.Log(1); break;
+			case 75: Debug.Log(2); break;
+			case 50: Debug.Log(3); break;
+			case 25: Debug.Log(4); break;
+			case 0: Debug.Log(5); break;	
+			}*/
 
-	public static IBehaviourNode Detector(){
+		if(Random.Range(0,100) < p_chance){
+			VTreeNode<IBehaviourGenoType> node = VTreeNodeGenoType(p_parent);
 
-		int percent = Random.Range(0, 101);
+			for(int i = 0 ; i<node.numChildren(); i++){
+				node.addChild( genStepper(node, p_chance-25) , i);
+			}
 
-		if(percent <= 25){
-			return DirectionDetector.random();
-		} else if (percent <= 50){
-			return InternalDetector.random();
-		}	else if (percent <= 75){
-			return PointingAtDetector.random();
-		}	else{
-			return ProximityDetector.random();
+			return node;
 		}
 
+		return null;
 	}
 
-	public static IBehaviourNode Detector(IBehaviourNode p_true_child, IBehaviourNode p_false_child){
-
-		int percent = Random.Range(0, 101);
-
-		if(percent <= 25){
-			return DirectionDetector.random(p_true_child, p_false_child);
-		} else if (percent <= 50){
-			return InternalDetector.random(p_true_child, p_false_child);
-		}	else if (percent <= 75){
-			return PointingAtDetector.random(p_true_child, p_false_child);
-		}	else{
-			return ProximityDetector.random(p_true_child, p_false_child);
-		}
-
-	}
-
-	public static IBehaviourNode IBehaviourNode(){
-
+	private static VTreeNode<IBehaviourGenoType> VTreeNodeGenoType(VTreeNode<IBehaviourGenoType> p_parent){
 		if(Random.Range(0,2) == 1){
-			return null;
+			return Detector(p_parent);
+		} else {
+			return ActionSequence(p_parent);
+		}
+	}
+
+	private static VTreeNode<IBehaviourGenoType> Detector(VTreeNode<IBehaviourGenoType> p_parent){
+		DirectionDetectorGenoType detector = new DirectionDetectorGenoType(0, Vector2.zero, 0, 0, p_parent );
+		detector.randomize();
+		return detector;
+	}
+
+	private static VTreeNode<IBehaviourGenoType> ActionSequence(VTreeNode<IBehaviourGenoType> p_parent){
+		ActionSequenceGeno sequence = new ActionSequenceGeno(p_parent);
+
+		int count = 10;
+
+		while(count > 0){
+			sequence.addAction(Action(sequence));
+			count -= Random.Range(0,10);
 		}
 
-		return Random.Range(0,2) == 1 ? Detector() : ActionSequence.random(); 
+		return sequence;
 	}
 
-	public static IBehaviourNode BehaviourTreeRoot(){
-		return Detector(ActionSequence.random(), ActionSequence.random() );
+	private static IActionGenoType Action(ActionSequenceGeno p_parent){
+		MoveActionGenoType geno = new MoveActionGenoType(0, 0, false, Direction());
+		geno.randomize();
+		return geno;
 	}
 
-
+	private static IDirectionGenoType Direction(){
+		return new TowardsPlayerGenoType();
+	}
+	
 }
