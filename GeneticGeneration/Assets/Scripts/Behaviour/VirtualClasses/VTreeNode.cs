@@ -56,14 +56,13 @@ public class VTreeNode<T> {
 		m_children[p_index] = p_child;
 	}
 
-	protected T getRandomChild(){
-		return ArrayCalc.randomElement(m_children).m_self;
+	public VTreeNode<T> getRandomChild(){
+		return ArrayCalc.randomElement(m_children);
 	}
 
-	protected void setRandomChild(T p_child, int p_children){
-		VTreeNode<T> to_add = new VTreeNode<T>(this, p_children);
-		to_add.setSelf(p_child);
-		m_children[ArrayCalc.randomIndex<VTreeNode<T>>(m_children)] = to_add;
+	public void addRandomChild(VTreeNode<T> p_child){
+		p_child.m_parent = this;
+		m_children[ArrayCalc.randomIndex<VTreeNode<T>>(m_children)] = p_child;
 	}
 
 }

@@ -61,9 +61,8 @@ public class EvolutionController : MonoBehaviour {
 		}
 
 		//BEHAVIOUR SEQUENCE
-		//BehaviourTree evo_behav = BehaviourTree.crossover(evo1.GetBehaviour(), evo2.GetBehaviour());
-
-		m_game_controller.spawn(new EvoObject(evolved, new BehaviourDNA(RandomGen.BehaviourDNARoot())));
+		BehaviourDNA evo_behav = BehaviourDNA.crossover(evo1.GetBehaviour(), evo2.GetBehaviour());
+		m_game_controller.spawn(new EvoObject(evolved, evo_behav));
 	}
 
 	private void massSpawn(int p_amount){
