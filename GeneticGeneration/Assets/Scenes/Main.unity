@@ -517,8 +517,8 @@ MonoBehaviour:
   m_hp: 100
   m_speed: 7
   m_bullet: {fileID: 1122462939011534, guid: 929b0d1aafcc40642b42c4e74f55f09e, type: 2}
-  shot_rate: 0.1
-  m_damage: 7
+  shot_rate: 0.2
+  m_damage: 10
 --- !u!50 &630540685
 Rigidbody2D:
   serializedVersion: 4
@@ -565,6 +565,7 @@ GameObject:
   - component: {fileID: 719835939}
   - component: {fileID: 719835941}
   - component: {fileID: 719835942}
+  - component: {fileID: 719835943}
   m_Layer: 0
   m_Name: GameController
   m_TagString: GameController
@@ -620,6 +621,17 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 56ff6105a013bad49ab29cf83eac5d5b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &719835943
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 719835938}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6c50e1b70f49b1d4bb1857dd5c510526, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!1 &1013057973

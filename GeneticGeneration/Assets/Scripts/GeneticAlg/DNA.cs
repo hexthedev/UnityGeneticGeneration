@@ -63,6 +63,10 @@ public class DNA {
 		return new DNA(chromos);
 	}
 
+	public string[] getStatsCSV(int creature){
+		string[] stats = {creature.ToString(), m_chromos[ETrait.ATTACK].getGeneValue().ToString(),  m_chromos[ETrait.DEFENSE].getGeneValue().ToString(), m_chromos[ETrait.SPEED].getGeneValue().ToString(), m_chromos[ETrait.HP].getGeneValue().ToString() + "\n"};
+		return stats;
+	}
 
 
 

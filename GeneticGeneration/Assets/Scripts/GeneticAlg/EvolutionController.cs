@@ -6,6 +6,8 @@ public class EvolutionController : MonoBehaviour {
 
 	GameController m_game_controller;
 
+	DataCollector m_data;
+
 	List<EvoObject> m_gene_pool = new List<EvoObject>();
 
 	float m_birth_timer = 0;
@@ -14,8 +16,11 @@ public class EvolutionController : MonoBehaviour {
 	public float m_birth_threshold;
 	public int m_mutation_percentage;
 
+	private int m_creature = 0;
+
 	void Start(){
 		m_game_controller = gameObject.GetComponent<GameController>();
+		m_data = gameObject.GetComponent<DataCollector>();
 
 		/*for(int i = 0; i<1000; i++ ){
 			Debug.Log(new BehaviourTree(m_game_controller.GetComponent<ObjectLogger>(), gameObject, new BehaviourDNA(RandomGen.BehaviourDNARoot()) ));
@@ -62,12 +67,20 @@ public class EvolutionController : MonoBehaviour {
 			evo_behav.mutate();
 		}
 
+		m_data.recordData(evolved, m_creature);
+		m_creature++;
+
 		m_game_controller.spawn(new EvoObject(evolved, evo_behav));
 	}
 
 	private void massSpawn(int p_amount){
 		for(int i = 0; i<p_amount; i++){
-			m_game_controller.spawn(new EvoObject(new DNA(), new BehaviourDNA(RandomGen.BehaviourDNARoot())));
+			DNA rand_dna = new DNA();
+
+			m_data.recordData(rand_dna, m_creature);
+			m_creature++;
+
+			m_game_controller.spawn(new EvoObject(rand_dna, new BehaviourDNA(RandomGen.BehaviourDNARoot())));
 		}
 	}
 
