@@ -496,7 +496,7 @@ Transform:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 630540681}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -5.41, y: -0.05, z: 0}
+  m_LocalPosition: {x: -0.04, y: -0.06, z: 0}
   m_LocalScale: {x: 0.22, y: 0.2, z: 0.2}
   m_Children: []
   m_Father: {fileID: 0}
@@ -517,8 +517,8 @@ MonoBehaviour:
   m_hp: 100
   m_speed: 7
   m_bullet: {fileID: 1122462939011534, guid: 929b0d1aafcc40642b42c4e74f55f09e, type: 2}
-  shot_rate: 0.2
-  m_damage: 10
+  shot_rate: 0.4
+  m_damage: 15
 --- !u!50 &630540685
 Rigidbody2D:
   serializedVersion: 4
@@ -610,8 +610,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_start_spawn: 10
-  m_birth_threshold: 1
-  m_mutation_percentage: 10
+  m_seconds_per_birth: 0.5
+  m_mutation_chance_percentage: 5
 --- !u!114 &719835942
 MonoBehaviour:
   m_ObjectHideFlags: 0

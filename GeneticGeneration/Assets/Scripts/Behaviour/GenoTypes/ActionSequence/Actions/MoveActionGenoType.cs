@@ -21,9 +21,9 @@ public class MoveActionGenoType : IActionGenoType
   public void mutate()
   {
     m_direction.mutate();
-    m_timeLimit = FloatCalc.mutate(m_timeLimit, 0f, 4f);
-    m_speed_percentage = FloatCalc.mutate(m_speed_percentage, 0.2f, 1f);
-    m_sudden = BoolCalc.random();
+    m_timeLimit = FloatCalc.mutate(m_timeLimit, 0f, 4f, EvolutionVars.action_time_limit_rand_mult() );
+    m_speed_percentage = FloatCalc.mutate(m_speed_percentage, 0.2f, 1f, EvolutionVars.action_speed_rand_mult());
+    //m_sudden = BoolCalc.random();
   }
 
   public IAction phenotype(ActionSequence p_parent)
@@ -34,8 +34,8 @@ public class MoveActionGenoType : IActionGenoType
   public void randomize()
   {
     m_direction.randomize();
-    m_timeLimit = Random.Range(0f, 1f);
-    m_speed_percentage = Random.Range(20f, 100f);
+    m_timeLimit = EvolutionVars.action_time_limit_rand_value();
+    m_speed_percentage = EvolutionVars.action_speed_rand_value();
     m_sudden = BoolCalc.random();
   }
 

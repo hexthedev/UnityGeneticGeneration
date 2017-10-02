@@ -30,10 +30,10 @@ public class PlayerController : MonoBehaviour, IDamagable {
 	void Update () {
 		shot_timer += Time.deltaTime;
 
-		m_rb.velocity = playerVelocityUpdate();
+		//m_rb.velocity = playerVelocityUpdate();
 
 		if((shot_timer > shot_rate) && Input.GetKey(KeyCode.Mouse0)){
-			shoot();
+			//shoot();
 			shot_timer = 0;
 		}
 
@@ -44,6 +44,46 @@ public class PlayerController : MonoBehaviour, IDamagable {
 		if(Input.GetKeyDown(KeyCode.O)){
 			m_logger.getAll();
 		}
+
+		m_rb.velocity += VectorCalc.CalcVec3to2((ArrayCalc.randomElement(m_logger.getByType(EObjectTypes.ENEMY)).transform.position - gameObject.transform.position).normalized * m_speed/10f);
+
+		if(m_rb.velocity.magnitude > m_speed){
+			m_rb.velocity = m_rb.velocity.normalized*m_speed;
+		}
+
+		if(shot_timer > shot_rate){
+			
+			float closest_distance = -1f;
+			Vector3 closest_position = Vector3.zero;
+
+			Vector3 player_position = gameObject.transform.position;
+
+			foreach(GameObject obj in m_logger.getByType(EObjectTypes.ENEMY)){
+				float test = (obj.transform.position - player_position).magnitude;
+				
+				if(closest_distance == -1f){
+					closest_position = obj.transform.position;
+					closest_distance = test;
+				} else {
+					
+					if(test < closest_distance){
+						closest_distance = test;
+						closest_position = obj.transform.position;
+					} 
+				}				
+			}
+
+			if(!(closest_position == Vector3.zero)){
+				Debug.DrawLine(gameObject.transform.position, closest_position, Color.red, 2f);
+				shoot(closest_position);
+			}
+
+			shot_timer = 0;
+			
+		}
+
+
+
 	}
 
 	Vector2 playerVelocityUpdate(){
@@ -70,10 +110,12 @@ public class PlayerController : MonoBehaviour, IDamagable {
 		return toReturn * m_speed;
 	}
 
-	void shoot(){
-		GameObject bullet = Instantiate(m_bullet, gameObject.transform.position, Quaternion.identity);	
-		Vector3 position  = Camera.allCameras[0].ScreenToWorldPoint(Input.mousePosition);
-		Vector2 direction = VectorCalc.CalcVec3to2( position - gameObject.transform.position ).normalized;
+	void shoot(Vector3 p_direction){
+		Vector2 direction = VectorCalc.CalcVec3to2( p_direction - gameObject.transform.position ).normalized;
+
+		GameObject bullet = Instantiate(m_bullet, VectorCalc.CalcVec3to2(gameObject.transform.position) + direction*0.5f, Quaternion.identity);	
+		//Vector3 position  = Camera.allCameras[0].ScreenToWorldPoint(Input.mousePosition);
+
 		bullet.GetComponent<Bullet>().Initalize(direction, m_damage, "Player", m_logger);
 	}
 

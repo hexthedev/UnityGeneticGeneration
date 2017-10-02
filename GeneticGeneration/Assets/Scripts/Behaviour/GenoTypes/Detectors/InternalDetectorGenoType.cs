@@ -27,7 +27,7 @@ public class InternalDetectorGenoType : VTreeNode<IBehaviourGenoType>, IBehaviou
   {
     m_trait = EnumCalc.randomValue<ETrait>();
 		m_is_current = BoolCalc.random();
-		m_threshold = FloatCalc.mutate(m_threshold, 0, 10);
+		m_threshold = FloatCalc.mutate(m_threshold, 0, 10, EvolutionVars.det_trait_threshold_rand_mult());
 		m_is_above = BoolCalc.random();
 
     VTreeNode<IBehaviourGenoType> child = getRandomChild();
@@ -46,7 +46,7 @@ public class InternalDetectorGenoType : VTreeNode<IBehaviourGenoType>, IBehaviou
   {
     m_trait = EnumCalc.randomValue<ETrait>();
 		m_is_current = BoolCalc.random();
-		m_threshold = Random.Range(0f, 10f);
+		m_threshold = EvolutionVars.det_trait_threshold_rand_val();
 		m_is_above = BoolCalc.random();
   }
 

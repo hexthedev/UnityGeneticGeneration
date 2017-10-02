@@ -48,7 +48,7 @@ public static class RandomGen {
 				det0.randomize();
 				return det0;
 			case 1:
-				InternalDetectorGenoType det1 = new InternalDetectorGenoType(0, false, 0, false, p_parent);
+				DirectionDetectorGenoType det1 = new DirectionDetectorGenoType(0, Vector2.zero, 0, 0, p_parent );
 				det1.randomize();
 				return det1;
 			case 2:

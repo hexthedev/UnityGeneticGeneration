@@ -7,12 +7,14 @@ public class EnemyController : MonoBehaviour, IDamagable {
 
 	private ObjectLogger m_logger;
 	private EvolutionController m_evolution_controller;
+	private DataCollector m_data;
 
 	private DNA m_dna;
 	private BehaviourDNA m_behav_dna;
 	private Dictionary<ETrait, StatTuple> m_stats;
 	private BehaviourTree m_behav_tree;
 
+	private int m_creature_id;
 
 	private float m_forward = -90;
 	private float m_fitness;
@@ -24,6 +26,7 @@ public class EnemyController : MonoBehaviour, IDamagable {
 	void Start () {
 		m_evolution_controller = GameObject.FindGameObjectWithTag("GameController").GetComponent<EvolutionController>();
 		GameObject player = GameObject.FindGameObjectWithTag("Player");
+		m_data = GameObject.FindGameObjectWithTag("GameController").GetComponent<DataCollector>();
 		m_debug = false;
 	}
 	
@@ -31,16 +34,12 @@ public class EnemyController : MonoBehaviour, IDamagable {
 	void Update () {
 		m_behav_tree.act();
 
-		m_fitness += Time.deltaTime;
-
-		if(m_fitness >= m_fitness_threshold){
-			m_fitness = 0;
-
-			m_evolution_controller.addDNA(m_dna.clone(), m_behav_dna.clone());
-		}
+		m_fitness += (1/(m_logger.getByType(EObjectTypes.PLAYER)[0].transform.position - gameObject.transform.position).magnitude)*Time.deltaTime;
 	}
 
-	public void Initalize(EvoObject p_evo, ObjectLogger p_logger){
+	public void Initalize(EvoObject p_evo, ObjectLogger p_logger, int p_id){
+		m_creature_id = p_id;
+
 		//Setup stats with DNA
 		m_stats = new Dictionary<ETrait, StatTuple>();
 		
@@ -50,7 +49,7 @@ public class EnemyController : MonoBehaviour, IDamagable {
 		float attack = dna.getTraitValue(ETrait.ATTACK)/2;
 		m_stats[ETrait.ATTACK] = new StatTuple(attack, attack);
 
-		float defense = dna.getTraitValue(ETrait.DEFENSE)/2;
+		float defense = dna.getTraitValue(ETrait.DEFENSE)/5;
 		m_stats[ETrait.DEFENSE] = new StatTuple(defense, defense);
 
 		float speed = dna.getTraitValue(ETrait.SPEED);
@@ -76,7 +75,13 @@ public class EnemyController : MonoBehaviour, IDamagable {
 		m_stats[ETrait.HP].m_current -= damage;
 		
 		if(m_stats[ETrait.HP].m_current <= 0){
+			//m_evolution_controller.addDNA(new EvoObject(m_dna.clone(), m_behav_dna.clone()), m_fitness);
 			m_logger.unlog(gameObject, EObjectTypes.ENEMY);
+
+			m_data.recordData(m_dna, m_creature_id, m_fitness);
+
+			Debug.Log(m_fitness);
+
 			Destroy(gameObject);
 		}
 	}	

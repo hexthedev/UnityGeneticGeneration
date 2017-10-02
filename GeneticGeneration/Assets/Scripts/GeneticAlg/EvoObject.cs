@@ -20,4 +20,8 @@ public class EvoObject {
 		return m_behaviour;
 	}
 
+	public static EvoObject random(){
+		return new EvoObject(new DNA(), new BehaviourDNA(RandomGen.BehaviourDNARoot()));
+	}
+
 }

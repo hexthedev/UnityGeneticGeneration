@@ -8,10 +8,10 @@ public class Chromo {
 	private float[] m_genes;
 
 	public Chromo(){
-		m_genes = new float[5];
+		m_genes = new float[EvolutionVars.chromo_genes];
 
 		for(int i = 0; i<m_genes.Length; i++){
-			m_genes[i] = Random.Range(0.2f, 2f);
+			m_genes[i] = EvolutionVars.chromo_start_value();
 		}
 	}
 
@@ -33,14 +33,18 @@ public class Chromo {
 	}
 
 	public Chromo mutate(){
-		int index = Random.Range(0,5);
+		
 		Chromo clone = this.clone();
-		clone.m_genes[index] += Random.Range(-1f, 4f);
 
+		for(int i = 0; i<EvolutionVars.chromo_mutation_iterations; i++){
+			int index = Random.Range(0,5);
+			clone.m_genes[index] += EvolutionVars.chromo_mutation_value();
+		}
+		
 		return clone;
 	}
 
-	public static Chromo evolove(Chromo p_chromo1, Chromo p_chromo2){
+	public static Chromo crossover(Chromo p_chromo1, Chromo p_chromo2){
 
 		float[] new_gene = new float[5];
 

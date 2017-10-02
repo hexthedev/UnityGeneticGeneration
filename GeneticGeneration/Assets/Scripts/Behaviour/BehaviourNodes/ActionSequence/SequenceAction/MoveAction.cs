@@ -27,7 +27,7 @@ public class MoveAction : VSequenceAction  {
 	public override bool performAction(){
 		//Debug.Log("MoveAction: " + m_speed);
 
-		float speed = m_controller.getTrait(ETrait.SPEED, false);
+		float speed = m_controller.getTrait(ETrait.SPEED, false) * m_speed_percentage;
 
 		if(m_sudden){
 			m_rb.velocity = m_direction.direction()*speed;

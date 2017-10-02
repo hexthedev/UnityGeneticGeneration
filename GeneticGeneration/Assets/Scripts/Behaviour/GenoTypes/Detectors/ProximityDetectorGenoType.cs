@@ -19,8 +19,8 @@ public class ProximityDetectorGenoType : VTreeNode<IBehaviourGenoType>, IBehavio
   public void mutate()
   {
     m_of = EnumCalc.randomValue<EObjectTypes>();
-    m_threshold = FloatCalc.mutate(m_threshold, 0.1f, 8f);
-    m_count = IntCalc.mutate(m_count, 1, 5);
+    m_threshold = FloatCalc.mutate(m_threshold, 0.1f, 8f, EvolutionVars.det_prox_threshold_rand_mult());
+    m_count = IntCalc.mutate(m_count, 1, 5, EvolutionVars.det_count_rand_mult());
 
     VTreeNode<IBehaviourGenoType> child = getRandomChild();
 
@@ -37,8 +37,8 @@ public class ProximityDetectorGenoType : VTreeNode<IBehaviourGenoType>, IBehavio
   public void randomize()
   {
     m_of = EnumCalc.randomValue<EObjectTypes>();
-    m_threshold = Random.Range(0.1f, 8f);
-    m_count = Random.Range(1, 5);
+    m_threshold = EvolutionVars.det_prox_threshold_rand_val();
+    m_count = EvolutionVars.det_count_rand_val();
   }
 
   public VTreeNode<IBehaviourGenoType> clone(VTreeNode<IBehaviourGenoType> p_parent)

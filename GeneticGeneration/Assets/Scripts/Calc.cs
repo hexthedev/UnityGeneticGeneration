@@ -56,7 +56,7 @@ namespace Calc{
     }
 
     public static Vector2 mutateVector2(Vector2 p_mutate){
-      return new Vector2(p_mutate.x * Random.Range(0.5f, 1.5f), p_mutate.y * Random.Range(0.5f, 1.5f));
+      return new Vector2(p_mutate.x * EvolutionVars.direction_mutation_multip(), p_mutate.y * EvolutionVars.direction_mutation_multip());
     }
 
     public static Vector2 clone(Vector2 to_clone){
@@ -120,13 +120,13 @@ namespace Calc{
 
   public static class FloatCalc{
 
-    public static float mutate(float p_value, float min, float max){
-      float to_return =  p_value * Random.Range(0.5f, 1.5f);
+    public static float mutate(float p_value, float p_min, float p_max, float p_mutation_value){
+      float to_return =  p_value * p_mutation_value;
 
-      if(to_return > max){
-        return max;
-      } else if (to_return < min){
-        return min;
+      if(to_return > p_max){
+        return p_max;
+      } else if (to_return < p_min){
+        return p_min;
       } else {
         return to_return;
       }
@@ -136,8 +136,8 @@ namespace Calc{
 
   public static class IntCalc{
 
-    public static int mutate(int p_value, int min, int max){
-      float to_return = FloatCalc.mutate((float)p_value, (float)min, (float)max);
+    public static int mutate(int p_value, int p_min, int p_max, float p_mutation_value){
+      float to_return = FloatCalc.mutate((float)p_value, (float)p_min, (float)p_max, p_mutation_value);
       return (int) to_return;
     }
 

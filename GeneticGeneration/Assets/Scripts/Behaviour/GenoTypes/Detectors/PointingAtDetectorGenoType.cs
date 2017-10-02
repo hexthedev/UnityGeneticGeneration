@@ -19,9 +19,9 @@ public class PointingAtDetectorGenoType : VTreeNode<IBehaviourGenoType>, IBehavi
 
   public void mutate()
   {
-    m_angle_threshold = FloatCalc.mutate(m_angle_threshold, 0f, 108f);
+    m_angle_threshold = FloatCalc.mutate(m_angle_threshold, 0f, 108f, EvolutionVars.det_angle_rand_mult());
     m_pointing_at = EnumCalc.randomValue<EObjectTypes>();
-    m_count = IntCalc.mutate(m_count, 1, 5);
+    m_count = IntCalc.mutate(m_count, 1, 5, EvolutionVars.det_count_rand_mult());
 
     VTreeNode<IBehaviourGenoType> child = getRandomChild();
 
@@ -39,7 +39,7 @@ public class PointingAtDetectorGenoType : VTreeNode<IBehaviourGenoType>, IBehavi
   {
     m_angle_threshold = Random.Range(0f, 180f);
     m_pointing_at = EnumCalc.randomValue<EObjectTypes>();
-    m_count = Random.Range(1, 5);
+    m_count = EvolutionVars.det_count_rand_val();
   }
 
   public VTreeNode<IBehaviourGenoType> clone(VTreeNode<IBehaviourGenoType> p_parent)

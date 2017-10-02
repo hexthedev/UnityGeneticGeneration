@@ -14,7 +14,7 @@ public class AbsoluteDirectionGenoType : IDirectionGenoType
 
   public void mutate()
   {
-    m_direction = new Vector2( Random.Range(0.5f, 1.5f)*m_direction.x, Random.Range(0.5f, 1.5f)*m_direction.y );
+    m_direction = new Vector2( EvolutionVars.direction_mutation_multip()*m_direction.x, EvolutionVars.direction_mutation_multip()*m_direction.y ).normalized;
   }
 
   public IDirection phenotype(VSequenceAction p_parent)

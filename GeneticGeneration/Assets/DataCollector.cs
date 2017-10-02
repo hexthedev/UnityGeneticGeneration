@@ -6,7 +6,8 @@ public class DataCollector : MonoBehaviour {
 
 	CSVWriter m_csv;
 
-	void Start(){
+	void Awake(){
+
 		if(!PlayerPrefs.HasKey("trail")){
 			PlayerPrefs.SetInt("trail", 0);
 			PlayerPrefs.Save();
@@ -16,12 +17,12 @@ public class DataCollector : MonoBehaviour {
 
 		m_csv = new CSVWriter("Trial" + PlayerPrefs.GetInt("trail", 0));
 
-		string[] headers = {"Creature", "Attack", "Defence", "Speed", "HP", "\n"};
+		string[] headers = {"Creature", "Attack", "Defence", "Speed", "HP", "Fitness", "\n"};
 		m_csv.WriteCSVRow(headers);
 	}
 
-	public void recordData(DNA p_dna, int p_creature){
-		m_csv.WriteCSVRow(p_dna.getStatsCSV(p_creature));
+	public void recordData(DNA p_dna, int p_creature, float p_fitness){
+		m_csv.WriteCSVRow(p_dna.getStatsCSV(p_creature, p_fitness));
 	}
 
 
