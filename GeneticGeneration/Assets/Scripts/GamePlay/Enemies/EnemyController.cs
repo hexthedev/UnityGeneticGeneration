@@ -75,7 +75,7 @@ public class EnemyController : MonoBehaviour, IDamagable {
 		m_stats[ETrait.HP].m_current -= damage;
 		
 		if(m_stats[ETrait.HP].m_current <= 0){
-			//m_evolution_controller.addDNA(new EvoObject(m_dna.clone(), m_behav_dna.clone()), m_fitness);
+			m_evolution_controller.addDNA(new EvoObject(m_dna.clone(), m_behav_dna.clone()), m_fitness);
 			m_logger.unlog(gameObject, EObjectTypes.ENEMY);
 
 			m_data.recordData(m_dna, m_creature_id, m_fitness);

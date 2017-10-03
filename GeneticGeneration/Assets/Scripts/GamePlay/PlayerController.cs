@@ -5,7 +5,8 @@ using Calc;
 
 public class PlayerController : MonoBehaviour, IDamagable {
 	
-	public GameController m_game_controller;	
+	public GameController m_game_controller;
+	public EvolutionController m_evo;	
 	private ObjectLogger m_logger;
 	
 	public float m_hp = 100f;
@@ -20,6 +21,7 @@ public class PlayerController : MonoBehaviour, IDamagable {
 	// Use this for initialization
 	void Start () {
 		m_rb = gameObject.GetComponent<Rigidbody2D>();
+		m_evo = m_game_controller.GetComponent<EvolutionController>();
 		shot_timer = shot_rate;
 
 		m_logger = m_game_controller.GetComponent<ObjectLogger>();
@@ -43,6 +45,16 @@ public class PlayerController : MonoBehaviour, IDamagable {
 
 		if(Input.GetKeyDown(KeyCode.O)){
 			m_logger.getAll();
+		}
+
+		if(Input.GetKeyDown(KeyCode.Comma)){
+			shot_rate -= 0.025f;
+			m_evo.playerChangeFitMod();
+		}
+
+		if(Input.GetKeyDown(KeyCode.Period)){
+			m_damage += 1f;
+			m_evo.playerChangeFitMod();
 		}
 
 		m_rb.velocity += VectorCalc.CalcVec3to2((ArrayCalc.randomElement(m_logger.getByType(EObjectTypes.ENEMY)).transform.position - gameObject.transform.position).normalized * m_speed/10f);

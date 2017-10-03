@@ -8,7 +8,7 @@ public class EvolutionController : MonoBehaviour {
 
 	DataCollector m_data;
 
-	SortedList<float , EvoObject> m_gene_pool = new SortedList<float , EvoObject>(new FitnessComparer());
+	FitnessList m_gene_pool;
 
 	float m_birth_timer = 0;
 
@@ -31,9 +31,7 @@ public class EvolutionController : MonoBehaviour {
 		m_data = gameObject.GetComponent<DataCollector>();
 		massSpawn(m_start_spawn);
 
-		for(int i = 0; i<101; i++){
-			m_gene_pool.Add(0, EvoObject.random());
-		}
+		m_gene_pool = new FitnessList(25);
 	}
 
 	void Update(){
@@ -46,20 +44,19 @@ public class EvolutionController : MonoBehaviour {
 	}
 
 	public void addDNA(EvoObject p_dna, float fitness){
-		/*m_gene_pool.Add(fitness, p_dna);
-		m_gene_pool.RemoveAt(m_gene_pool.Count-1);
-
-		Debug.Log(m_gene_pool.Count);*/
+		m_gene_pool.add(fitness, p_dna);
 	} 
 
-	private void birth(){
-		
-		if(m_gene_pool.Count < 2){
-			return;
-		}
+	public void playerChangeFitMod(){
+		m_gene_pool.modifyFitness( (float p_to_mod) => { return p_to_mod/2; } );
+	}
 
-		EvoObject evo1 = m_gene_pool.Values[fitnessChoiceIndex()];
-		EvoObject evo2 = m_gene_pool.Values[fitnessChoiceIndex()];
+	private void birth(){
+
+		EvoObject evo1 = m_gene_pool.getRandomObject();
+		EvoObject evo2 = m_gene_pool.getRandomObject();
+
+		Debug.Log(m_gene_pool.print());
 
 
 		//DNA SEQUENCE
@@ -83,11 +80,6 @@ public class EvolutionController : MonoBehaviour {
 			m_game_controller.spawn(EvoObject.random(), m_creature);
 			m_creature++;
 		}
-	}
-
-
-	private int fitnessChoiceIndex(){
-		return (int)Mathf.Round(Mathf.Pow(Random.Range(0f, 1f), 2)*100);
 	}
 
 

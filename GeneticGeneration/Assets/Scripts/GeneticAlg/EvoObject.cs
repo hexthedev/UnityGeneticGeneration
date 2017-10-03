@@ -24,4 +24,8 @@ public class EvoObject {
 		return new EvoObject(new DNA(), new BehaviourDNA(RandomGen.BehaviourDNARoot()));
 	}
 
+	public EvoObject clone(){
+		return new EvoObject(m_DNA.clone(), m_behaviour.clone());
+	}
+
 }
