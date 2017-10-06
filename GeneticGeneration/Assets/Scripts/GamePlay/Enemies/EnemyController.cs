@@ -35,6 +35,9 @@ public class EnemyController : MonoBehaviour, IDamagable {
 		m_behav_tree.act();
 
 		m_fitness += (1/(m_logger.getByType(EObjectTypes.PLAYER)[0].transform.position - gameObject.transform.position).magnitude)*Time.deltaTime;
+
+
+		damage((1 - gameObject.GetComponent<Rigidbody2D>().velocity.magnitude)*Time.deltaTime);
 	}
 
 	public void Initalize(EvoObject p_evo, ObjectLogger p_logger, int p_id){
@@ -70,6 +73,10 @@ public class EnemyController : MonoBehaviour, IDamagable {
 	}
 
 	public void damage(float p_damage){
+		if(p_damage < 0){
+			return;
+		}
+
 		float damage = p_damage - m_stats[ETrait.DEFENSE].m_current <= 0.5f? 0.5f: p_damage-m_stats[ETrait.DEFENSE].m_current;
 		
 		m_stats[ETrait.HP].m_current -= damage;

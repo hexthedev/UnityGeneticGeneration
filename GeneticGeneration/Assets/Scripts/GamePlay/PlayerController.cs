@@ -6,7 +6,7 @@ using Calc;
 public class PlayerController : MonoBehaviour, IDamagable {
 	
 	public GameController m_game_controller;
-	public EvolutionController m_evo;	
+	private EvolutionController m_evo;	
 	private ObjectLogger m_logger;
 	
 	public float m_hp = 100f;
@@ -17,6 +17,9 @@ public class PlayerController : MonoBehaviour, IDamagable {
 	private float shot_timer;
 	public float shot_rate;
 	public float m_damage;
+
+	public float m_damage_increase_time;
+	private float m_damage_increase_timer = 0f;
 
 	// Use this for initialization
 	void Start () {
@@ -31,6 +34,7 @@ public class PlayerController : MonoBehaviour, IDamagable {
 	// Update is called once per frame
 	void Update () {
 		shot_timer += Time.deltaTime;
+		m_damage_increase_timer += Time.deltaTime;
 
 		//m_rb.velocity = playerVelocityUpdate();
 
@@ -47,6 +51,14 @@ public class PlayerController : MonoBehaviour, IDamagable {
 			m_logger.getAll();
 		}
 
+		if(m_damage_increase_timer >= m_damage_increase_time){
+			m_damage_increase_timer = 0;
+			m_damage += 1f;
+			m_evo.playerChangeFitMod();
+		}
+
+
+		/* 
 		if(Input.GetKeyDown(KeyCode.Comma)){
 			shot_rate -= 0.025f;
 			m_evo.playerChangeFitMod();
@@ -55,7 +67,7 @@ public class PlayerController : MonoBehaviour, IDamagable {
 		if(Input.GetKeyDown(KeyCode.Period)){
 			m_damage += 1f;
 			m_evo.playerChangeFitMod();
-		}
+		}*/
 
 		m_rb.velocity += VectorCalc.CalcVec3to2((ArrayCalc.randomElement(m_logger.getByType(EObjectTypes.ENEMY)).transform.position - gameObject.transform.position).normalized * m_speed/10f);
 

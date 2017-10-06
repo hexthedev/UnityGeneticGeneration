@@ -49,6 +49,7 @@ public class EvolutionController : MonoBehaviour {
 
 	public void playerChangeFitMod(){
 		m_gene_pool.modifyFitness( (float p_to_mod) => { return p_to_mod/2; } );
+		m_gene_pool.randomHalf();
 	}
 
 	private void birth(){

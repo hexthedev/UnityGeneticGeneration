@@ -19,6 +19,12 @@ public class FitnessList
 		}
 	}
 
+	public void randomHalf(){
+		for(int i = m_objects.Length/2; i<m_objects.Length; i++){
+			m_objects[i] = new FitnessObject(0, EvoObject.random());
+		}
+	}
+
 	public void add(float p_fitness, EvoObject p_evo){
 		if(!(m_objects[m_objects.Length-1].getFitness() > p_fitness)){
 			m_objects[m_objects.Length-1] = new FitnessObject(p_fitness, p_evo.clone());
