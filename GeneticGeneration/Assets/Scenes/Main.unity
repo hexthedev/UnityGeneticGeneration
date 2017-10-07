@@ -631,7 +631,7 @@ MonoBehaviour:
   m_bullet: {fileID: 1122462939011534, guid: 929b0d1aafcc40642b42c4e74f55f09e, type: 2}
   shot_rate: 0.4
   m_damage: 15
-  m_damage_increase_time: 30
+  m_damage_increase_time: 10
 --- !u!50 &630540685
 Rigidbody2D:
   serializedVersion: 4
@@ -792,6 +792,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_enemy: {fileID: 1818656523597620, guid: bf1dcda3d1f509d44a7aeea5360466ee, type: 2}
+  m_game_speed: 1
 --- !u!4 &719835940
 Transform:
   m_ObjectHideFlags: 0

@@ -35,7 +35,7 @@ public class EvolutionController : MonoBehaviour {
 	}
 
 	void Update(){
-	 m_birth_timer += Time.deltaTime;
+	 m_birth_timer += Time.deltaTime * m_game_controller.m_game_speed;
 
 		if(m_birth_timer >= m_seconds_per_birth){
 			massSpawn(m_start_spawn);

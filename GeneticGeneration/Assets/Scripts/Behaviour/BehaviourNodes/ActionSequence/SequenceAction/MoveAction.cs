@@ -41,7 +41,7 @@ public class MoveAction : VSequenceAction  {
 			}	
 		}		
 
-		m_timer += Time.deltaTime;
+		m_timer += Time.deltaTime*m_controller.m_controller.m_game_speed;
 
 		return m_timer > m_timeLimit;
 	}

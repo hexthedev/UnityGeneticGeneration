@@ -6,6 +6,7 @@ using Calc;
 public class EnemyController : MonoBehaviour, IDamagable {
 
 	//Global Mono Objects
+	public GameController m_controller;
 	private ObjectLogger m_logger;
 	private EvolutionController m_evolution_controller;
 	private DataCollector m_data;
@@ -32,8 +33,10 @@ public class EnemyController : MonoBehaviour, IDamagable {
 
 
 	// Use this for initialization
-	void Start () {
-		m_evolution_controller = GameObject.FindGameObjectWithTag("GameController").GetComponent<EvolutionController>();
+	void Awake () {
+		m_controller = GameObject.FindGameObjectWithTag("GameController").GetComponent<GameController>();
+
+		m_evolution_controller = m_controller.GetComponent<EvolutionController>();
 		GameObject player = GameObject.FindGameObjectWithTag("Player");
 		m_data = GameObject.FindGameObjectWithTag("GameController").GetComponent<DataCollector>();
 		m_debug = false;
@@ -54,12 +57,17 @@ public class EnemyController : MonoBehaviour, IDamagable {
 	void Update () {
 		m_behav_tree.act();
 
-		m_fitness += (1/(m_logger.getByType(EObjectTypes.PLAYER)[0].transform.position - gameObject.transform.position).magnitude)*Time.deltaTime;
+		m_fitness += (1/Mathf.Pow((m_logger.getByType(EObjectTypes.PLAYER)[0].transform.position - gameObject.transform.position).magnitude,2))*Time.deltaTime*m_controller.m_game_speed;
 
-		m_tick.tick(Time.deltaTime);
+		m_tick.tick(Time.deltaTime*m_controller.m_game_speed);
 
-		m_energy += Time.deltaTime * gameObject.GetComponent<Rigidbody2D>().velocity.magnitude/2;
+		m_energy += Time.deltaTime * m_controller.m_game_speed * gameObject.GetComponent<Rigidbody2D>().velocity.magnitude/2;
 		//damage((1 - gameObject.GetComponent<Rigidbody2D>().velocity.magnitude)*Time.deltaTime);
+
+		if(m_controller.m_reset_speed == true){
+			float speed = m_dna.getTraitValue(ETrait.SPEED)*m_controller.m_game_speed;
+			m_stats[ETrait.SPEED] = new StatTuple(speed, speed);
+		}
 	}
 
 	public void Initalize(EvoObject p_evo, ObjectLogger p_logger, int p_id){
@@ -77,7 +85,7 @@ public class EnemyController : MonoBehaviour, IDamagable {
 		float defense = dna.getTraitValue(ETrait.DEFENSE)/5;
 		m_stats[ETrait.DEFENSE] = new StatTuple(defense, defense);
 
-		float speed = dna.getTraitValue(ETrait.SPEED);
+		float speed = dna.getTraitValue(ETrait.SPEED)*m_controller.m_game_speed;
 		m_stats[ETrait.SPEED] = new StatTuple(speed, speed);
 
 		float hp = dna.getTraitValue(ETrait.HP)*2;
@@ -109,6 +117,9 @@ public class EnemyController : MonoBehaviour, IDamagable {
 	}	
 
 	public void death(){
+		float speed = m_dna.getTraitValue(ETrait.SPEED);
+		m_stats[ETrait.SPEED] = new StatTuple(speed, speed);
+
 		m_evolution_controller.addDNA(new EvoObject(m_dna.clone(), m_behav_dna.clone()), m_fitness);
 		m_logger.unlog(gameObject, EObjectTypes.ENEMY);
 

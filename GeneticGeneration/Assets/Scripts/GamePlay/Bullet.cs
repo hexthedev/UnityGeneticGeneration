@@ -15,9 +15,9 @@ public class Bullet : MonoBehaviour {
 
 	private Rigidbody2D m_rb;
 
-	public void Initalize( Vector2 p_direction, float p_damage, string p_shooter, ObjectLogger p_logger){
+	public void Initalize( Vector2 p_direction, float p_damage, string p_shooter, ObjectLogger p_logger, GameController p_controller){
 		m_rb = gameObject.GetComponent<Rigidbody2D>();
-		this.m_rb.velocity = p_direction * m_speed;
+		this.m_rb.velocity = p_direction * m_speed * p_controller.m_game_speed;
 		m_damage = p_damage;
 		m_shooter = p_shooter;
 
