@@ -51,6 +51,9 @@ public static class RandomGen {
 				DirectionDetectorGenoType det1 = new DirectionDetectorGenoType(0, Vector2.zero, 0, 0, p_parent );
 				det1.randomize();
 				return det1;
+				// PointingAtDetectorGenoType det1 = new PointingAtDetectorGenoType(0, 0, 0, p_parent);
+				// det1.randomize();
+				// return det1;
 			case 2:
 				PointingAtDetectorGenoType det2 = new PointingAtDetectorGenoType(0, 0, 0, p_parent);
 				det2.randomize();
@@ -86,7 +89,10 @@ public static class RandomGen {
 	private static IDirectionGenoType Direction(){
 		switch(Random.Range(0,2)){
 			case 0:
-				return new TowardsPlayerGenoType();
+				RelativeDirectionGenoType to_create = new RelativeDirectionGenoType(0, 0, 0);
+				to_create.randomize();
+				return to_create;
+				// return new AbsoluteDirectionGenoType(VectorCalc.randomDirection());
 			case 1:
 				return new AbsoluteDirectionGenoType(VectorCalc.randomDirection());
 		}

@@ -21,6 +21,16 @@ public static class EvolutionVars {
 	//multiplier for mutating directions
 	public static float direction_mutation_multip() { return Random.Range(-1.5f, 1.5f); }
 
+	public static float index_mutation_multip() { return Random.Range(0.5f, 1.2f); }
+	public static int index_rand_val() { return Random.Range(0, 4); }
+
+	public static float vector_rotation_mutation_multip() { return Random.Range(0.5f, 1.2f); }
+	public static float vector_rotation_rand_val() { return Random.Range(0f, 360f); }
+
+
+
+
+
 
 	//ACTIONS
 	//Mutation multiplier for time limits

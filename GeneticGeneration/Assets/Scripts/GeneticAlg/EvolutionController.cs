@@ -28,17 +28,17 @@ public class EvolutionController : MonoBehaviour {
 
 	void Start(){
 		m_game_controller = gameObject.GetComponent<GameController>();
-		m_data = gameObject.GetComponent<DataCollector>();
-		massSpawn(m_start_spawn);
-
+		m_data = gameObject.GetComponent<DataCollector>();	
 		m_gene_pool = new FitnessList(25);
+
+		massSpawn(m_start_spawn);
 	}
 
 	void Update(){
 	 m_birth_timer += Time.deltaTime;
 
 		if(m_birth_timer >= m_seconds_per_birth){
-			birth();
+			massSpawn(m_start_spawn);
 			m_birth_timer = 0;
 		}
 	}
@@ -57,7 +57,7 @@ public class EvolutionController : MonoBehaviour {
 		EvoObject evo1 = m_gene_pool.getRandomObject();
 		EvoObject evo2 = m_gene_pool.getRandomObject();
 
-		Debug.Log(m_gene_pool.print());
+		// Debug.Log(m_gene_pool.print());
 
 
 		//DNA SEQUENCE
@@ -67,7 +67,7 @@ public class EvolutionController : MonoBehaviour {
 		BehaviourDNA evo_behav = BehaviourDNA.crossover(evo1.GetBehaviour(), evo2.GetBehaviour());
 		
 		if(Random.Range(0,100) < m_mutation_chance_percentage){
-			Debug.Log("MUTATE");
+			// Debug.Log("MUTATE");
 			evolved = evolved.mutate();
 			evo_behav.mutate();
 		}
@@ -78,8 +78,7 @@ public class EvolutionController : MonoBehaviour {
 
 	private void massSpawn(int p_amount){
 		for(int i = 0; i<p_amount; i++){
-			m_game_controller.spawn(EvoObject.random(), m_creature);
-			m_creature++;
+			birth();
 		}
 	}
 

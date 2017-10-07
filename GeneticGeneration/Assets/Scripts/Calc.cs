@@ -95,7 +95,8 @@ namespace Calc{
     }
 
     public static int randomIndex<T>(T[] p_array){
-      return Random.Range(0,p_array.Length);
+      int rand = Random.Range(0,p_array.Length);
+      return rand;
     }
   }
 

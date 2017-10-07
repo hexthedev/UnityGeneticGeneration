@@ -5,21 +5,30 @@ using Calc;
 
 public class EnemyController : MonoBehaviour, IDamagable {
 
+	//Global Mono Objects
 	private ObjectLogger m_logger;
 	private EvolutionController m_evolution_controller;
 	private DataCollector m_data;
 
+	//DNA and BEHAVIOUR
 	private DNA m_dna;
 	private BehaviourDNA m_behav_dna;
 	private Dictionary<ETrait, StatTuple> m_stats;
 	private BehaviourTree m_behav_tree;
 
+	//BASIC INFO
 	private int m_creature_id;
-
 	private float m_forward = -90;
 	private float m_fitness;
 	public float m_fitness_threshold;
 	public bool m_debug;
+
+	public float m_energy = 5;
+	private TextMesh m_energy_text;
+
+	private Ticker m_tick;
+
+	
 
 
 	// Use this for initialization
@@ -28,6 +37,17 @@ public class EnemyController : MonoBehaviour, IDamagable {
 		GameObject player = GameObject.FindGameObjectWithTag("Player");
 		m_data = GameObject.FindGameObjectWithTag("GameController").GetComponent<DataCollector>();
 		m_debug = false;
+
+		m_energy_text = gameObject.transform.GetChild(0).GetComponent<TextMesh>();
+		m_energy_text.text = "" + m_energy;
+
+		m_tick = new Ticker();
+		m_tick.addListener(1f, () => { 
+			m_energy -= 1; 
+			m_energy_text.text = "" + Mathf.Round(m_energy); 
+			if(m_energy <= 0) { death(); }
+			}
+		);
 	}
 	
 	// Update is called once per frame
@@ -36,8 +56,10 @@ public class EnemyController : MonoBehaviour, IDamagable {
 
 		m_fitness += (1/(m_logger.getByType(EObjectTypes.PLAYER)[0].transform.position - gameObject.transform.position).magnitude)*Time.deltaTime;
 
+		m_tick.tick(Time.deltaTime);
 
-		damage((1 - gameObject.GetComponent<Rigidbody2D>().velocity.magnitude)*Time.deltaTime);
+		m_energy += Time.deltaTime * gameObject.GetComponent<Rigidbody2D>().velocity.magnitude/2;
+		//damage((1 - gameObject.GetComponent<Rigidbody2D>().velocity.magnitude)*Time.deltaTime);
 	}
 
 	public void Initalize(EvoObject p_evo, ObjectLogger p_logger, int p_id){
@@ -82,16 +104,20 @@ public class EnemyController : MonoBehaviour, IDamagable {
 		m_stats[ETrait.HP].m_current -= damage;
 		
 		if(m_stats[ETrait.HP].m_current <= 0){
-			m_evolution_controller.addDNA(new EvoObject(m_dna.clone(), m_behav_dna.clone()), m_fitness);
-			m_logger.unlog(gameObject, EObjectTypes.ENEMY);
-
-			m_data.recordData(m_dna, m_creature_id, m_fitness);
-
-			Debug.Log(m_fitness);
-
-			Destroy(gameObject);
+			death();
 		}
 	}	
+
+	public void death(){
+		m_evolution_controller.addDNA(new EvoObject(m_dna.clone(), m_behav_dna.clone()), m_fitness);
+		m_logger.unlog(gameObject, EObjectTypes.ENEMY);
+
+		m_data.recordData(m_dna, m_creature_id, m_fitness);
+
+		// Debug.Log(m_fitness);
+
+		Destroy(gameObject);
+	}
 
 	public float getTrait(ETrait p_trait, bool p_want_current ){
 		return p_want_current ? m_stats[p_trait].m_current : m_stats[p_trait].m_total;

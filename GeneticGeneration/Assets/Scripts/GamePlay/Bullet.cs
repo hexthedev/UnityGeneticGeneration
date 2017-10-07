@@ -11,7 +11,7 @@ public class Bullet : MonoBehaviour {
 
 	private string m_shooter;
 
-	private float m_speed = 20;
+	public float m_speed = 20;
 
 	private Rigidbody2D m_rb;
 
