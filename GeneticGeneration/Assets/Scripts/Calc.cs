@@ -144,4 +144,52 @@ namespace Calc{
 
   }
 
+  public static class MatrixCalc{
+
+    public static float[ , ] matrixMultiply(float[ , ] input, float[ , ] output){
+
+      int[] inputSize = {input.GetLength(0), input.GetLength(1)};
+      int[] outputSize = {output.GetLength(0), output.GetLength(1)};
+
+      if(inputSize[0] != outputSize[1]){
+        Debug.LogError("Invalid Matrix multiplication");
+      }
+
+      float[ , ] result = new float[outputSize[0] , inputSize[1]];
+
+      for(int y = 0; y < inputSize[1]; y++){
+        for(int x = 0; x < outputSize[0]; x++){
+          for(int i = 0; i<inputSize[0]; i++){
+            result[x, y] += input[i, y] * output[x,i];
+          }
+        }
+      }
+      
+      return result;
+
+    }
+
+    public static string matrixString(float[,] p_matrix){
+
+      string to_return = "";
+
+      for(int i = 0; i<p_matrix.GetLength(0); i++){
+        to_return += "[";
+
+        for(int j = 0; j<p_matrix.GetLength(1); j++){
+          to_return += p_matrix[i,j] + " ";
+        }
+
+        to_return += "]\n";
+      }
+
+      return to_return;
+    }
+
+
+
+    }
+
+  
+
 }
