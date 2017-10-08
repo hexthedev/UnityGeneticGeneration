@@ -4,7 +4,7 @@ using UnityEngine;
 
 public interface IRecievable {
 
-	void recievePropagation(float[] p_propagation);
+	void recievePropagation(float[,] p_propagation);
 	int count();
 
 }

@@ -4,7 +4,7 @@ using UnityEngine;
 
 public interface IPropagatable {
 
-	float[] propagate();
+	float[,] propagate();
 	int count();
 
 }

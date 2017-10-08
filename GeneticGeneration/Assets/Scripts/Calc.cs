@@ -146,7 +146,7 @@ namespace Calc{
 
   public static class MatrixCalc{
 
-    public static float[ , ] matrixMultiply(float[ , ] input, float[ , ] output){
+    public static float[ , ] Multiply(float[ , ] input, float[ , ] output){
 
       int[] inputSize = {input.GetLength(0), input.GetLength(1)};
       int[] outputSize = {output.GetLength(0), output.GetLength(1)};
@@ -169,15 +169,15 @@ namespace Calc{
 
     }
 
-    public static string matrixString(float[,] p_matrix){
+    public static string String(float[,] p_matrix){
 
       string to_return = "";
 
-      for(int i = 0; i<p_matrix.GetLength(0); i++){
+      for(int i = 0; i<p_matrix.GetLength(1); i++){
         to_return += "[";
 
-        for(int j = 0; j<p_matrix.GetLength(1); j++){
-          to_return += p_matrix[i,j] + " ";
+        for(int j = 0; j<p_matrix.GetLength(0); j++){
+          to_return += p_matrix[j,i] + " ";
         }
 
         to_return += "]\n";
@@ -186,7 +186,15 @@ namespace Calc{
       return to_return;
     }
 
+    public static void randomPopulate(float[,] p_matrix){
 
+      for(int x = 0; x<p_matrix.GetLength(0); x++){
+       for(int y = 0; y<p_matrix.GetLength(1); y++){
+         p_matrix[x,y] = Random.Range(0f, 1f);
+       } 
+      }
+
+    }
 
     }
 
