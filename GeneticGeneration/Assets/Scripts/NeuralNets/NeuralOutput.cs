@@ -2,15 +2,10 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class NeuralOutput : MonoBehaviour {
+public class NeuralOutput {
 
-	// Use this for initialization
-	void Start () {
-		
+	public void output(float p_value){
+		return;
 	}
-	
-	// Update is called once per frame
-	void Update () {
-		
-	}
+
 }

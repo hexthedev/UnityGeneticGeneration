@@ -4,7 +4,7 @@ using UnityEngine;
 
 public interface IPropagatable {
 
-	float[,] propagate();
+	Matrix propagate();
 	int count();
 
 }

@@ -193,11 +193,42 @@ namespace Calc{
          p_matrix[x,y] = Random.Range(0f, 1f);
        } 
       }
-
     }
 
+    public static float[,] clone(float[,] p_matrix){
+      float[,] to_return = new float[ p_matrix.GetLength(0), p_matrix.GetLength(1) ];
+
+      for(int i = 0; i<p_matrix.GetLength(0);i++){
+        for(int j = 0; j<p_matrix.GetLength(1);j++){
+          to_return[i,j] = p_matrix[i,j];
+        }
+      }
+
+      return to_return;
     }
 
+    public static float[,] crossover(float[,] p_matrix1, float[,] p_matrix2){      
+      if(!isSameSize(p_matrix1, p_matrix2)){
+        Debug.LogError("CANNOT CROSSOVER MATRIX, NOT SAME SIZE");
+      }
+      
+      float[,] to_return = new float[ p_matrix1.GetLength(0), p_matrix2.GetLength(1) ];
+
+      for(int i = 0; i<to_return.GetLength(0);i++){
+        for(int j = 0; j<to_return.GetLength(1);j++){
+          to_return[i,j] = BoolCalc.random() ? p_matrix1[i,j] : p_matrix2[i,j];
+        }
+      }
+
+      return to_return;
+    }
+
+    public static bool isSameSize(float[,] p_matrix1, float[,] p_matrix2){
+      return p_matrix1.GetLength(0) == p_matrix2.GetLength(0) && p_matrix1.GetLength(1) == p_matrix2.GetLength(1);
+    }
+
+  }
+  
   
 
 }

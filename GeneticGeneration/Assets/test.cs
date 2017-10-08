@@ -8,17 +8,17 @@ public class test : MonoBehaviour {
 	// Use this for initialization
 	void Start () {
 
-		NeuralInput input = new NeuralInput(5);
+		NeuralInput[] inputs = {new NeuralInput(), new NeuralInput(),new NeuralInput()};
+		NeuralInputLayer input = new NeuralInputLayer(inputs);
 
-		NeuralHiddenLayer hidden1 = new NeuralHiddenLayer();
+		NeuralOutput[] outputs = {new NeuralOutput(), new NeuralOutput()};
+		DActivationFunction[] activators = {Activators.Sqrt(), Activators.Sqrt(),};
+		NeuralOutputLayer output = new NeuralOutputLayer(outputs, activators);
 
-		NeuralHiddenLayer hidden2 = new NeuralHiddenLayer();
+		int[] hiddens = {2,2};
+		NeuralNet net = new NeuralNet(input, output, hiddens);
 
-		NeuralLink link1 = new NeuralLink(input, hidden1);
-		NeuralLink link2 = new NeuralLink(hidden1, hidden2);
-		
-		link1.propagate();
-		link2.propagate();
+		net.propagate();
 
 	}
 
