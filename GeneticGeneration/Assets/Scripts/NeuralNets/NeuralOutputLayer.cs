@@ -31,8 +31,12 @@ public class NeuralOutputLayer : IRecievable {
     p_propagation.activate(m_activators);
 
     Debug.Log(p_propagation);
+    Debug.Log(m_activators.Length);
+    Debug.Log(m_outputs.Length);
 
     for(int i = 0; i<m_outputs.Length; i++){
+      Debug.Log(m_outputs[i]);
+
       m_outputs[i].output(p_propagation.get(i, 0));
     }
   }

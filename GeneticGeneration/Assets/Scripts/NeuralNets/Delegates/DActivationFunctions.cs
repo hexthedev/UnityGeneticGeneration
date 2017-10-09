@@ -34,4 +34,16 @@ public static class Activators{
 
   }
 
+  public static DActivationFunction[] randomArrayOfSize(int p_size){
+
+    DActivationFunction[] to_return = new DActivationFunction[p_size];
+
+    for(int i = 0 ; i<to_return.Length; i++){
+      to_return[i] = BoolCalc.random() ? Round() : Sqrt();
+    }
+
+    return to_return;
+
+  }
+
 }

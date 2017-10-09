@@ -31,9 +31,11 @@ public class NeuralDNA {
 		
 		m_links = new List<DActivationFunction[]>();
 		//Links are indicated using their activator arrays
-		for(int i = 0; i<links; i++){
+		for(int i = 0; i<links-1; i++){
 			m_links.Add(Activators.randomArray());
 		}
+
+		m_links.Add(Activators.randomArrayOfSize(outputs.Length));
 
 		//Now need weight arrays which rep the weightings used in the links
 		m_weights = new Matrix[m_links.Count];
@@ -47,7 +49,32 @@ public class NeuralDNA {
 		}
 
 		//The last weights are the output x last layer matrix
-		m_weights[m_weights.Length-1] = new Matrix(m_outputs.Length, m_links[m_links.Count-1].Length);
+		m_weights[m_weights.Length-1] = new Matrix(m_outputs.Length, m_links[m_links.Count-2].Length);
+
+		Debug.Log(m_inputs.Length);
+		
+		string x = "[";
+
+		foreach(DActivationFunction[] array in m_links){
+			x+=array.Length+",";
+		}
+
+		x+="]";
+				
+		Debug.Log(x);
+
+		x = "[";
+
+		foreach(Matrix mat in m_weights){
+			x+=mat.numColumns()+"x"+mat.numRows()+",";
+		}
+
+		x+="]";
+				
+		Debug.Log(x);
+
+		Debug.Log(m_outputs.Length);
+		
 	}
 
 	public NeuralInputLayer inputLayer(){
@@ -63,6 +90,10 @@ public class NeuralDNA {
 	public NeuralOutputLayer outputLayer(){
 		NeuralOutput[] output = new NeuralOutput[m_outputs.Length];
 		
+		for(int i = 0 ; i<output.Length;i++){
+			output[i] = new NeuralOutput();
+		}
+
 		return new NeuralOutputLayer(output, getOutputActivators());
 	}
 
@@ -93,6 +124,7 @@ public class NeuralDNA {
 	public int hiddenLayerSize(int p_layer_index){
 		return m_links[p_layer_index].Length;
 	}
+
 
 
 }
