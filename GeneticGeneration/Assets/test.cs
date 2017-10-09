@@ -8,9 +8,11 @@ public class test : MonoBehaviour {
 	// Use this for initialization
 	void Start () {
 
-		NeuralNet x = new NeuralNet(new NeuralDNA());
+		for(int i = 0; i<1000; i++){
+			NeuralNet x = new NeuralNet(new NeuralDNA());
+			x.propagate();
+		}
 
-		x.propagate();
 
 	}
 

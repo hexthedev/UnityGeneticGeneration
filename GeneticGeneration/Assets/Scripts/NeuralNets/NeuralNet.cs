@@ -53,7 +53,7 @@ public class NeuralNet {
 		//Setup links with activators and weights between them
 		m_links = new List<NeuralLink>();
 
-		if(m_layers.Count == 1){
+		if(m_layers.Count == 0){
 			m_links.Add(new NeuralLink(m_input, m_output, p_DNA.getOutputWeights()));
 		} else {
 			m_links.Add(new NeuralLink(m_input, m_layers[0], p_DNA.getWeights(0)));	

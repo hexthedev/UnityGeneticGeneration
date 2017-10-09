@@ -27,7 +27,7 @@ public class NeuralDNA {
 		m_outputs = outputs;
 
 		//Want to know the number of links
-		int links = Random.Range(2,4);
+		int links = Random.Range(2,5);
 		
 		m_links = new List<DActivationFunction[]>();
 		//Links are indicated using their activator arrays
