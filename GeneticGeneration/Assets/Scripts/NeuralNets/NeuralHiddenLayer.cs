@@ -50,5 +50,10 @@ public class NeuralHiddenLayer : IRecievable, IPropagatable
     m_results.activate(m_activators);
 
     Debug.Log(m_results);
+  
+  }
+
+  public DActivationFunction[] dnaify(){
+    return (DActivationFunction[]) m_activators.Clone();
   }
 }

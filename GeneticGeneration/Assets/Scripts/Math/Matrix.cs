@@ -44,7 +44,7 @@ public class Matrix {
 		}
 
 		if(numColumns() != p_activators.Length){
-			Debug.LogError("Bad number of activators");
+			Debug.LogError("Bad number of activators " + p_activators.Length);
 		}
 
 		for(int i = 0; i<numColumns(); i++){
