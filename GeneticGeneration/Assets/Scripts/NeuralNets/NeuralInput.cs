@@ -8,4 +8,8 @@ public class NeuralInput {
 		return Random.Range(-1f, 1f);
 	}
 
+	public SNeuralInputDNA dnaify(){
+		return new SNeuralInputDNA();
+	}
+
 }

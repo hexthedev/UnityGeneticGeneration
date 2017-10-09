@@ -28,4 +28,15 @@ public class NeuralInputLayer : IPropagatable
     Debug.Log(MatrixCalc.String(m_prop));
     return new Matrix(m_prop);
   }
+
+  public SNeuralInputDNA[] dnaify(){
+    SNeuralInputDNA[] to_return = new SNeuralInputDNA[m_inputs.Length];
+
+    for(int i = 0; i<m_inputs.Length; i++){
+      to_return[i] = m_inputs[i].dnaify();
+    }
+
+    return to_return;
+
+  }
 }

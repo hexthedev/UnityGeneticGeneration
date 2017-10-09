@@ -35,8 +35,9 @@ public class NeuralNet {
 
 			m_links.Add(new NeuralLink(m_layers[m_layers.Count-1], m_output));
 		}
-				
 	}
+
+	
 
 	public void propagate(){
 		foreach(NeuralLink link in m_links){
@@ -44,7 +45,15 @@ public class NeuralNet {
 		}
 	}
 
+	public NeuralDNA dnaify(){
+		Matrix[] links = new Matrix[m_links.Count];
 
+		for(int i = 0; i<m_links.Count; i++){
+			links[i] = m_links[i].dnaify();
+		}
+		
+		return new NeuralDNA(m_input.dnaify(), links, m_output.dnaify());
+	}
 
 
 }

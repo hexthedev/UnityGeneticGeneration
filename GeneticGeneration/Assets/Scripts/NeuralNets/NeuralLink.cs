@@ -29,4 +29,8 @@ public class NeuralLink {
 		Debug.Log(m_weights);
 		m_output.recievePropagation( propagation * m_weights );
 	}
+
+	public Matrix dnaify(){
+		return m_weights.clone();
+	}
 }

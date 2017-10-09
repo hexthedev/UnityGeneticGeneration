@@ -8,4 +8,8 @@ public class NeuralOutput {
 		return;
 	}
 
+	public ENeuralOutput dnaify(){
+		return ENeuralOutput.OUTPUT;
+	}
+
 }

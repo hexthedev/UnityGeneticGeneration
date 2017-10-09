@@ -37,4 +37,15 @@ public class NeuralOutputLayer : IRecievable {
     }
   }
 
+  public SNeuralOutputDNA[] dnaify(){
+    SNeuralOutputDNA[] outputs = new SNeuralOutputDNA[m_outputs.Length];
+
+    for(int i = 0; i<m_outputs.Length;i++){
+      outputs[i].m_output = m_outputs[i].dnaify();
+      outputs[i].m_activate = m_activators[i];
+    }
+
+    return outputs;
+  }
+
 }
