@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class NeuralOutput {
 
+	//Gives to enemy output
 	public void output(float p_value){
 		return;
 	}

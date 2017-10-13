@@ -3,13 +3,14 @@ using System.Collections.Generic;
 using UnityEngine;
 using Calc;
 
-public class NeuralHiddenLayer : IRecievable, IPropagatable
+public class NeuralHiddenLayer : IRecievable, IInputable
 {
-  
+  //Holds activator array. Must be same Length as result columns
   DActivationFunction[] m_activators;
 
   Matrix m_results;
 
+  //Construct with predetermined activators
   public NeuralHiddenLayer(int p_size){
     m_results = new Matrix(p_size, 1);
 
@@ -20,6 +21,7 @@ public class NeuralHiddenLayer : IRecievable, IPropagatable
     }
   }
 
+  //Construct by giving activators. Must be right length
   public NeuralHiddenLayer(int p_size, DActivationFunction[] p_activators){
     m_results = new Matrix(p_size, 1);
 
@@ -31,28 +33,31 @@ public class NeuralHiddenLayer : IRecievable, IPropagatable
     m_activators = (DActivationFunction[])p_activators.Clone();
   }
 
+  //Columns = length
   public int count()
   {
     return m_results.numColumns();
   }
 
-  public Matrix propagate()
+  //results are input
+  public Matrix getInputs()
   {
-    Debug.Log(m_results);
+    Debug.Log("Hidden Input \n" + m_results);
     
     return m_results;
   }
 
+  //On recieving p_pagation make results a activate
   public void recievePropagation(Matrix p_propagation)
   {
-    Debug.Log(p_propagation);
-
+    Debug.Log("Pre Activation \n" + p_propagation);
+    m_results = p_propagation.clone();
     m_results.activate(m_activators);
+    Debug.Log("Activated \n" + m_results);
 
-    Debug.Log(m_results);
-  
   }
 
+  //HiddenLayers are arrays of activators
   public DActivationFunction[] dnaify(){
     return (DActivationFunction[]) m_activators.Clone();
   }

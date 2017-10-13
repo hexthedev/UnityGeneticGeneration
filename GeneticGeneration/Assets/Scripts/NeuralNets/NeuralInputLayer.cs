@@ -3,21 +3,24 @@ using System.Collections.Generic;
 using UnityEngine;
 using Calc;
 
-public class NeuralInputLayer : IPropagatable
+public class NeuralInputLayer : IInputable
 {
-
+  //Aggregation of inputs
   NeuralInput[] m_inputs;
 
+  //Simply holds the inputs for the input layer
   public NeuralInputLayer(NeuralInput[] p_inputs){
     m_inputs = (NeuralInput[])p_inputs.Clone();
   }
 
+  //Count is number of inputs
   public int count()
   {
     return m_inputs.Length;
   }
 
-  public Matrix propagate()
+  //Gets input values for current frame and passes as a matrix
+  public Matrix getInputs()
   {
     float[,] m_prop = new float[count(),1]; 
     
@@ -25,10 +28,11 @@ public class NeuralInputLayer : IPropagatable
       m_prop[i, 0] = m_inputs[i].input();
     }
 
-    Debug.Log(MatrixCalc.String(m_prop));
+    Debug.Log(" Input Weights \n " + MatrixCalc.String(m_prop));
     return new Matrix(m_prop);
   }
 
+  //Returns an array of dnaified NeuralInputs. The represents input layer
   public SNeuralInputDNA[] dnaify(){
     SNeuralInputDNA[] to_return = new SNeuralInputDNA[m_inputs.Length];
 

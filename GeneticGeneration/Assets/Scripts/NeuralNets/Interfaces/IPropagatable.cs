@@ -2,9 +2,9 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public interface IPropagatable {
+public interface IInputable {
 
-	Matrix propagate();
+	Matrix getInputs();
 	int count();
 
 }
