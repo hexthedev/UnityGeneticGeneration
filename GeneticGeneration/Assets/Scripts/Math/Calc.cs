@@ -91,6 +91,8 @@ namespace Calc{
     }
 
     public static T randomElement<T>(T[] p_array){
+      if(p_array.Length == 0) { Debug.Log("EMPTY ARRAY"); };
+      
       return p_array[randomIndex<T>(p_array)];
     }
 

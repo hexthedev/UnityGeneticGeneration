@@ -6,11 +6,11 @@ using Calc;
 public class NeuralInputLayer : IInputable
 {
   //Aggregation of inputs
-  NeuralInput[] m_inputs;
+  INeuralInput[] m_inputs;
 
   //Simply holds the inputs for the input layer
-  public NeuralInputLayer(NeuralInput[] p_inputs){
-    m_inputs = (NeuralInput[])p_inputs.Clone();
+  public NeuralInputLayer(INeuralInput[] p_inputs){
+    m_inputs = (INeuralInput[])p_inputs.Clone();
   }
 
   //Count is number of inputs

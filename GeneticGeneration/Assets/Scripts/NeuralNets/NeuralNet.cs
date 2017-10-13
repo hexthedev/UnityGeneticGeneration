@@ -6,11 +6,12 @@ public class NeuralNet {
 
 	NeuralInputLayer m_input;
 
-	List<NeuralLink> m_links;
-
 	List<NeuralHiddenLayer> m_layers;
 
 	NeuralOutputLayer m_output;
+
+
+	List<NeuralLink> m_links;
 
 	//Create with hidden layers
 	public NeuralNet(NeuralInputLayer p_input, NeuralOutputLayer p_output, int[] p_hidden_layers){
@@ -46,9 +47,9 @@ public class NeuralNet {
 	}
 
 	//Create Net with DNA
-	public NeuralNet(NeuralDNA p_DNA){
+	public NeuralNet(NeuralDNA p_DNA, GameObject p_actor, ObjectLogger p_logger){
 		//Place the input layers
-		m_input = p_DNA.inputLayer();
+		m_input = p_DNA.inputLayer(p_actor, p_logger);
 		m_output = p_DNA.outputLayer();
 
 		//Hidden layers are based on Activators
@@ -68,7 +69,7 @@ public class NeuralNet {
 		} else {
 			Debug.Log("ADDING START");
 
-			//Othewise link input to first hidfen
+			//Othewise link input to first hidden
 			m_links.Add(new NeuralLink(m_input, m_layers[0], p_DNA.getWeights(0)));	
 
 			Debug.Log("ADDING HIDDEN");
@@ -104,8 +105,6 @@ public class NeuralNet {
 		for(int i = 0; i<hiddens.Count-1; i++){
 			hiddens.Add(m_layers[i].dnaify());
 		}
-
-		hiddens.Add(m_output.getActivators());
 
 		//Links DNA
 		Matrix[] links = new Matrix[m_links.Count];

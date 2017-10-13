@@ -6,9 +6,9 @@ using Calc;
 public class test : MonoBehaviour {
 
 	// Use this for initialization
-	void Start () {
+	/*void Start () {
 
-		for(int i = 0; i<1; i++){
+		for(int i = 0; i<500; i++){
 			NeuralNet x = new NeuralNet(new NeuralDNA());
 			x.propagate();
 
@@ -16,10 +16,7 @@ public class test : MonoBehaviour {
 
 			NeuralNet z = new NeuralNet(y);
 			//z.propagate();
-
 		}
-
-
-	}
+	}*/
 
 }
