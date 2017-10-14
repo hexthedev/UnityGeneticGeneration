@@ -16,9 +16,7 @@ public class NeuralHiddenLayer : IRecievable, IInputable
 
     m_activators = new DActivationFunction[p_size];
 
-    for(int i = 0; i<m_activators.Length; i++){
-      m_activators[i] = Activators.Sqrt();
-    }
+    m_activators = Activators.randomArrayOfSize(p_size);
   }
 
   //Construct by giving activators. Must be right length

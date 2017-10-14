@@ -7,33 +7,61 @@ public delegate float DActivationFunction(float value);
 
 public static class Activators{
 
-  private static DActivationFunction m_round = (float p_value) => { return Mathf.Round(p_value); };
-
-  private static DActivationFunction m_sqrt = (float p_value) => { 
-    float sign = p_value/Mathf.Abs(p_value);
-    
-  Debug.Log("HERE------------------------    " + sign);
-
-    return sign * Mathf.Sqrt(Mathf.Abs(p_value)); 
+  //Functions
+  private static DActivationFunction m_bipolar = (float p_value) => { return p_value > 0 ? 1 : -1; };
+  private static DActivationFunction m_piece_linear = (float p_value) => { 
+    if(p_value > -1 && p_value < 1){
+      return p_value;
+    } else {
+      return p_value > 1 ? 1 : -1; 
+    }
   };
+  private static DActivationFunction m_mod_signmoid = (float p_value) => { return (2/(1+Mathf.Exp(-5*p_value)))-1; };
+  private static DActivationFunction m_cosine = (float p_value) => { return Mathf.Cos(p_value); };
+
+  //Array Setups
+  private static DActivationFunction[] m_all_functions = {m_bipolar, m_piece_linear, m_mod_signmoid, m_cosine};
+  private static DActivationFunction[] m_continous_functions = {m_piece_linear, m_mod_signmoid, m_cosine};
+  private static DActivationFunction[] m_binary_functions = {m_bipolar};
 
 
 
-  public static DActivationFunction Round(){
-    return m_round;
+  //GETTER FUNCTIONS
+  public static DActivationFunction Bipolar(){
+    return m_bipolar;
   }
 
-  public static DActivationFunction Sqrt(){
-    return m_sqrt;
+  public static DActivationFunction PiecewiseLinear(){
+    return m_piece_linear;
+  }
+
+  public static DActivationFunction ModifiedSignmoid(){
+    return m_mod_signmoid;
+  }
+
+  public static DActivationFunction Cosine(){
+    return m_cosine;
+  }
+
+  public static DActivationFunction randomOutputFunction(ENeuralOutput p_output){
+
+    if(p_output == ENeuralOutput.NOVeloX){
+      return ArrayCalc.randomElement(m_all_functions);
+    }
+
+    Debug.LogError("MUST RETURN AN ACTIAVTOR");
+
+    return null;
   }
 
 
-  public static DActivationFunction[] randomArray(){
+  //RANDOM ARRAY GETTER FUNCTIONS
+  public static DActivationFunction[] randomArray(int p_min_range, int p_max_range){
 
-    DActivationFunction[] to_return = new DActivationFunction[Random.Range(1,3)];
+    DActivationFunction[] to_return = new DActivationFunction[Random.Range(p_min_range, p_max_range)];
 
     for(int i = 0 ; i<to_return.Length; i++){
-      to_return[i] = BoolCalc.random() ? Round() : Sqrt();
+      to_return[i] = ArrayCalc.randomElement(m_all_functions);
     }
 
     return to_return;
@@ -45,11 +73,10 @@ public static class Activators{
     DActivationFunction[] to_return = new DActivationFunction[p_size];
 
     for(int i = 0 ; i<to_return.Length; i++){
-      to_return[i] = BoolCalc.random() ? Round() : Sqrt();
+      to_return[i] = ArrayCalc.randomElement(m_all_functions);
     }
 
     return to_return;
-
   }
 
 }

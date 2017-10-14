@@ -58,6 +58,7 @@ public class PlayerController : MonoBehaviour, IDamagable {
 			m_evo.playerChangeFitMod();
 		}
 
+		m_rb.velocity = playerVelocityUpdate();
 
 		/* 
 		if(Input.GetKeyDown(KeyCode.Comma)){

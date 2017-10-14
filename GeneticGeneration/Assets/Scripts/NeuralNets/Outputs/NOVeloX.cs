@@ -14,7 +14,7 @@ public class NOVeloX : INeuralOutput {
     public void output(float p_value)
     {
         Vector2 vec1 = new Vector2(p_value, 0);
-        m_controller.changeVelocity(vec1*0.1f);
+        m_controller.changeVelocity(vec1*10f);
     }
 
     ENeuralOutput INeuralOutput.dnaify()

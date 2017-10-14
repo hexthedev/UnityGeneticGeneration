@@ -37,7 +37,7 @@ public class NeuralDNA {
 
 		SNeuralInputDNA[] inputs = { new SNeuralInputDNA(ENeuralInput.DIRECTION, x1), new SNeuralInputDNA(ENeuralInput.DIRECTION, y), new SNeuralInputDNA(ENeuralInput.DIRECTION, z) };
 		m_inputs = inputs;
-		SNeuralOutputDNA[] outputs = { new SNeuralOutputDNA(ENeuralOutput.NOVeloX, Activators.Sqrt()) };
+		SNeuralOutputDNA[] outputs = SNeuralOutputDNA.randomOutputArrayNoRepeat(1);
 		m_outputs = outputs;
 
 		//Now that we have output we can make some random hidden layers based on activation functions
