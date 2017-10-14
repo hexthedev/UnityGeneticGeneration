@@ -150,7 +150,7 @@ public class EnemyControllerNeural : MonoBehaviour, IDamagable {
 			m_stats.Add(ETrait.SPEED, new StatTuple(10,10));
 		}
 		
-		m_rb.velocity = p_change;
+		m_rb.velocity += p_change*10f;
 
 		if(m_rb.velocity.magnitude > m_stats[ETrait.SPEED].m_total){
 			m_rb.velocity = m_rb.velocity.normalized * m_stats[ETrait.SPEED].m_total;

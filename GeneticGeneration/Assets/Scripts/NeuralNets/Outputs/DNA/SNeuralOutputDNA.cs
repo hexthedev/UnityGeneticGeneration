@@ -19,12 +19,14 @@ public struct SNeuralOutputDNA {
 		switch(m_output_type){
 			case ENeuralOutput.NOVeloX: 
 				return new NOVeloX(p_actor_controller);
+			case ENeuralOutput.NOVeloY:
+				return new NOVeloY(p_actor_controller);
 		}
 		return null;
 	}
 
 	//RANDOMIZATION FUNCTIONS
-	public static ENeuralOutput[] m_activate_outputs = {ENeuralOutput.NOVeloX};
+	public static ENeuralOutput[] m_activate_outputs = {ENeuralOutput.NOVeloX, ENeuralOutput.NOVeloY};
 
 	public static SNeuralOutputDNA randomOutputDNA(){
 		ENeuralOutput output = ArrayCalc.randomElement(m_activate_outputs);

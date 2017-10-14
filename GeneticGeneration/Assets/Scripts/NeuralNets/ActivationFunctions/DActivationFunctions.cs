@@ -45,7 +45,7 @@ public static class Activators{
 
   public static DActivationFunction randomOutputFunction(ENeuralOutput p_output){
 
-    if(p_output == ENeuralOutput.NOVeloX){
+    if(p_output == ENeuralOutput.NOVeloX || p_output == ENeuralOutput.NOVeloY){
       return ArrayCalc.randomElement(m_all_functions);
     }
 

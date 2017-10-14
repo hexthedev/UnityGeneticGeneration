@@ -36,7 +36,7 @@ public class NeuralDNA {
 		float[] z = {Random.Range(-1f, 1f) , Random.Range(-1f, 1f)};
 
 		m_inputs = SNeuralInputDNA.randomInputArrayRepeat(3);
-		m_outputs = SNeuralOutputDNA.randomOutputArrayNoRepeat(1);
+		m_outputs = SNeuralOutputDNA.randomOutputArrayNoRepeat(2);
 
 		//Now that we have output we can make some random hidden layers based on activation functions
 		int hiddens = Random.Range(1,4);
@@ -73,7 +73,7 @@ public class NeuralDNA {
 		INeuralOutput[] output = new INeuralOutput[m_outputs.Length];
 		
 		for(int i = 0 ; i<output.Length;i++){
-			output[i] = new NOVeloX(p_controller);
+			output[i] = m_outputs[i].getNeuralOutput(p_controller);
 		}
 
 		return new NeuralOutputLayer(output, getOutputActivators());
