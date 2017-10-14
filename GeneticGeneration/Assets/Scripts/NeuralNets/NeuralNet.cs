@@ -67,26 +67,26 @@ public class NeuralNet {
 		if(m_layers.Count == 0){
 			m_links.Add(new NeuralLink(m_input, m_output, p_DNA.getOutputWeights()));
 		} else {
-			Debug.Log("ADDING START");
+//			Debug.Log("ADDING START");
 
 			//Othewise link input to first hidden
 			m_links.Add(new NeuralLink(m_input, m_layers[0], p_DNA.getWeights(0)));	
 
-			Debug.Log("ADDING HIDDEN");
+//			Debug.Log("ADDING HIDDEN");
 
-			Debug.Log("LAYERS" + m_layers.Count);
+//			Debug.Log("LAYERS" + m_layers.Count);
 
 			//Link layers with weights
 			for(int i = 0; i<m_layers.Count-1; i++){
 				m_links.Add(new NeuralLink(m_layers[i], m_layers[i+1], p_DNA.getWeights(i+1)));
 			}
 
-			Debug.Log("ADDING OUTPUT");
+//			Debug.Log("ADDING OUTPUT");
 
 			//Link output
 			m_links.Add(new NeuralLink(m_layers[m_layers.Count-1], m_output, p_DNA.getOutputWeights()));
 
-			Debug.Log("DONE");
+//			Debug.Log("DONE");
 		}
 	}
 

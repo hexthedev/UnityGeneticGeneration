@@ -29,6 +29,8 @@ public class NIDirection : INeuralInput {
 		
 		Vector3 player_direction = player.transform.position - m_actor.transform.position;
 
+		//NumberTester.log( VectorCalc.getAngle( m_direction, player_direction )/180f == 0 ? 0 : Mathf.Sign(VectorCalc.getAngle( m_direction, player_direction )/180f));
+
 		return VectorCalc.getAngle( m_direction, player_direction )/180f;
     }
 }

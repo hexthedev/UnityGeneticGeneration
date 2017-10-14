@@ -33,6 +33,10 @@ public class PlayerController : MonoBehaviour, IDamagable {
 	
 	// Update is called once per frame
 	void Update () {
+		if(Input.GetKeyDown(KeyCode.Space)){
+			NumberTester.print();
+		}
+		
 		shot_timer += Time.deltaTime * m_game_controller.m_game_speed;
 		m_damage_increase_timer += Time.deltaTime * m_game_controller.m_game_speed;
 

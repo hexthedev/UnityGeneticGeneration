@@ -13,6 +13,8 @@ public class NOVeloY : INeuralOutput {
 
     public void output(float p_value)
     {
+        NumberTester.log(p_value);
+
         Vector2 vec = new Vector2(0, p_value);
         m_controller.changeVelocity(vec);
     }

@@ -16,12 +16,14 @@ public static class Activators{
       return p_value > 1 ? 1 : -1; 
     }
   };
-  private static DActivationFunction m_mod_signmoid = (float p_value) => { return (2/(1+Mathf.Exp(-5*p_value)))-1; };
-  private static DActivationFunction m_cosine = (float p_value) => { return Mathf.Cos(p_value); };
+  private static DActivationFunction m_mod_sigmoid = (float p_value) => { return (2/(1+Mathf.Exp(-5*p_value)))-1; };
+  private static DActivationFunction m_cosine = (float p_value) => { return Mathf.Cos(p_value*Mathf.PI); };
+
+  private static DActivationFunction m_oppposite_cosine = (float p_value) => { return -1*Mathf.Cos(p_value*Mathf.PI); };
 
   //Array Setups
-  private static DActivationFunction[] m_all_functions = {m_bipolar, m_piece_linear, m_mod_signmoid, m_cosine};
-  private static DActivationFunction[] m_continous_functions = {m_piece_linear, m_mod_signmoid, m_cosine};
+  private static DActivationFunction[] m_all_functions = {m_bipolar, m_mod_sigmoid, m_cosine, m_oppposite_cosine};
+  private static DActivationFunction[] m_continous_functions = {m_mod_sigmoid, m_cosine, m_oppposite_cosine};
   private static DActivationFunction[] m_binary_functions = {m_bipolar};
 
 
@@ -36,11 +38,15 @@ public static class Activators{
   }
 
   public static DActivationFunction ModifiedSignmoid(){
-    return m_mod_signmoid;
+    return m_mod_sigmoid;
   }
 
   public static DActivationFunction Cosine(){
     return m_cosine;
+  }
+
+  public static DActivationFunction OppositeCosine(){
+    return m_oppposite_cosine;
   }
 
   public static DActivationFunction randomOutputFunction(ENeuralOutput p_output){

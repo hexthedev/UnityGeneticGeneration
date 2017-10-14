@@ -14,18 +14,21 @@ public struct SNeuralInputDNA {
 		m_params = p_params;
 	}
 
-	//RANDOMIZATION FUNCTIONS
+	//BIRTHING FUNCTIONS FUNCTIONS
 	public INeuralInput getNeuralInput(GameObject p_actor, ObjectLogger p_logger){
 		switch(m_input_type){
 			case ENeuralInput.DIRECTION: 
 				return new NIDirection(p_actor, p_logger, (float[])m_params.Clone());
+			case ENeuralInput.PROXPLAYER:
+				return new NIProxPlayer(p_actor, p_logger, m_params);
 		}
+		Debug.LogError("SHOULD ALWAYS RETURN A INeuralInput");
 		return null;
 	}
 
 
 	//RANDOMIZAITON FUNCTIONS
-	private static ENeuralInput[] m_active_inputs = {ENeuralInput.DIRECTION}; 
+	private static ENeuralInput[] m_active_inputs = {ENeuralInput.DIRECTION, ENeuralInput.PROXPLAYER}; 
 
 	public static SNeuralInputDNA randomInputDNA(ENeuralInput p_input_type){
 
@@ -33,6 +36,9 @@ public struct SNeuralInputDNA {
 			case ENeuralInput.DIRECTION: 
 				float[] dir_params = {Random.Range(-1f, 1f), Random.Range(-1f, 1f)};
 				return new SNeuralInputDNA(ENeuralInput.DIRECTION, dir_params); 
+			case ENeuralInput.PROXPLAYER: 
+				float[] prox_params = {Random.Range(1f, 2f)};
+				return new SNeuralInputDNA(ENeuralInput.PROXPLAYER, prox_params); 
 		}
 
 		Debug.LogError("SHOULD ALWAYS RETURN A SNEURALINPUTDNA");

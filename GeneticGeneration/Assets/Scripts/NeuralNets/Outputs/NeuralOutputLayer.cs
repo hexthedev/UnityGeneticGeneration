@@ -31,9 +31,9 @@ public class NeuralOutputLayer : IRecievable {
   {
     Matrix prop = p_propagation.clone();
     
-    Debug.Log("Ouput Preactivation \n" + prop);
+//    Debug.Log("Ouput Preactivation \n" + prop);
     prop.activate(m_activators);
-    Debug.Log("Ouput Activation \n" + prop);
+//    Debug.Log("Ouput Activation \n" + prop);
 
     //Complete Output
     for(int i = 0; i<m_outputs.Length; i++){

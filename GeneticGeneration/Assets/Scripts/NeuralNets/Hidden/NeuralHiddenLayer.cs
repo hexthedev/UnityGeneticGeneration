@@ -40,7 +40,7 @@ public class NeuralHiddenLayer : IRecievable, IInputable
   //results are input
   public Matrix getInputs()
   {
-    Debug.Log("Hidden Input \n" + m_results);
+//    Debug.Log("Hidden Input \n" + m_results);
     
     return m_results;
   }
@@ -48,10 +48,10 @@ public class NeuralHiddenLayer : IRecievable, IInputable
   //On recieving p_pagation make results a activate
   public void recievePropagation(Matrix p_propagation)
   {
-    Debug.Log("Pre Activation \n" + p_propagation);
+//    Debug.Log("Pre Activation \n" + p_propagation);
     m_results = p_propagation.clone();
     m_results.activate(m_activators);
-    Debug.Log("Activated \n" + m_results);
+//    Debug.Log("Activated \n" + m_results);
 
   }
 

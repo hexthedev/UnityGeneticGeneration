@@ -13,16 +13,33 @@ public class Matrix {
 
 	public Matrix(int p_width, int p_height){
 		m_matrix = new float[p_width,p_height];
-		randomPopulate();
+		randomPopulate(true);
 	}	
 
-	private void randomPopulate(){
+	private void randomPopulate(bool p_weight_balance){
 
 		for(int x = 0; x<m_matrix.GetLength(0); x++){
 			for(int y = 0; y<m_matrix.GetLength(1); y++){
-				m_matrix[x,y] = Random.Range(0f, 1f);
+				m_matrix[x,y] = Random.Range(-1f, 1f);
 			} 
 		}
+
+		if(p_weight_balance){
+			for(int i = 0; i<m_matrix.GetLength(0); i++){
+				float sum = 0;
+
+				for(int j = 0; j<m_matrix.GetLength(1); j++){
+					sum += m_matrix[i,j];
+				}
+
+				if(sum == 0) { continue; }
+
+				for(int j = 0; j<m_matrix.GetLength(1); j++){
+					m_matrix[i,j] /= sum;
+				}
+			}
+		}
+		
 	}
 
 	public Matrix clone(){
