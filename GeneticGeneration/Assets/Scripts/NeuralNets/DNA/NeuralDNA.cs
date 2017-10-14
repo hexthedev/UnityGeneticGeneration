@@ -35,10 +35,8 @@ public class NeuralDNA {
 		float[] y = {Random.Range(-1f, 1f) , Random.Range(-1f, 1f)};
 		float[] z = {Random.Range(-1f, 1f) , Random.Range(-1f, 1f)};
 
-		SNeuralInputDNA[] inputs = { new SNeuralInputDNA(ENeuralInput.DIRECTION, x1), new SNeuralInputDNA(ENeuralInput.DIRECTION, y), new SNeuralInputDNA(ENeuralInput.DIRECTION, z) };
-		m_inputs = inputs;
-		SNeuralOutputDNA[] outputs = SNeuralOutputDNA.randomOutputArrayNoRepeat(1);
-		m_outputs = outputs;
+		m_inputs = SNeuralInputDNA.randomInputArrayRepeat(3);
+		m_outputs = SNeuralOutputDNA.randomOutputArrayNoRepeat(1);
 
 		//Now that we have output we can make some random hidden layers based on activation functions
 		int hiddens = Random.Range(1,4);
