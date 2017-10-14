@@ -31,9 +31,9 @@ public class NeuralDNA {
 	//TEST DNA
 	public NeuralDNA(){
 		//INputs and outputs are simple
-		float[] x1 = {1,0};
-		float[] y = {0,-1};
-		float[] z = {-1,0};
+		float[] x1 = { Random.Range(-1f, 1f) , Random.Range(-1f, 1f)};
+		float[] y = {Random.Range(-1f, 1f) , Random.Range(-1f, 1f)};
+		float[] z = {Random.Range(-1f, 1f) , Random.Range(-1f, 1f)};
 
 		SNeuralInputDNA[] inputs = { new SNeuralInputDNA(ENeuralInput.DIRECTION, x1), new SNeuralInputDNA(ENeuralInput.DIRECTION, y), new SNeuralInputDNA(ENeuralInput.DIRECTION, z) };
 		m_inputs = inputs;
