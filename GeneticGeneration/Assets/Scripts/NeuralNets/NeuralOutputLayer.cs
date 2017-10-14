@@ -6,12 +6,12 @@ using Calc;
 public class NeuralOutputLayer : IRecievable {
  
  //Has outputs and activation functions
-  NeuralOutput[] m_outputs;
+  INeuralOutput[] m_outputs;
   DActivationFunction[] m_activators;
 
   //Create with activators, must have same number of activators to outputs
-  public NeuralOutputLayer(NeuralOutput[] p_outputs, DActivationFunction[] p_activators){
-    m_outputs = (NeuralOutput[])p_outputs.Clone();
+  public NeuralOutputLayer(INeuralOutput[] p_outputs, DActivationFunction[] p_activators){
+    m_outputs = (INeuralOutput[])p_outputs.Clone();
 
     if(p_activators.Length != p_outputs.Length){
       Debug.LogError("OUTPUT WRONG NUMBER ACTIVATORS");
@@ -45,7 +45,7 @@ public class NeuralOutputLayer : IRecievable {
     SNeuralOutputDNA[] outputs = new SNeuralOutputDNA[m_outputs.Length];
 
     for(int i = 0; i<m_outputs.Length;i++){
-      outputs[i].m_output = m_outputs[i].dnaify();
+      outputs[i].m_output_type = m_outputs[i].dnaify();
       outputs[i].m_activate = m_activators[i];
     }
 

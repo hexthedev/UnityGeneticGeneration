@@ -10,6 +10,7 @@ public class EnemyControllerNeural : MonoBehaviour, IDamagable {
 	private ObjectLogger m_logger;
 	private EvolutionController m_evolution_controller;
 	private DataCollector m_data;
+	private Rigidbody2D m_rb;
 
 	//DNA and BEHAVIOUR
 	private DNA m_dna;
@@ -36,6 +37,7 @@ public class EnemyControllerNeural : MonoBehaviour, IDamagable {
 	// Use this for initialization
 	void Awake () {
 		m_controller = GameObject.FindGameObjectWithTag("GameController").GetComponent<GameController>();
+		m_rb = gameObject.GetComponent<Rigidbody2D>();
 
 		m_evolution_controller = m_controller.GetComponent<EvolutionController>();
 		GameObject player = GameObject.FindGameObjectWithTag("Player");
@@ -55,7 +57,7 @@ public class EnemyControllerNeural : MonoBehaviour, IDamagable {
 
 		m_logger = GameObject.FindGameObjectWithTag("GameController").GetComponent<ObjectLogger>();
 
-		m_brain = new NeuralNet(new NeuralDNA(), gameObject, m_logger);
+		m_brain = new NeuralNet(new NeuralDNA(), gameObject, m_logger, this);
 	}
 	
 	// Update is called once per frame
@@ -140,5 +142,9 @@ public class EnemyControllerNeural : MonoBehaviour, IDamagable {
 
 	public float getForward(){
 		return m_forward;
+	}
+
+	public void changeVelocity(Vector2 p_change){
+		m_rb.velocity += p_change;
 	}
 }

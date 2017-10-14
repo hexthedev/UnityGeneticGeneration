@@ -9,7 +9,13 @@ public static class Activators{
 
   private static DActivationFunction m_round = (float p_value) => { return Mathf.Round(p_value); };
 
-  private static DActivationFunction m_sqrt = (float p_value) => { return Mathf.Sqrt(Mathf.Abs(p_value)); };
+  private static DActivationFunction m_sqrt = (float p_value) => { 
+    float sign = p_value/Mathf.Abs(p_value);
+    
+  Debug.Log("HERE------------------------    " + sign);
+
+    return sign * Mathf.Sqrt(Mathf.Abs(p_value)); 
+  };
 
 
 

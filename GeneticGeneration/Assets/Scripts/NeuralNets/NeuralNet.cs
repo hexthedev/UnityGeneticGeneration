@@ -47,10 +47,10 @@ public class NeuralNet {
 	}
 
 	//Create Net with DNA
-	public NeuralNet(NeuralDNA p_DNA, GameObject p_actor, ObjectLogger p_logger){
+	public NeuralNet(NeuralDNA p_DNA, GameObject p_actor, ObjectLogger p_logger, EnemyControllerNeural p_controller){
 		//Place the input layers
 		m_input = p_DNA.inputLayer(p_actor, p_logger);
-		m_output = p_DNA.outputLayer();
+		m_output = p_DNA.outputLayer(p_controller);
 
 		//Hidden layers are based on Activators
 		m_layers = new List<NeuralHiddenLayer>();

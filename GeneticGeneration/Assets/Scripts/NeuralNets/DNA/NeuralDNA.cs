@@ -37,66 +37,27 @@ public class NeuralDNA {
 
 		SNeuralInputDNA[] inputs = { new SNeuralInputDNA(ENeuralInput.DIRECTION, x1), new SNeuralInputDNA(ENeuralInput.DIRECTION, y), new SNeuralInputDNA(ENeuralInput.DIRECTION, z) };
 		m_inputs = inputs;
-		SNeuralOutputDNA[] outputs = { new SNeuralOutputDNA(ENeuralOutput.OUTPUT, Activators.Sqrt()), new SNeuralOutputDNA(ENeuralOutput.OUTPUT, Activators.Sqrt()), new SNeuralOutputDNA(ENeuralOutput.OUTPUT, Activators.Sqrt()) };
+		SNeuralOutputDNA[] outputs = { new SNeuralOutputDNA(ENeuralOutput.NOVeloX, Activators.Sqrt()) };
 		m_outputs = outputs;
 
-		//Want to know the number of links
-		int links = Random.Range(2,5);
-		
+		//Now that we have output we can make some random hidden layers based on activation functions
+		int hiddens = Random.Range(1,4);
+
 		m_hiddens = new List<DActivationFunction[]>();
-		//Links are indicated using their activator arrays
-		for(int i = 0; i<links-1; i++){
-			m_hiddens.Add(Activators.randomArray());
+		for(int i = 0; i<hiddens; i++){
+			m_hiddens.Add(Activators.randomArrayOfSize(Random.Range(1,4)));
 		}
 
-		DActivationFunction[] activators = {Activators.Sqrt(),Activators.Sqrt(),Activators.Sqrt()};
-		m_hiddens.Add(activators);
+		//Finally we construct the required links
+		m_links = new Matrix[hiddens+1];
 
-		Debug.Log("HIDDENS: " + m_hiddens.Count);
-
-
-
-		m_hiddens.Add(Activators.randomArrayOfSize(outputs.Length));
-
-		//Now need weight arrays which rep the weightings used in the links
-		m_links = new Matrix[m_hiddens.Count];
-
-		//The first weights are hidden layer x input matrix
 		m_links[0] = new Matrix(m_hiddens[0].Length, m_inputs.Length);
 
-		//The following weights are next layer x last layer matrix
-		for(int i = 0; i<m_hiddens.Count-1; i++){
-			m_links[i+1] = new Matrix(m_hiddens[i+1].Length, m_hiddens[i].Length);
+		for(int i = 1; i<m_links.Length-1; i++){
+			m_links[i] = new Matrix(m_hiddens[i].Length, m_hiddens[i-1].Length);
 		}
 
-		//The last weights are the output x last layer matrix
-		m_links[m_links.Length-1] = new Matrix(m_outputs.Length, m_hiddens[m_hiddens.Count-2].Length);
-
-		Debug.Log("WEIGHTS: " + m_links.Length);
-
-		Debug.Log(m_inputs.Length);
-		
-		string x = "[";
-
-		foreach(DActivationFunction[] array in m_hiddens){
-			x+=array.Length+",";
-		}
-
-		x+="]";
-				
-		Debug.Log(x);
-
-		x = "[";
-
-		foreach(Matrix mat in m_links){
-			x+=mat.numColumns()+"x"+mat.numRows()+",";
-		}
-
-		x+="]";
-				
-		Debug.Log(x);
-
-		Debug.Log(m_outputs.Length);
+		m_links[m_links.Length-1] = new Matrix(m_outputs.Length, m_hiddens[m_hiddens.Count-1].Length);
 		
 	}
 
@@ -110,11 +71,11 @@ public class NeuralDNA {
 		return new NeuralInputLayer(input);
 	}
 
-	public NeuralOutputLayer outputLayer(){
-		NeuralOutput[] output = new NeuralOutput[m_outputs.Length];
+	public NeuralOutputLayer outputLayer(EnemyControllerNeural p_controller){
+		INeuralOutput[] output = new INeuralOutput[m_outputs.Length];
 		
 		for(int i = 0 ; i<output.Length;i++){
-			output[i] = new NeuralOutput();
+			output[i] = new NOVeloX(p_controller);
 		}
 
 		return new NeuralOutputLayer(output, getOutputActivators());
@@ -141,11 +102,11 @@ public class NeuralDNA {
 	public Matrix getOutputWeights(){					
 		string x = "Ouput weights\n\n";
 
-		foreach(Matrix m in m_links){
+		/*foreach(Matrix m in m_links){
 			x += m + "\n\n";
 		}
 
-		Debug.Log(x);
+		Debug.Log(x);*/
 
 
 		return m_links[m_links.Length-1];
