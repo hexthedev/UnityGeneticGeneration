@@ -10,6 +10,7 @@ public class NeuralDNA {
 	Matrix[] m_links;			//Represents the weight between two layers in order
 	SNeuralOutputDNA[] m_outputs;		//Represents the outputs in the output layer
 
+	//Constructs DNA from parts when creatures die
 	public NeuralDNA( SNeuralInputDNA[] p_inputs, List<DActivationFunction[]> p_hiddens, Matrix[] p_weights, SNeuralOutputDNA[] p_outputs ){
 		m_inputs = (SNeuralInputDNA[])p_inputs.Clone();
 	
@@ -18,42 +19,43 @@ public class NeuralDNA {
 		foreach(DActivationFunction[] func in p_hiddens){
 			m_hiddens.Add(func);
 		}
-
-		Debug.Log("HIDDENS: " + m_hiddens.Count);
-
+		debug("HIDDENS: " + m_hiddens.Count);
+		
 		m_links = (Matrix[])p_weights.Clone();
-
-		Debug.Log("WEIGHTS: " + m_links.Length);
+		debug("WEIGHTS: " + m_links.Length);
 
 		m_outputs = (SNeuralOutputDNA[])p_outputs.Clone();
 	}
 
-	//TEST DNA
+	//Constructs random neural DNA
 	public NeuralDNA(){
-		m_inputs = SNeuralInputDNA.randomInputArrayNoRepeat(2);
-		m_outputs = SNeuralOutputDNA.randomOutputArrayNoRepeat(2);
+		m_inputs = SNeuralInputDNA.randomInputArrayRepeat(RandomCalc.Rand(NeuralNetConfig.input_mm));
+		m_outputs = SNeuralOutputDNA.randomOutputArrayNoRepeat(RandomCalc.Rand(NeuralNetConfig.output_mm));
 
 		//Now that we have output we can make some random hidden layers based on activation functions
-		int hiddens = Random.Range(1,4);
+		int hiddens = RandomCalc.Rand(NeuralNetConfig.hidden_layer_mm);
 
 		m_hiddens = new List<DActivationFunction[]>();
 		for(int i = 0; i<hiddens; i++){
-			m_hiddens.Add(Activators.randomArrayOfSize(Random.Range(1,4)));
+			m_hiddens.Add(Activators.randomArrayOfSize(RandomCalc.Rand(NeuralNetConfig.hidden_size_mm)));
 		}
 
 		//Finally we construct the required links
 		m_links = new Matrix[hiddens+1];
 
-		m_links[0] = new Matrix(m_hiddens[0].Length, m_inputs.Length);
+		m_links[0] = new Matrix(m_hiddens[0].Length, m_inputs.Length, NeuralNetConfig.weight_mm, true);
 
 		for(int i = 1; i<m_links.Length-1; i++){
-			m_links[i] = new Matrix(m_hiddens[i].Length, m_hiddens[i-1].Length);
+			m_links[i] = new Matrix(m_hiddens[i].Length, m_hiddens[i-1].Length, NeuralNetConfig.weight_mm, true);
 		}
 
-		m_links[m_links.Length-1] = new Matrix(m_outputs.Length, m_hiddens[m_hiddens.Count-1].Length);
+		m_links[m_links.Length-1] = new Matrix(m_outputs.Length, m_hiddens[m_hiddens.Count-1].Length, NeuralNetConfig.weight_mm, true);
 		
 	}
 
+	//BIRTHING FUNCTIONS
+
+	//Converts the DNA inputs into a concrete input layer
 	public NeuralInputLayer inputLayer(GameObject p_actor, ObjectLogger p_logger){
 		INeuralInput[] input = new INeuralInput[m_inputs.Length];
 
@@ -64,6 +66,7 @@ public class NeuralDNA {
 		return new NeuralInputLayer(input);
 	}
 
+	//Converts the DNA inputs into a concrete output layer
 	public NeuralOutputLayer outputLayer(EnemyControllerNeural p_controller){
 		INeuralOutput[] output = new INeuralOutput[m_outputs.Length];
 		
@@ -74,10 +77,12 @@ public class NeuralDNA {
 		return new NeuralOutputLayer(output, getOutputActivators());
 	}
 
+	//Returns activators of a hidden layer at a certain depth
 	public DActivationFunction[] getActivators(int p_link_index){
 		return m_hiddens[p_link_index];
 	}
 
+	//Returns activators of a output layer
 	public DActivationFunction[] getOutputActivators(){
 		DActivationFunction[] activators = new DActivationFunction[m_outputs.Length];
 
@@ -88,29 +93,32 @@ public class NeuralDNA {
 		return activators;		
 	}
 
+	//Return weights of link at certain index
 	public Matrix getWeights(int p_layer_index){
 		return m_links[p_layer_index];
 	}
 
+	//Returns weights for the final link to output
 	public Matrix getOutputWeights(){					
-		string x = "Ouput weights\n\n";
-
-		/*foreach(Matrix m in m_links){
-			x += m + "\n\n";
-		}
-
-		Debug.Log(x);*/
-
-
 		return m_links[m_links.Length-1];
 	}
 
+	//Returns the number of hidden layers
 	public int hiddenLayerCount(){
 		return m_hiddens.Count; 
 	}
 
+	//Returns the size of a hidden layer at an index
 	public int hiddenLayerSize(int p_layer_index){
 		return m_hiddens[p_layer_index].Length;
+	}
+
+
+	//DEBUG CODE
+	public void debug(string p){
+		if(NeuralNetConfig.debug_net_dna){
+			Debug.Log(p);
+		}
 	}
 
 

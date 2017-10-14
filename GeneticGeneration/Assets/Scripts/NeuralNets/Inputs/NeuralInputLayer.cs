@@ -28,7 +28,6 @@ public class NeuralInputLayer : IInputable
       m_prop[i, 0] = m_inputs[i].input();
     }
 
-//    Debug.Log(" Input Weights \n " + MatrixCalc.String(m_prop));
     return new Matrix(m_prop);
   }
 

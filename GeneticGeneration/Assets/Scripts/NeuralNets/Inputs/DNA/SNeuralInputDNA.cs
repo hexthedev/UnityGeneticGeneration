@@ -28,16 +28,15 @@ public struct SNeuralInputDNA {
 
 
 	//RANDOMIZAITON FUNCTIONS
-	private static ENeuralInput[] m_active_inputs = {ENeuralInput.DIRECTION, ENeuralInput.PROXPLAYER}; 
-
+	
 	public static SNeuralInputDNA randomInputDNA(ENeuralInput p_input_type){
 
 		switch(p_input_type){
 			case ENeuralInput.DIRECTION: 
-				float[] dir_params = {Random.Range(-1f, 1f), Random.Range(-1f, 1f)};
+				float[] dir_params = {RandomCalc.Rand(NeuralNetConfig.direction_mm), RandomCalc.Rand(NeuralNetConfig.direction_mm)};
 				return new SNeuralInputDNA(ENeuralInput.DIRECTION, dir_params); 
 			case ENeuralInput.PROXPLAYER: 
-				float[] prox_params = {Random.Range(1f, 2f)};
+				float[] prox_params = {RandomCalc.Rand(NeuralNetConfig.prox_mm)};
 				return new SNeuralInputDNA(ENeuralInput.PROXPLAYER, prox_params); 
 		}
 
@@ -47,14 +46,14 @@ public struct SNeuralInputDNA {
 
 	public static SNeuralInputDNA[] randomInputArrayNoRepeat(int size){ 
 
-		List<ENeuralInput> inputs = new List<ENeuralInput>(m_active_inputs);	
+		List<ENeuralInput> inputs = new List<ENeuralInput>(NeuralNetConfig.m_active_inputs);	
 
 		List<SNeuralInputDNA> dna = new List<SNeuralInputDNA>();
 
 		for(int i = 0; i<size; i++){
 			if(inputs.Count == 0){		break;	}
 			
-			ENeuralInput input = inputs[Random.Range(0, inputs.Count)];
+			ENeuralInput input = inputs[RandomCalc.Rand(new MinMaxInt(0, inputs.Count-1))];
 			dna.Add(randomInputDNA(input));
 			inputs.Remove(input);
 		}
@@ -67,7 +66,7 @@ public struct SNeuralInputDNA {
 		List<SNeuralInputDNA> dna = new List<SNeuralInputDNA>();
 
 		for(int i = 0; i<size; i++){
-			dna.Add(randomInputDNA(ArrayCalc.randomElement(m_active_inputs)));
+			dna.Add(randomInputDNA(ArrayCalc.randomElement(NeuralNetConfig.m_active_inputs)));
 		}
 
 		return dna.ToArray(); 

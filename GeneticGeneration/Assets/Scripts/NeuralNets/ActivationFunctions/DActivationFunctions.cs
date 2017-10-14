@@ -21,11 +21,6 @@ public static class Activators{
 
   private static DActivationFunction m_oppposite_cosine = (float p_value) => { return -1*Mathf.Cos(p_value*Mathf.PI); };
 
-  //Array Setups
-  private static DActivationFunction[] m_all_functions = {m_bipolar, m_mod_sigmoid, m_cosine, m_oppposite_cosine};
-  private static DActivationFunction[] m_continous_functions = {m_mod_sigmoid, m_cosine, m_oppposite_cosine};
-  private static DActivationFunction[] m_binary_functions = {m_bipolar};
-
 
 
   //GETTER FUNCTIONS
@@ -52,7 +47,7 @@ public static class Activators{
   public static DActivationFunction randomOutputFunction(ENeuralOutput p_output){
 
     if(p_output == ENeuralOutput.NOVeloX || p_output == ENeuralOutput.NOVeloY){
-      return ArrayCalc.randomElement(m_all_functions);
+      return ArrayCalc.randomElement(NeuralNetConfig.all_functions);
     }
 
     Debug.LogError("MUST RETURN AN ACTIAVTOR");
@@ -62,12 +57,12 @@ public static class Activators{
 
 
   //RANDOM ARRAY GETTER FUNCTIONS
-  public static DActivationFunction[] randomArray(int p_min_range, int p_max_range){
+  public static DActivationFunction[] randomArray(MinMaxInt p_range){
 
-    DActivationFunction[] to_return = new DActivationFunction[Random.Range(p_min_range, p_max_range)];
+    DActivationFunction[] to_return = new DActivationFunction[RandomCalc.Rand(p_range)];
 
     for(int i = 0 ; i<to_return.Length; i++){
-      to_return[i] = ArrayCalc.randomElement(m_all_functions);
+      to_return[i] = ArrayCalc.randomElement(NeuralNetConfig.all_functions);
     }
 
     return to_return;
@@ -79,7 +74,7 @@ public static class Activators{
     DActivationFunction[] to_return = new DActivationFunction[p_size];
 
     for(int i = 0 ; i<to_return.Length; i++){
-      to_return[i] = ArrayCalc.randomElement(m_all_functions);
+      to_return[i] = ArrayCalc.randomElement(NeuralNetConfig.all_functions);
     }
 
     return to_return;

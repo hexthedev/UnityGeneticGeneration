@@ -52,7 +52,7 @@ namespace Calc{
     }
 
     public static Vector2 randomDirection(){
-      return new Vector2(Random.Range(-1f,1f), Random.Range(-1f,1f));
+      return new Vector2(RandomCalc.Rand(new MinMaxFloat(-1f, 1)), RandomCalc.Rand(new MinMaxFloat(-1f, 1)));
     }
 
     public static Vector2 mutateVector2(Vector2 p_mutate){
@@ -97,7 +97,7 @@ namespace Calc{
     }
 
     public static int randomIndex<T>(T[] p_array){
-      int rand = Random.Range(0,p_array.Length);
+      int rand = RandomCalc.Rand(new MinMaxInt(0,p_array.Length-1));
       return rand;
     }
   }
@@ -107,7 +107,7 @@ namespace Calc{
     ///<summary>Return Random enum value </summary>
     public static T randomValue<T>(){
       System.Array array = System.Enum.GetValues(typeof(T));
-      return (T)array.GetValue(Random.Range(0, array.Length));
+      return (T)array.GetValue(RandomCalc.Rand(new MinMaxInt(0,array.Length-1)));
     }
 
   }
@@ -116,7 +116,7 @@ namespace Calc{
 
     ///<summary>Return Random enum value </summary>
     public static bool random(){
-      return Random.Range(0,2) == 1? true: false;
+      return RandomCalc.Rand(new MinMaxInt(0,1)) == 1? true: false;
     }
 
   }
@@ -192,7 +192,7 @@ namespace Calc{
 
       for(int x = 0; x<p_matrix.GetLength(0); x++){
        for(int y = 0; y<p_matrix.GetLength(1); y++){
-         p_matrix[x,y] = Random.Range(0f, 1f);
+         p_matrix[x,y] = RandomCalc.Rand(new MinMaxFloat(0f,1f));
        } 
       }
     }
@@ -231,6 +231,18 @@ namespace Calc{
 
   }
   
+
+  public static class RandomCalc{
+
+    public static float Rand(MinMaxFloat p){
+      return Random.Range(p.getMin(), p.getMax());
+    }
+    
+    public static int Rand(MinMaxInt p){
+      return Random.Range(p.getMin(), p.getMax()+1);
+    }
+
+  }
   
 
 }

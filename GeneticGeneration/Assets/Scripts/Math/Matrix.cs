@@ -13,14 +13,18 @@ public class Matrix {
 
 	public Matrix(int p_width, int p_height){
 		m_matrix = new float[p_width,p_height];
-		randomPopulate(true);
+	}
+
+	public Matrix(int p_width, int p_height, MinMaxFloat p_mm, bool balance_cols){
+		m_matrix = new float[p_width,p_height];
+		randomPopulate(p_mm, true);
 	}	
 
-	private void randomPopulate(bool p_weight_balance){
+	private void randomPopulate(MinMaxFloat p_mm, bool p_weight_balance){
 
 		for(int x = 0; x<m_matrix.GetLength(0); x++){
 			for(int y = 0; y<m_matrix.GetLength(1); y++){
-				m_matrix[x,y] = Random.Range(-1f, 1f);
+				m_matrix[x,y] = RandomCalc.Rand(p_mm);
 			} 
 		}
 

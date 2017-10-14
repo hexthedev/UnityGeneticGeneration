@@ -26,10 +26,8 @@ public struct SNeuralOutputDNA {
 	}
 
 	//RANDOMIZATION FUNCTIONS
-	public static ENeuralOutput[] m_activate_outputs = {ENeuralOutput.NOVeloX, ENeuralOutput.NOVeloY};
-
 	public static SNeuralOutputDNA randomOutputDNA(){
-		ENeuralOutput output = ArrayCalc.randomElement(m_activate_outputs);
+		ENeuralOutput output = ArrayCalc.randomElement(NeuralNetConfig.m_activate_outputs);
 		return new SNeuralOutputDNA(output, Activators.randomOutputFunction(output));
 	}
 
@@ -39,14 +37,14 @@ public struct SNeuralOutputDNA {
 
 	public static SNeuralOutputDNA[] randomOutputArrayNoRepeat(int size){
 
-		List<ENeuralOutput> outputs = new List<ENeuralOutput>(m_activate_outputs);	
+		List<ENeuralOutput> outputs = new List<ENeuralOutput>(NeuralNetConfig.m_activate_outputs);	
 
 		List<SNeuralOutputDNA> dna = new List<SNeuralOutputDNA>();
 
 		for(int i = 0; i<size; i++){
 			if(outputs.Count == 0){		break;	}
 			
-			ENeuralOutput output = outputs[Random.Range(0, outputs.Count)];
+			ENeuralOutput output = outputs[RandomCalc.Rand(new MinMaxInt(0, outputs.Count-1))];
 			dna.Add(outputDNAwithRandomActivator(output));
 			outputs.Remove(output);
 		}

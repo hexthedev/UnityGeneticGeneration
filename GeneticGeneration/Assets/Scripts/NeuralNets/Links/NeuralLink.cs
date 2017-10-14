@@ -15,15 +15,13 @@ public class NeuralLink {
 		m_input = p_input;
 		m_output = p_output;
 
-		m_weights = new Matrix(p_output.count(), p_input.count());
+		m_weights = new Matrix(p_output.count(), p_input.count(), NeuralNetConfig.weight_mm, true);
 	}
 
 	//Create with specified weights. Weights must be right size
 	public NeuralLink(IInputable p_input, IRecievable p_output, Matrix p_weights){
 		m_input = p_input;
 		m_output = p_output;
-
-//		Debug.Log("Creating Link: \n" + p_input.count() + " : " + p_output.count() + "\n Weights \n" + p_weights);
 
 		//Inputs = Rows, Outputs = columns
 		if(m_input.count() != p_weights.numRows() || m_output.count() != p_weights.numColumns()){
@@ -38,8 +36,6 @@ public class NeuralLink {
 		//Get inputs
 		Matrix propagation = m_input.getInputs();
 		
-//		Debug.Log("Propagation Weights \n" + m_weights);
-
 		//multiply by weights to get output
 		m_output.recievePropagation( propagation * m_weights );
 	}
