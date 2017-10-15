@@ -5,19 +5,19 @@ using Calc;
 
 public class EnemyController : MonoBehaviour, IDamagable {
 
-	//Global Mono Objects
+	//Global Mono Object References
 	public GameController m_controller;
 	private ObjectLogger m_logger;
 	private EvolutionController m_evolution_controller;
 	private DataCollector m_data;
 
-	//DNA and BEHAVIOUR
+	//DNA and BEHAVIOUR (WILL CHANGE)
 	private DNA m_dna;
 	private BehaviourDNA m_behav_dna;
 	private Dictionary<ETrait, StatTuple> m_stats;
 	private BehaviourTree m_behav_tree;
 
-	//BASIC INFO
+	//BASIC INFO (WILL CHANGE)
 	private int m_creature_id;
 	private float m_forward = -90;
 	private float m_fitness;
@@ -27,7 +27,7 @@ public class EnemyController : MonoBehaviour, IDamagable {
 	public float m_energy = 5;
 	private TextMesh m_energy_text;
 
-	private Ticker m_tick;
+	private IntervalEventManager m_tick;
 
 	
 
@@ -44,7 +44,7 @@ public class EnemyController : MonoBehaviour, IDamagable {
 		m_energy_text = gameObject.transform.GetChild(0).GetComponent<TextMesh>();
 		m_energy_text.text = "" + m_energy;
 
-		m_tick = new Ticker();
+		m_tick = new IntervalEventManager();
 		m_tick.addListener(1f, () => { 
 			m_energy -= 1; 
 			m_energy_text.text = "" + Mathf.Round(m_energy); 

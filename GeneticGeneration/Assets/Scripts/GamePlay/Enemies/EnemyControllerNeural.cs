@@ -29,7 +29,7 @@ public class EnemyControllerNeural : MonoBehaviour, IDamagable {
 	public float m_energy = 5;
 	private TextMesh m_energy_text;
 
-	private Ticker m_tick;
+	private IntervalEventManager m_tick;
 
 	
 
@@ -47,7 +47,7 @@ public class EnemyControllerNeural : MonoBehaviour, IDamagable {
 		m_energy_text = gameObject.transform.GetChild(0).GetComponent<TextMesh>();
 		m_energy_text.text = "" + m_energy;
 
-		m_tick = new Ticker();
+		m_tick = new IntervalEventManager();
 		m_tick.addListener(1f, () => { 
 			m_energy -= 1; 
 			m_energy_text.text = "" + Mathf.Round(m_energy); 

@@ -11,9 +11,9 @@ public class NIDirection : INeuralInput {
 
 	private Vector2 m_direction;
 
-	public NIDirection (GameObject p_actor, ObjectLogger p_logger, float[] p_params){
-		m_actor = p_actor;
-		m_logger = p_logger;
+	public NIDirection (EnemyController p_controller, float[] p_params){
+		//m_actor = p_actor;
+		//m_logger = p_logger;
 		m_direction = new Vector2(p_params[0], p_params[1]);
 	}
 

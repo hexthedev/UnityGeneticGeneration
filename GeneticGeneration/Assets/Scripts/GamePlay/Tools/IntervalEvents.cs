@@ -2,29 +2,29 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Ticker {
+public class IntervalEventManager {
 
-	private Dictionary<float, Tick> m_ticks;
+	private Dictionary<float, IntervalTick> m_ticks;
 
-	public Ticker(){
-		m_ticks = new Dictionary<float, Tick>();
+	public IntervalEventManager(){
+		m_ticks = new Dictionary<float, IntervalTick>();
 	}
 
 	public void tick(float p_delta_time){
-		foreach(Tick l_tick in m_ticks.Values){
+		foreach(IntervalTick l_tick in m_ticks.Values){
 			l_tick.addTick(p_delta_time);
 		}
 	}
 
-	public void addListener(float p_period, DTickListener p_listener){
+	public void addListener(float p_period, DIntervalListener p_listener){
 		if(!m_ticks.ContainsKey(p_period)){
-			m_ticks.Add(p_period, new Tick(p_period));
+			m_ticks.Add(p_period, new IntervalTick(p_period));
 		}
 
 		m_ticks[p_period].addListener(p_listener);
 	}
 
-	public void removeListener(float p_period, DTickListener p_listener){
+	public void removeListener(float p_period, DIntervalListener p_listener){
 		if(!m_ticks.ContainsKey(p_period)){
 			return;
 		}
@@ -37,19 +37,19 @@ public class Ticker {
 	}
 }
 
-class Tick{
+class IntervalTick{
 
 	private float m_tick_limit;
 	private float m_tick_current;
 	
 
-	private List<DTickListener> m_listeners;
+	private List<DIntervalListener> m_listeners;
 
-	public Tick(float m_limit){
+	public IntervalTick(float m_limit){
 		m_tick_limit = m_limit;
 		m_tick_current = 0;
 
-		m_listeners = new List<DTickListener>();
+		m_listeners = new List<DIntervalListener>();
 	}
 
 	public void addTick(float p_delta_time){
@@ -57,7 +57,7 @@ class Tick{
 
 		if(m_tick_current >= m_tick_limit){
 
-			foreach(DTickListener l_listener in m_listeners){
+			foreach(DIntervalListener l_listener in m_listeners){
 				l_listener();
 			}
 
@@ -66,11 +66,11 @@ class Tick{
 		}
 	}
 
-	public void addListener(DTickListener p_listener){
+	public void addListener(DIntervalListener p_listener){
 		m_listeners.Add(p_listener);
 	}
 
-	public void removeListener(DTickListener p_listener){
+	public void removeListener(DIntervalListener p_listener){
 		if(!m_listeners.Contains(p_listener)){
 			return;
 		}
@@ -84,4 +84,4 @@ class Tick{
 
 }
 
-public delegate void DTickListener();
+public delegate void DIntervalListener();

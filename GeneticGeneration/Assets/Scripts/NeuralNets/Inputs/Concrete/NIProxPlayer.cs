@@ -11,9 +11,9 @@ public class NIProxPlayer : INeuralInput {
 
 	private float m_scale;
 
-	public NIProxPlayer (GameObject p_actor, ObjectLogger p_logger, float[] p_params){
-		m_actor = p_actor;
-		m_logger = p_logger;
+	public NIProxPlayer (EnemyController p_controller, float[] p_params){
+		//m_actor = p_actor;
+		//m_logger = p_logger;
 		m_scale = p_params[0];
 	}
 
