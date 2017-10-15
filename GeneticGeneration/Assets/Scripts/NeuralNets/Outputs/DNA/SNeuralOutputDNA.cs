@@ -27,17 +27,17 @@ public struct SNeuralOutputDNA {
 
 	//RANDOMIZATION FUNCTIONS
 	public static SNeuralOutputDNA randomOutputDNA(){
-		ENeuralOutput output = ArrayCalc.randomElement(NeuralNetConfig.m_activate_outputs);
-		return new SNeuralOutputDNA(output, Activators.randomOutputFunction(output));
+		ENeuralOutput output = ArrayCalc.randomElement(NeuralNetConfig.activate_outputs);
+		return new SNeuralOutputDNA(output, randomOutputFunction(output));
 	}
 
 	public static SNeuralOutputDNA outputDNAwithRandomActivator(ENeuralOutput p_output){
-		return new SNeuralOutputDNA(p_output, Activators.randomOutputFunction(p_output));
+		return new SNeuralOutputDNA(p_output, randomOutputFunction(p_output));
 	}	
 
 	public static SNeuralOutputDNA[] randomOutputArrayNoRepeat(int size){
 
-		List<ENeuralOutput> outputs = new List<ENeuralOutput>(NeuralNetConfig.m_activate_outputs);	
+		List<ENeuralOutput> outputs = new List<ENeuralOutput>(NeuralNetConfig.activate_outputs);	
 
 		List<SNeuralOutputDNA> dna = new List<SNeuralOutputDNA>();
 
@@ -51,4 +51,16 @@ public struct SNeuralOutputDNA {
 
 		return dna.ToArray(); 
 	}
+
+	//HELPER FUNCTIONS
+	public static DActivationFunction randomOutputFunction(ENeuralOutput p_output){
+
+    if(p_output == ENeuralOutput.NOVeloX || p_output == ENeuralOutput.NOVeloY){
+      return ArrayCalc.randomElement(NeuralNetConfig.all_functions);
+    }
+
+    Debug.LogError("MUST RETURN AN ACTIAVTOR");
+
+    return null;
+  }
 }

@@ -77,11 +77,12 @@ public class NeuralNet {
 		return new NeuralDNA(m_input.dnaify(), hiddens, links, m_output.dnaify());
 	}
 
-
 	private void debug(string p){
 		if(NeuralNetConfig.debug_net){
 			Debug.Log(p);
 		}
 	}
+
+	
 
 }

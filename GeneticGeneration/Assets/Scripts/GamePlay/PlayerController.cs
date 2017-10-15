@@ -40,7 +40,7 @@ public class PlayerController : MonoBehaviour, IDamagable {
 		shot_timer += Time.deltaTime * m_game_controller.m_game_speed;
 		m_damage_increase_timer += Time.deltaTime * m_game_controller.m_game_speed;
 
-		//m_rb.velocity = playerVelocityUpdate();
+		m_rb.velocity = playerVelocityUpdate();
 
 		if((shot_timer > shot_rate) && Input.GetKey(KeyCode.Mouse0)){
 			//shoot();
@@ -62,9 +62,9 @@ public class PlayerController : MonoBehaviour, IDamagable {
 			m_evo.playerChangeFitMod();
 		}
 
-		m_rb.velocity = playerVelocityUpdate();
+		//m_rb.velocity += playerVelocityUpdate();
 
-		/* 
+		
 		if(Input.GetKeyDown(KeyCode.Comma)){
 			shot_rate -= 0.025f;
 			m_evo.playerChangeFitMod();
@@ -73,7 +73,7 @@ public class PlayerController : MonoBehaviour, IDamagable {
 		if(Input.GetKeyDown(KeyCode.Period)){
 			m_damage += 1f;
 			m_evo.playerChangeFitMod();
-		}*/
+		}
 
 		//m_rb.velocity += VectorCalc.CalcVec3to2((ArrayCalc.randomElement(m_logger.getByType(EObjectTypes.ENEMY)).transform.position - gameObject.transform.position).normalized * m_speed * m_game_controller.m_game_speed /10f);
 

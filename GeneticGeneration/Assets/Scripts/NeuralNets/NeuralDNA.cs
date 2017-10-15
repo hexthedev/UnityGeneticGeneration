@@ -113,6 +113,46 @@ public class NeuralDNA {
 		return m_hiddens[p_layer_index].Length;
 	}
 
+	//EVOLUTION FUNCTIONS
+	public static NeuralDNA crossover(NeuralDNA p_dna1, NeuralDNA p_dna2){
+
+		Matrix[] weights = new Matrix[p_dna1.m_links.Length];
+
+		for(int i = 0 ; i<weights.Length; i++){
+			weights[i] = Matrix.crossover(p_dna1.m_links[i], p_dna2.m_links[i]);
+		}
+
+		return new NeuralDNA(p_dna1.m_inputs, p_dna1.m_hiddens, weights, p_dna1.m_outputs);
+	}
+
+	public void mutate(){
+		foreach(Matrix m in m_links){
+			m.mutate(NeuralNetConfig.mutation_chance, NeuralNetConfig.mutation_amount);
+		}
+	}
+
+
+	//HELPER
+	public static bool isSameStructure(NeuralDNA p_dna1, NeuralDNA p_dna2){
+
+		if(p_dna1.m_inputs.Length != p_dna2.m_inputs.Length){
+			return false;
+		}
+
+		if(p_dna1.m_hiddens.Count != p_dna2.m_hiddens.Count){
+			return false;
+		}
+
+		if(p_dna1.m_outputs.Length != p_dna2.m_outputs.Length){
+			return false;
+		}
+
+		return true;
+	}
+
+	public NeuralDNA clone(){
+		return new NeuralDNA(m_inputs, m_hiddens, m_links, m_outputs);
+	}
 
 	//DEBUG CODE
 	public void debug(string p){

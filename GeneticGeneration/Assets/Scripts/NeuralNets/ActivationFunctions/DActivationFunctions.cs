@@ -44,18 +44,6 @@ public static class Activators{
     return m_oppposite_cosine;
   }
 
-  public static DActivationFunction randomOutputFunction(ENeuralOutput p_output){
-
-    if(p_output == ENeuralOutput.NOVeloX || p_output == ENeuralOutput.NOVeloY){
-      return ArrayCalc.randomElement(NeuralNetConfig.all_functions);
-    }
-
-    Debug.LogError("MUST RETURN AN ACTIAVTOR");
-
-    return null;
-  }
-
-
   //RANDOM ARRAY GETTER FUNCTIONS
   public static DActivationFunction[] randomArray(MinMaxInt p_range){
 

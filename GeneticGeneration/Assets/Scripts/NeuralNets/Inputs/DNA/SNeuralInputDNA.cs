@@ -46,7 +46,7 @@ public struct SNeuralInputDNA {
 
 	public static SNeuralInputDNA[] randomInputArrayNoRepeat(int size){ 
 
-		List<ENeuralInput> inputs = new List<ENeuralInput>(NeuralNetConfig.m_active_inputs);	
+		List<ENeuralInput> inputs = new List<ENeuralInput>(NeuralNetConfig.active_inputs);	
 
 		List<SNeuralInputDNA> dna = new List<SNeuralInputDNA>();
 
@@ -66,7 +66,7 @@ public struct SNeuralInputDNA {
 		List<SNeuralInputDNA> dna = new List<SNeuralInputDNA>();
 
 		for(int i = 0; i<size; i++){
-			dna.Add(randomInputDNA(ArrayCalc.randomElement(NeuralNetConfig.m_active_inputs)));
+			dna.Add(randomInputDNA(ArrayCalc.randomElement(NeuralNetConfig.active_inputs)));
 		}
 
 		return dna.ToArray(); 

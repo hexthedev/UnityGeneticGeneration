@@ -57,7 +57,10 @@ public class EnemyControllerNeural : MonoBehaviour, IDamagable {
 
 		m_logger = GameObject.FindGameObjectWithTag("GameController").GetComponent<ObjectLogger>();
 
-		m_brain = new NeuralNet(new NeuralDNA(), gameObject, m_logger, this);
+		NeuralDNA x = new NeuralDNA();
+		
+		m_brain = new NeuralNet(NeuralDNA.crossover(x, x.clone()), gameObject, m_logger, this);
+
 	}
 	
 	// Update is called once per frame

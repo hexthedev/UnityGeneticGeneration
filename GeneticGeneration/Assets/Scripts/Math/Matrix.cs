@@ -82,7 +82,7 @@ public class Matrix {
 		return p_matrix1.m_matrix.GetLength(0) == p_matrix2.m_matrix.GetLength(0) && p_matrix1.m_matrix.GetLength(1) == p_matrix2.m_matrix.GetLength(1);
 	}
 
-	public static float[,] crossover(Matrix p_matrix1, Matrix p_matrix2){      
+	public static Matrix crossover(Matrix p_matrix1, Matrix p_matrix2){      
 		if(!isSameSize(p_matrix1, p_matrix2)){
 			Debug.LogError("CANNOT CROSSOVER MATRIX, NOT SAME SIZE");
 		}
@@ -95,7 +95,15 @@ public class Matrix {
 			}
 		}
 
-		return to_return;
+		return new Matrix(to_return);
+	}
+
+	public void mutate(float p_chance, MinMaxFloat p_range){
+		for(int i = 0; i<m_matrix.GetLength(0); i++){
+			for(int j = 0; j<m_matrix.GetLength(1); j++){
+				m_matrix[i,j] = RandomCalc.ChanceRoll(p_chance) ? m_matrix[i,j] += RandomCalc.Rand(p_range) : m_matrix[i,j];
+			}
+		}
 	}
 
 	//OVERRIDES

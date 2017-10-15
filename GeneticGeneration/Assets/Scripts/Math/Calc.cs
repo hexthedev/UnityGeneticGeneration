@@ -242,6 +242,10 @@ namespace Calc{
       return Random.Range(p.getMin(), p.getMax()+1);
     }
 
+    public static bool ChanceRoll(float p_chance){
+      return p_chance >= Rand(new MinMaxFloat(0,100)) ? true : false;
+    }
+
   }
   
 
