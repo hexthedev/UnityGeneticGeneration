@@ -11,7 +11,7 @@ public class BehaviourTree {
 	//Reference Infomation
 	private ObjectLogger m_logger;
 	private GameObject m_actor;	
-	private EnemyController m_actor_controller;
+//	private EnemyController m_actor_controller;
 	private Rigidbody2D m_actor_body;
 
 	private BehaviourDNA m_dna;
@@ -24,7 +24,7 @@ public class BehaviourTree {
 		m_actor = p_actor;
 		m_dna = p_dna;
 
-		m_actor_controller = m_actor.GetComponent<EnemyController>();
+		//m_actor_controller = m_actor.GetComponent<EnemyController>();
 		m_actor_body = m_actor.GetComponent<Rigidbody2D>();
 
 		m_root = generatePhenotype(p_dna.getRoot(), null);
@@ -41,8 +41,9 @@ public class BehaviourTree {
 		return m_actor;
 	}
 
-	public EnemyController getActorController(){
-		return m_actor_controller;
+	public CreatureController getActorController(){
+		//return m_actor_controller;
+		return new CreatureController();
 	}
 
 	public Rigidbody2D getActorBody(){

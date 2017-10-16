@@ -31,7 +31,7 @@ public class DirectionDetector : VDetector
 			//Vector representing direction of target from actor
 			Vector2 direction_of_target = objects[i].transform.position - m_tree.getActor().transform.position;
 
-			if(m_tree.getActorController().m_debug){
+			if(m_tree.getActorController()){
 				debug(m_direction, direction_of_target, Time.deltaTime);
 			}
 

@@ -5,15 +5,12 @@ using Calc;
 
 public class NIDirection : INeuralInput {
 
-	private GameObject m_actor;
-
-	private ObjectLogger m_logger;
+	private CreatureController m_controller;
 
 	private Vector2 m_direction;
 
-	public NIDirection (EnemyController p_controller, float[] p_params){
-		//m_actor = p_actor;
-		//m_logger = p_logger;
+	public NIDirection (CreatureController p_controller, float[] p_params){
+		m_controller = p_controller;
 		m_direction = new Vector2(p_params[0], p_params[1]);
 	}
 
@@ -25,12 +22,7 @@ public class NIDirection : INeuralInput {
 
     public float input()
     {
-        GameObject player = m_logger.getByType(EObjectTypes.PLAYER)[0];
-		
-		Vector3 player_direction = player.transform.position - m_actor.transform.position;
-
-		//NumberTester.log( VectorCalc.getAngle( m_direction, player_direction )/180f == 0 ? 0 : Mathf.Sign(VectorCalc.getAngle( m_direction, player_direction )/180f));
-
+		Vector3 player_direction = m_controller.sensePosition() - m_controller.senseNearestObjectPosition(EObjectTypes.PLAYER);
 		return VectorCalc.getAngle( m_direction, player_direction )/180f;
     }
 }

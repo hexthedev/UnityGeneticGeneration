@@ -21,7 +21,7 @@ public class DataCollector : MonoBehaviour {
 		m_csv.WriteCSVRow(headers);*/
 	}
 
-	public void recordData(DNA p_dna, int p_creature, float p_fitness){
+	public void recordData(PhysicalDNA p_dna, int p_creature, float p_fitness){
 		//m_csv.WriteCSVRow(p_dna.getStatsCSV(p_creature, p_fitness));
 	}
 

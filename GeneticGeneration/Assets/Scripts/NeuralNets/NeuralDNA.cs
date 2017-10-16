@@ -56,18 +56,18 @@ public class NeuralDNA {
 	//BIRTHING FUNCTIONS
 
 	//Converts the DNA inputs into a concrete input layer
-	public NeuralInputLayer inputLayer(GameObject p_actor, ObjectLogger p_logger){
+	public NeuralInputLayer inputLayer(CreatureController p_controller){
 		INeuralInput[] input = new INeuralInput[m_inputs.Length];
 
 		for(int i = 0; i<input.Length; i++){
-			input[i] = m_inputs[i].getNeuralInput(p_actor, p_logger);
+			input[i] = m_inputs[i].getNeuralInput(p_controller);
 		}
 
 		return new NeuralInputLayer(input);
 	}
 
 	//Converts the DNA inputs into a concrete output layer
-	public NeuralOutputLayer outputLayer(EnemyControllerNeural p_controller){
+	public NeuralOutputLayer outputLayer(CreatureController p_controller){
 		INeuralOutput[] output = new INeuralOutput[m_outputs.Length];
 		
 		for(int i = 0 ; i<output.Length;i++){

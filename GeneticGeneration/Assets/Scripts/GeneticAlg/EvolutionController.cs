@@ -43,7 +43,7 @@ public class EvolutionController : MonoBehaviour {
 		}
 	}
 
-	public void addDNA(EvoObject p_dna, float fitness){
+	public void addDNA(DNA p_dna, float fitness){
 		m_gene_pool.add(fitness, p_dna);
 	} 
 
@@ -54,14 +54,14 @@ public class EvolutionController : MonoBehaviour {
 
 	private void birth(){
 
-		EvoObject evo1 = m_gene_pool.getRandomObject();
-		EvoObject evo2 = m_gene_pool.getRandomObject();
+		/*DNA evo1 = m_gene_pool.getRandomObject();
+		DNA evo2 = m_gene_pool.getRandomObject();
 
 		// Debug.Log(m_gene_pool.print());
 
 
 		//DNA SEQUENCE
-		DNA evolved = DNA.crossover(evo1.getDNA(), evo2.getDNA());
+		DNAsivolved = PhysicalDNA.crossovsi(evo1.getDNA(), evo2.getDNA());
 
 		//BEHAVIOUR SEQUENCE
 		BehaviourDNA evo_behav = BehaviourDNA.crossover(evo1.GetBehaviour(), evo2.GetBehaviour());
@@ -72,8 +72,8 @@ public class EvolutionController : MonoBehaviour {
 			evo_behav.mutate();
 		}
 
-		m_game_controller.spawn(new EvoObject(evolved, evo_behav), m_creature);
-		m_creature++;
+		m_game_controller.spawn(new DNA(evolved, evo_behav), m_creature);
+		m_creature++;*/
 	}
 
 	private void massSpawn(int p_amount){

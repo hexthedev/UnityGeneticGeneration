@@ -11,9 +11,9 @@ public class NeuralNet {
 	List<NeuralLink> m_links;
 
 	//Neural nets are created completely through NeuralDNA. They are created on a creature as the "brain"
-	public NeuralNet(NeuralDNA p_DNA, GameObject p_actor, ObjectLogger p_logger, EnemyControllerNeural p_controller){
+	public NeuralNet(NeuralDNA p_DNA, CreatureController p_controller){
 		//Place the input layers
-		m_input = p_DNA.inputLayer(p_actor, p_logger);
+		m_input = p_DNA.inputLayer(p_controller);
 		m_output = p_DNA.outputLayer(p_controller);
 
 		//Hidden layers are based on Activators

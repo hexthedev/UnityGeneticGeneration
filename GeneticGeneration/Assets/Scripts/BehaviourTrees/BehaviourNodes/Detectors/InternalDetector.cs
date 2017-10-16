@@ -24,11 +24,11 @@ public class InternalDetector : VDetector
 
   public override bool detect()
   {
-		float trait = m_tree.getActorController().getTrait(m_trait, m_is_current);
-
+		//float trait = m_tree.getActorController().getTrait(m_trait, m_is_current);
+/* 
 		if(m_is_above){
 			if( trait >= m_threshold ){
-				if(m_tree.getActorController().m_debug){
+				if(m_tree.getActorController()){
 					debug(true);
 				}
 				
@@ -37,7 +37,7 @@ public class InternalDetector : VDetector
 		} else {
 			if( trait <= m_threshold ){
 				
-				if(m_tree.getActorController().m_debug){
+				if(m_tree.getActorController()){
 					debug(true);
 				}
 
@@ -45,9 +45,9 @@ public class InternalDetector : VDetector
 			}
 		}
 		
-		if(m_tree.getActorController().m_debug){
+		if(m_tree.getActorController()){
 			debug(false);
-		}
+		}*/
 
 		return false;
 

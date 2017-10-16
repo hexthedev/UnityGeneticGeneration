@@ -5,9 +5,9 @@ using Calc;
 
 public class NOVeloY : INeuralOutput {
 
-    EnemyControllerNeural m_controller;
+    CreatureController m_controller;
 
-    public NOVeloY(EnemyControllerNeural p_controller){
+    public NOVeloY(CreatureController p_controller){
         m_controller = p_controller;
     }
 
@@ -16,7 +16,7 @@ public class NOVeloY : INeuralOutput {
         NumberTester.log(p_value);
 
         Vector2 vec = new Vector2(0, p_value);
-        m_controller.changeVelocity(vec);
+        m_controller.moveForce(vec);
     }
 
     ENeuralOutput INeuralOutput.dnaify()

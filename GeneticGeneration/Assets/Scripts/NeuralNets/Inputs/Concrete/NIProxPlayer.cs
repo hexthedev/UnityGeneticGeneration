@@ -5,15 +5,14 @@ using Calc;
 
 public class NIProxPlayer : INeuralInput {
 
-	private GameObject m_actor;
+	private CreatureController m_controller;
 
 	private ObjectLogger m_logger;
 
 	private float m_scale;
 
-	public NIProxPlayer (EnemyController p_controller, float[] p_params){
-		//m_actor = p_actor;
-		//m_logger = p_logger;
+	public NIProxPlayer (CreatureController p_controller, float[] p_params){
+		m_controller = p_controller;
 		m_scale = p_params[0];
 	}
 
@@ -24,12 +23,8 @@ public class NIProxPlayer : INeuralInput {
     }
 
     public float input()
-    {		
-		GameObject player = m_logger.getByType(EObjectTypes.PLAYER)[0];
-		float player_prox = (player.transform.position - m_actor.transform.position).magnitude;
-
-		//NumberTester.log(player_prox/m_scale == 0 ? 0 : Mathf.Sign(player_prox/m_scale));
-
+    {	
+		float player_prox = (m_controller.sensePosition() - m_controller.senseNearestObjectPosition(EObjectTypes.PLAYER)).magnitude;
 		return player_prox/m_scale;
     }
 }

@@ -15,17 +15,16 @@ public struct SNeuralInputDNA {
 	}
 
 	//BIRTHING FUNCTIONS FUNCTIONS
-	public INeuralInput getNeuralInput(GameObject p_actor, ObjectLogger p_logger){
-		return null;
+	public INeuralInput getNeuralInput(CreatureController p_controller){
 		
-		/*switch(m_input_type){
+		switch(m_input_type){
 			case ENeuralInput.DIRECTION: 
-				return new NIDirection(p_actor, p_logger, (float[])m_params.Clone());
+				return new NIDirection(p_controller, (float[])m_params.Clone());
 			case ENeuralInput.PROXPLAYER:
-				return new NIProxPlayer(p_actor, p_logger, m_params);
+				return new NIProxPlayer(p_controller, m_params);
 		}
 		Debug.LogError("SHOULD ALWAYS RETURN A INeuralInput");
-		return null;*/
+		return null;
 	}
 
 

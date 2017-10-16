@@ -18,7 +18,7 @@ public class PointingAtDetector : VDetector {
 
   public override bool detect()
   {
- 		float forward = m_tree.getActorController().getForward();
+ 		/*float forward = m_tree.getActorController().getForward();
 
 		 //Vector Representing direction actor is pointing
 		Vector2 forward_vector = VectorCalc.forwardVector(m_tree.getActor().transform.rotation.eulerAngles.z, forward);
@@ -43,7 +43,7 @@ public class PointingAtDetector : VDetector {
 				return true;
 			}
 
-		}
+		}*/
 
 		return false;
   }

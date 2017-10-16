@@ -15,7 +15,7 @@ public struct SNeuralOutputDNA {
 	}
 
 	//BIRTHING FUNCTION
-	public INeuralOutput getNeuralOutput(EnemyControllerNeural p_actor_controller){
+	public INeuralOutput getNeuralOutput(CreatureController p_actor_controller){
 		switch(m_output_type){
 			case ENeuralOutput.NOVeloX: 
 				return new NOVeloX(p_actor_controller);

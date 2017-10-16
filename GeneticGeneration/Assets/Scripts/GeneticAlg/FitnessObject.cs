@@ -5,9 +5,9 @@ using UnityEngine;
 public class FitnessObject {
 
 	private float m_fitness;
-	private EvoObject m_dna;
+	private DNA m_dna;
 
-  public FitnessObject(float p_fitness, EvoObject p_dna)
+  public FitnessObject(float p_fitness, DNA p_dna)
   {
 		m_fitness = p_fitness;
 		m_dna = p_dna;	
@@ -17,9 +17,9 @@ public class FitnessObject {
 		return m_fitness;
 	}
 
-	public EvoObject getDna(){
+	/*public DNA getDna(){
 		return m_dna.clone();
-	}
+	}*/
 
 	public void modifyFitness(FitnessMod p_del_mod){
 		m_fitness = p_del_mod(m_fitness);

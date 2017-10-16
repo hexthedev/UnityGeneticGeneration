@@ -32,14 +32,11 @@ public class PlayerController : MonoBehaviour, IDamagable {
 		m_logger = m_game_controller.GetComponent<ObjectLogger>();
 		m_logger.log(gameObject, EObjectTypes.PLAYER);
 
-		manager.addTimeout(2f, () => { Debug.Log("WORKING"); } );
-		Debug.Log("Happens");
 	}
 	
 	// Update is called once per frame
 	void Update () {
 		manager.tick(Time.deltaTime);
-		Debug.Log("Happens");
 
 		if(Input.GetKeyDown(KeyCode.Space)){
 			NumberTester.print();
