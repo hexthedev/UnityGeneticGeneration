@@ -6,7 +6,7 @@ using Calc;
 public class CreatureController : MonoBehaviour, IDamagable {
 
 	//Global Mono Objects
-	public GameController m_game_controller;
+	private GameController m_game_controller;
 	private ObjectLogger m_logger;
 	private EvolutionController m_evolution_controller;
 	private DataCollector m_data;
@@ -19,7 +19,7 @@ public class CreatureController : MonoBehaviour, IDamagable {
 	private IntervalEventManager m_interval;
 
 	//DNA and BEHAVIOUR (this will change a lot)
-	private PhysicalDNA m_dna;
+	private DNA m_dna;
 	private Dictionary<ETrait, StatTuple> m_stats;
 	private NeuralNet m_brain;
 
@@ -36,6 +36,8 @@ public class CreatureController : MonoBehaviour, IDamagable {
 		m_logger = game_controller_object.GetComponent<ObjectLogger>();
 		m_evolution_controller = game_controller_object.GetComponent<EvolutionController>();
 		m_data = game_controller_object.GetComponent<DataCollector>();
+
+		m_logger.log(gameObject, EObjectTypes.ENEMY);
 
 		//Setup body Variables
 		m_rb = gameObject.GetComponent<Rigidbody2D>();
@@ -55,18 +57,18 @@ public class CreatureController : MonoBehaviour, IDamagable {
 		m_interval.tick(Time.deltaTime*m_game_controller.m_game_speed);
 	}
 
-	public void Initalize(DNA p_evo, int p_id){
-		//Creatures are given an ID on itialization
+	public void Initalize(DNA p_dna, int p_id){
+		m_dna = p_dna;
 
-		//Creatures are given two sets of DNA. Stats DNA and Brain DNA. PACKAGE?
-		//Creatures setup up their body with stats
-		//Creature set up their behaviour with brain
-		//--Brains are given the EnemyController
+		m_stats = p_dna.expressBody();
+		m_brain = p_dna.expressMind(this);
+
+		m_creature_id = p_id;
 	}
-
 
 	//OCCURENT EVENTS
 	public void damage(float p_damage){
+				
 		if(p_damage < 0){
 			return;
 		}
@@ -74,6 +76,8 @@ public class CreatureController : MonoBehaviour, IDamagable {
 		float damage = p_damage - m_stats[ETrait.DEFENSE].getCurrent();
 		damage = damage < 0.5f ? 0.5f : damage;
 		
+		Debug.Log(damage);
+
 		m_stats[ETrait.HP].addToCurrent(-damage);
 		
 		if(m_stats[ETrait.HP].getCurrent() <= 0){
@@ -83,7 +87,10 @@ public class CreatureController : MonoBehaviour, IDamagable {
 
 	public void death(){
 		//ON DEATH, creature pass on their fitness, and DNA only
-		
+		m_logger.unlog(gameObject, EObjectTypes.ENEMY);
+
+		m_evolution_controller.addDNA(m_dna, m_fitness);
+
 		Destroy(gameObject);
 	}
 

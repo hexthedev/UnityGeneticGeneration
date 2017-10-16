@@ -50,6 +50,12 @@ public class Matrix {
 		return new Matrix((float[,])m_matrix.Clone());
 	}
 
+	public Matrix randomClone(MinMaxFloat p_mm, bool p_weight_balance){
+		Matrix to_return = clone();
+		to_return.randomPopulate(p_mm, p_weight_balance);
+		return to_return;
+	}
+
 	public int numRows(){
 		return m_matrix.GetLength(1);
 	}

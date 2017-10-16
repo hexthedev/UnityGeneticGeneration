@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class PhysicalDNA {
-
+	
 	private Dictionary<ETrait, Chromo> m_chromos = new Dictionary<ETrait, Chromo>();
 	
 	public PhysicalDNA(){
@@ -17,6 +17,7 @@ public class PhysicalDNA {
 		m_chromos = p_chromos;
 	}
 
+	//This is the stat representation
 	private Chromo getChromo(ETrait p_trait){
 		return m_chromos[p_trait];
 	}
@@ -25,6 +26,7 @@ public class PhysicalDNA {
 		return m_chromos[p_trait].getGeneValue();
 	}
 
+	//Clonable
 	public PhysicalDNA clone(){
 		Dictionary<ETrait, Chromo> clone_chromos = new Dictionary<ETrait, Chromo>();
 
@@ -36,11 +38,25 @@ public class PhysicalDNA {
 		return new PhysicalDNA(clone_chromos);
 	}
 
-	public string print(){
+	
+	//ToString
+	public override string ToString(){
 		return "DNA -- At: " + m_chromos[ETrait.ATTACK].getGeneValue() + ", De: " + m_chromos[ETrait.DEFENSE].getGeneValue() + ", Sp: " + m_chromos[ETrait.SPEED].getGeneValue() + ", Hp: " + m_chromos[ETrait.HP].getGeneValue();
 	}
 
+	//DNA Expression Functions
+	public Dictionary<ETrait, StatTuple> expressDNA(){
+		Dictionary<ETrait, StatTuple> to_return = new Dictionary<ETrait, StatTuple>();
 
+		foreach(ETrait stat in m_chromos.Keys){
+			float value = getTraitValue(stat);
+			to_return.Add(stat, new StatTuple(value, value));
+		}
+
+		return to_return;
+	}
+
+	//Evolution Functions
 	public PhysicalDNA mutate(){
 		PhysicalDNA clone = this.clone();
 
@@ -63,6 +79,7 @@ public class PhysicalDNA {
 		return new PhysicalDNA(chromos);
 	}
 
+	//Data Collection
 	public string[] getStatsCSV(int creature, float p_fitness){
 		string[] stats = {creature.ToString(), m_chromos[ETrait.ATTACK].getGeneValue().ToString(),  m_chromos[ETrait.DEFENSE].getGeneValue().ToString(), m_chromos[ETrait.SPEED].getGeneValue().ToString(), m_chromos[ETrait.HP].getGeneValue().ToString(), p_fitness + "\n"};
 		return stats;

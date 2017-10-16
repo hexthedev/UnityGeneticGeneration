@@ -13,6 +13,29 @@ public class DNA {
 		m_mind = p_mind;
 	}
 
-	
+	public NeuralNet expressMind(CreatureController p_controller){
+		return m_mind.expressDNA(p_controller);
+	}
 
+	public Dictionary<ETrait, StatTuple> expressBody(){
+		return m_body.expressDNA();
+	}
+
+
+	//EVOLUTION FUNCTIONS
+	public static DNA crossover(DNA dna_1, DNA dna_2){
+		PhysicalDNA body = PhysicalDNA.crossover(dna_1.m_body, dna_2.m_body);
+		NeuralDNA mind = NeuralDNA.crossover(dna_1.m_mind, dna_2.m_mind);
+
+		return new DNA(body, mind);
+	}
+	
+	public void mutate(){
+		m_body.mutate();
+		m_mind.mutate();
+	}
+
+	public DNA clone(){
+		return new DNA(m_body.clone(), m_mind.clone());
+	}
 }

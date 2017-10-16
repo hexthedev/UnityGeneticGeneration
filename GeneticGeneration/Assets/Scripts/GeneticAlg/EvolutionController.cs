@@ -5,7 +5,6 @@ using UnityEngine;
 public class EvolutionController : MonoBehaviour {
 
 	GameController m_game_controller;
-
 	DataCollector m_data;
 
 	FitnessList m_gene_pool;
@@ -22,12 +21,10 @@ public class EvolutionController : MonoBehaviour {
 	public int m_mutation_chance_percentage;
 
 
-
-
-	private int m_creature = 0;
+	private int m_creature_id = 0;
 
 	void Start(){
-		m_game_controller = gameObject.GetComponent<GameController>();
+		m_game_controller = GameObject.FindGameObjectWithTag("GameController").GetComponent<GameController>();
 		m_data = gameObject.GetComponent<DataCollector>();	
 		m_gene_pool = new FitnessList(25);
 
@@ -35,7 +32,7 @@ public class EvolutionController : MonoBehaviour {
 	}
 
 	void Update(){
-	 m_birth_timer += Time.deltaTime * m_game_controller.m_game_speed;
+	 m_birth_timer += Time.deltaTime;
 
 		if(m_birth_timer >= m_seconds_per_birth){
 			massSpawn(m_start_spawn);
@@ -54,26 +51,16 @@ public class EvolutionController : MonoBehaviour {
 
 	private void birth(){
 
-		/*DNA evo1 = m_gene_pool.getRandomObject();
+		DNA evo1 = m_gene_pool.getRandomObject();
 		DNA evo2 = m_gene_pool.getRandomObject();
 
-		// Debug.Log(m_gene_pool.print());
-
-
-		//DNA SEQUENCE
-		DNAsivolved = PhysicalDNA.crossovsi(evo1.getDNA(), evo2.getDNA());
-
-		//BEHAVIOUR SEQUENCE
-		BehaviourDNA evo_behav = BehaviourDNA.crossover(evo1.GetBehaviour(), evo2.GetBehaviour());
+		DNA birth = DNA.crossover(evo1, evo2);
 		
 		if(Random.Range(0,100) < m_mutation_chance_percentage){
-			// Debug.Log("MUTATE");
-			evolved = evolved.mutate();
-			evo_behav.mutate();
+			birth.mutate();
 		}
 
-		m_game_controller.spawn(new DNA(evolved, evo_behav), m_creature);
-		m_creature++;*/
+		m_game_controller.spawn(birth, m_creature_id);
 	}
 
 	private void massSpawn(int p_amount){

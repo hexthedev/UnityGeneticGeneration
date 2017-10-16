@@ -53,6 +53,25 @@ public class NeuralDNA {
 		
 	}
 
+
+	//This maintains the structure of the passed in NeuralDNA
+	public NeuralDNA(NeuralDNA p_structure){
+		m_inputs = (SNeuralInputDNA[])p_structure.m_inputs.Clone();
+		m_outputs = (SNeuralOutputDNA[])p_structure.m_outputs.Clone();
+		m_hiddens = new List<DActivationFunction[]>();
+
+		foreach(DActivationFunction[] activate in p_structure.m_hiddens){
+			m_hiddens.Add((DActivationFunction[])activate.Clone());
+		}
+		
+		m_links = new Matrix[p_structure.m_links.Length];
+
+		for(int i = 0 ; i< m_links.Length; i++){
+			m_links[i] = p_structure.m_links[i].randomClone(NeuralNetConfig.weight_mm, true);
+			Debug.Log(m_links[i]);
+		}
+	}
+
 	//BIRTHING FUNCTIONS
 
 	//Converts the DNA inputs into a concrete input layer
@@ -131,6 +150,10 @@ public class NeuralDNA {
 		}
 	}
 
+	//EXPRESSION METHODS
+	public NeuralNet expressDNA(CreatureController p_controller){
+		return new NeuralNet(this, p_controller);
+	}
 
 	//HELPER
 	public static bool isSameStructure(NeuralDNA p_dna1, NeuralDNA p_dna2){
