@@ -2,11 +2,11 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class ObjectLogger : MonoBehaviour {
+public static class ObjectLogger {
 
-	private Dictionary<EObjectTypes, List<GameObject>> m_objects;
+	private static Dictionary<EObjectTypes, List<GameObject>> m_objects;
 
-	void Awake(){
+	static ObjectLogger(){
 
 		m_objects = new Dictionary<EObjectTypes, List<GameObject>>();
 
@@ -15,19 +15,19 @@ public class ObjectLogger : MonoBehaviour {
 		}
 	}
 
-	public void log(GameObject p_object, EObjectTypes p_type){
+	public static void log(GameObject p_object, EObjectTypes p_type){
 		m_objects[p_type].Add(p_object);
 		//debug(p_object.transform.position, Color.red, 1f);
 		//Debug.Log("ADD: " +  m_objects[p_type].Count);
 	}
 
-	public void unlog(GameObject p_object, EObjectTypes p_type){
+	public static void unlog(GameObject p_object, EObjectTypes p_type){
 		m_objects[p_type].Remove(p_object);
 		//debug(p_object.transform.position, Color.blue, 1f);
 		//Debug.Log("REMOVE: " +  m_objects[p_type].Count);
 	}
 
-	public GameObject[] getByType(EObjectTypes p_type){
+	public static GameObject[] getByType(EObjectTypes p_type){
 		/*foreach(GameObject x in m_objects[p_type].ToArray()){
 			debug(x.transform.position, Color.cyan, 10f);
 		}*/
@@ -39,7 +39,31 @@ public class ObjectLogger : MonoBehaviour {
 		return m_objects[p_type].ToArray();
 	}
 
-	public GameObject[] getAll(){
+	public static GameObject[] getByTypeByDistance(EObjectTypes p_type, Vector3 point){
+		List<GameObject> objects = m_objects[p_type];
+
+		SortedDictionary<float, GameObject> ob_by_dist = new SortedDictionary<float, GameObject>();
+
+		for(int i = 0; i<objects.Count; i++){
+			
+			float mag = (objects[i].transform.position - point).magnitude;
+
+			while(ob_by_dist.ContainsKey(mag)){
+				mag += 0.001f;
+			}
+
+			ob_by_dist.Add(mag, objects[i]);
+		}
+
+		GameObject[] to_return_temp = new GameObject[ob_by_dist.Count];
+		ob_by_dist.Values.CopyTo(to_return_temp, 0);
+
+		return to_return_temp;
+	}
+
+	
+
+	public static GameObject[] getAll(){
 		List<GameObject> objects = new List<GameObject>();
 
 		foreach(List<GameObject> list in m_objects.Values){
@@ -55,7 +79,7 @@ public class ObjectLogger : MonoBehaviour {
 
 
 	//DEBUG
-	private void debug(Vector3 p_position, Color p_color, float p_duration){
+	private static void debug(Vector3 p_position, Color p_color, float p_duration){
 		Debug.DrawLine(Vector3.zero, p_position, p_color, p_duration);
 	}	
 

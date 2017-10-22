@@ -27,30 +27,43 @@ public class NeuralDNA {
 		m_outputs = (SNeuralOutputDNA[])p_outputs.Clone();
 	}
 
+	//Only give inputs and outputs
+	public NeuralDNA(SNeuralInputDNA[] p_inputs, SNeuralOutputDNA[] p_outputs){
+		m_inputs = (SNeuralInputDNA[])p_inputs.Clone();
+		m_outputs = (SNeuralOutputDNA[])p_outputs.Clone();
+
+		setRandomHiddens();
+		constructLinks();
+	}
+
+	//Only give inputs and outputs and layer number
+	public NeuralDNA(SNeuralInputDNA[] p_inputs, SNeuralOutputDNA[] p_outputs, int p_num_layers){
+		m_inputs = (SNeuralInputDNA[])p_inputs.Clone();
+		m_outputs = (SNeuralOutputDNA[])p_outputs.Clone();
+
+		setRandomHiddens(p_num_layers);
+		constructLinks();
+	}
+
+	//Give inputs, ouputs, layer number and layer size
+	public NeuralDNA(SNeuralInputDNA[] p_inputs, SNeuralOutputDNA[] p_outputs, int p_num_layers, int p_layer_size){
+		m_inputs = (SNeuralInputDNA[])p_inputs.Clone();
+		m_outputs = (SNeuralOutputDNA[])p_outputs.Clone();
+
+		setRandomHiddens(p_num_layers, p_layer_size);
+		constructLinks();
+	}
+
 	//Constructs random neural DNA
 	public NeuralDNA(){
 		m_inputs = SNeuralInputDNA.randomInputArrayRepeat(RandomCalc.Rand(NeuralNetConfig.input_mm));
 		m_outputs = SNeuralOutputDNA.randomOutputArrayNoRepeat(RandomCalc.Rand(NeuralNetConfig.output_mm));
 
 		//Now that we have output we can make some random hidden layers based on activation functions
-		int hiddens = RandomCalc.Rand(NeuralNetConfig.hidden_layer_mm);
-
-		m_hiddens = new List<DActivationFunction[]>();
-		for(int i = 0; i<hiddens; i++){
-			m_hiddens.Add(Activators.randomArrayOfSize(RandomCalc.Rand(NeuralNetConfig.hidden_size_mm)));
-		}
+		setRandomHiddens();
 
 		//Finally we construct the required links
-		m_links = new Matrix[hiddens+1];
-
-		m_links[0] = new Matrix(m_hiddens[0].Length, m_inputs.Length, NeuralNetConfig.weight_mm, true);
-
-		for(int i = 1; i<m_links.Length-1; i++){
-			m_links[i] = new Matrix(m_hiddens[i].Length, m_hiddens[i-1].Length, NeuralNetConfig.weight_mm, true);
-		}
-
-		m_links[m_links.Length-1] = new Matrix(m_outputs.Length, m_hiddens[m_hiddens.Count-1].Length, NeuralNetConfig.weight_mm, true);
-		
+		constructLinks();
 	}
 
 
@@ -68,8 +81,44 @@ public class NeuralDNA {
 
 		for(int i = 0 ; i< m_links.Length; i++){
 			m_links[i] = p_structure.m_links[i].randomClone(NeuralNetConfig.weight_mm, true);
-			Debug.Log(m_links[i]);
+//			Debug.Log(m_links[i]);
 		}
+	}
+
+	//Set random number and size of hiddens
+	private void setRandomHiddens(){
+		m_hiddens = new List<DActivationFunction[]>();
+		for(int i = 0; i<RandomCalc.Rand(NeuralNetConfig.hidden_layer_mm); i++){
+			m_hiddens.Add(Activators.randomArrayOfSize(RandomCalc.Rand(NeuralNetConfig.hidden_size_mm)));
+		}
+	}
+
+	//Add number of Random hidden layers of variying size
+	private void setRandomHiddens(int p_num_layers){
+		m_hiddens = new List<DActivationFunction[]>();
+		for(int i = 0; i<p_num_layers; i++){
+			m_hiddens.Add(Activators.randomArrayOfSize(RandomCalc.Rand(NeuralNetConfig.hidden_size_mm)));
+		}
+	}
+
+	//Add number of hidden layers of specific size
+	private void setRandomHiddens(int p_num_layers, int p_layer_size){
+		m_hiddens = new List<DActivationFunction[]>();
+		for(int i = 0; i<p_num_layers; i++){
+			m_hiddens.Add(Activators.randomArrayOfSize(p_layer_size));
+		}
+	}
+
+	private void constructLinks(){
+		m_links = new Matrix[m_hiddens.Count+1];
+
+		m_links[0] = new Matrix(m_hiddens[0].Length, m_inputs.Length, NeuralNetConfig.weight_mm, true);
+
+		for(int i = 1; i<m_links.Length-1; i++){
+			m_links[i] = new Matrix(m_hiddens[i].Length, m_hiddens[i-1].Length, NeuralNetConfig.weight_mm, true);
+		}
+
+		m_links[m_links.Length-1] = new Matrix(m_outputs.Length, m_hiddens[m_hiddens.Count-1].Length, NeuralNetConfig.weight_mm, true);
 	}
 
 	//BIRTHING FUNCTIONS

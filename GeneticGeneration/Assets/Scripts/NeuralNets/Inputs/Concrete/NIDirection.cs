@@ -7,11 +7,15 @@ public class NIDirection : INeuralInput {
 
 	private CreatureController m_controller;
 
+	private EObjectTypes m_object;
 	private Vector2 m_direction;
 
 	public NIDirection (CreatureController p_controller, float[] p_params){
 		m_controller = p_controller;
 		m_direction = new Vector2(p_params[0], p_params[1]);
+		m_object = (EObjectTypes)(int)p_params[2];
+
+//		Debug.Log("DIRECTION: " + m_object);
 	}
 
     public SNeuralInputDNA dnaify()
@@ -22,7 +26,9 @@ public class NIDirection : INeuralInput {
 
     public float input()
     {
-		Vector3 player_direction = m_controller.sensePosition() - m_controller.senseNearestObjectPosition(EObjectTypes.PLAYER);
-		return VectorCalc.getAngle( m_direction, player_direction )/180f;
+		if(!m_controller.senseExistsObject(m_object)) { return 0; }
+
+		Vector3 object_direction = m_controller.sensePosition() - m_controller.senseNearestObjectPosition(m_object);
+		return VectorCalc.getAngle( m_direction, object_direction )/180f;
     }
 }

@@ -6,7 +6,6 @@ using Calc;
 public class RelativeDirection : VActionDirection
 {
   private GameObject m_actor;
-  private ObjectLogger m_logger;
 	
   private int m_index;
 
@@ -17,7 +16,6 @@ public class RelativeDirection : VActionDirection
 
 
   public RelativeDirection(int p_index, EObjectTypes p_to, float p_degrees, VSequenceAction p_action):base(p_action){
-    m_logger = m_action.getSequence().getTree().GetLogger();
     m_actor = m_action.getSequence().getTree().getActor();
     m_index = p_index;
     m_to = p_to;
@@ -27,7 +25,7 @@ public class RelativeDirection : VActionDirection
 	//CALCUATION
 	public override Vector2 direction()
   {
-    GameObject[] objects = m_logger.getByType(m_to); 
+    GameObject[] objects = ObjectLogger.getByType(m_to); 
     
     if(objects.Length == 0) { return Vector2.zero; }
     

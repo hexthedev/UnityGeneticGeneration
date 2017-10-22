@@ -7,9 +7,7 @@ public class CreatureController : MonoBehaviour, IDamagable {
 
 	//Global Mono Objects
 	private GameController m_game_controller;
-	private ObjectLogger m_logger;
 	private EvolutionController m_evolution_controller;
-	private DataCollector m_data;
 	
 	//Enemy Specific Objects
 	private Rigidbody2D m_rb;
@@ -33,11 +31,9 @@ public class CreatureController : MonoBehaviour, IDamagable {
 		GameObject game_controller_object = GameObject.FindGameObjectWithTag("GameController");
 
 		m_game_controller = game_controller_object.GetComponent<GameController>();
-		m_logger = game_controller_object.GetComponent<ObjectLogger>();
-		m_evolution_controller = game_controller_object.GetComponent<EvolutionController>();
-		m_data = game_controller_object.GetComponent<DataCollector>();
+//		m_evolution_controller = game_controller_object.GetComponent<EvolutionController>();
 
-		m_logger.log(gameObject, EObjectTypes.ENEMY);
+		ObjectLogger.log(gameObject, EObjectTypes.ENEMY);
 
 		//Setup body Variables
 		m_rb = gameObject.GetComponent<Rigidbody2D>();
@@ -45,13 +41,15 @@ public class CreatureController : MonoBehaviour, IDamagable {
 		//Setup Time based events
 		m_timeout = new TimeoutEventManager();
 		m_interval = new IntervalEventManager();
+
+		gameObject.GetComponent<SpriteRenderer>().color = new Color(Random.Range(0f,1f), Random.Range(0f,1f), Random.Range(0f,1f));
 	}
 	
 	// Update is called once per frame
 	void Update () {
 		m_brain.propagate();
 
-		m_fitness += (1/Mathf.Pow((m_logger.getByType(EObjectTypes.PLAYER)[0].transform.position - gameObject.transform.position).magnitude,2))*Time.deltaTime*m_game_controller.m_game_speed;
+		m_fitness += (1/Mathf.Pow((ObjectLogger.getByType(EObjectTypes.PLAYER)[0].transform.position - gameObject.transform.position).magnitude,2))*Time.deltaTime*m_game_controller.m_game_speed;
 
 		m_timeout.tick(Time.deltaTime*m_game_controller.m_game_speed);
 		m_interval.tick(Time.deltaTime*m_game_controller.m_game_speed);
@@ -76,7 +74,7 @@ public class CreatureController : MonoBehaviour, IDamagable {
 		float damage = p_damage - m_stats[ETrait.DEFENSE].getCurrent();
 		damage = damage < 0.5f ? 0.5f : damage;
 		
-		Debug.Log(damage);
+//		Debug.Log(damage);
 
 		m_stats[ETrait.HP].addToCurrent(-damage);
 		
@@ -87,9 +85,9 @@ public class CreatureController : MonoBehaviour, IDamagable {
 
 	public void death(){
 		//ON DEATH, creature pass on their fitness, and DNA only
-		m_logger.unlog(gameObject, EObjectTypes.ENEMY);
+		ObjectLogger.unlog(gameObject, EObjectTypes.ENEMY);
 
-		m_evolution_controller.addDNA(m_dna, m_fitness);
+//		m_evolution_controller.addDNA(m_dna, m_fitness);
 
 		Destroy(gameObject);
 	}
@@ -103,12 +101,23 @@ public class CreatureController : MonoBehaviour, IDamagable {
 		return gameObject.transform.position;
 	}
 
+	public bool senseExistsObject(EObjectTypes p_object){
+		return !(ObjectLogger.getByType(p_object).Length == 0);
+	}
+
 	public Vector3 senseNearestObjectPosition(EObjectTypes p_object){
-		return m_logger.getByType(p_object)[0].transform.position;
+				
+		GameObject[] objects = ObjectLogger.getByTypeByDistance(p_object, gameObject.transform.position);
+		
+		if(objects.Length == 0)  return gameObject.transform.position; 
+
+		if(p_object == EObjectTypes.ENEMY && objects.Length > 1) return objects[1].transform.position;
+
+		return objects[0].transform.position;
 	}
 
 	public GameObject[] senseVisibleObjects(EObjectTypes p_object){
-		return m_logger.getByType(p_object);
+		return ObjectLogger.getByTypeByDistance(p_object, gameObject.transform.position);
 	}
 
 	public Quaternion senseRotation(){

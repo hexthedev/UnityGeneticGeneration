@@ -8,9 +8,18 @@ public delegate float DActivationFunction(float value);
 public static class Activators{
 
   //Functions
-  private static DActivationFunction m_bipolar = (float p_value) => { return p_value > 0 ? 1 : -1; };
+  private static DActivationFunction m_bipolar = (float p_value) => { 
+    if(p_value > 0){
+      return 1;
+    } else if (p_value < 0) {
+      return -1;
+    } else {
+      return 0;
+    }
+  };
+
   private static DActivationFunction m_piece_linear = (float p_value) => { 
-    if(p_value > -1 && p_value < 1){
+    if(p_value >= -1 && p_value <= 1){
       return p_value;
     } else {
       return p_value > 1 ? 1 : -1; 

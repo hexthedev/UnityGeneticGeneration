@@ -5,8 +5,6 @@ using Calc;
 
 public class Bullet : MonoBehaviour {
 
-	private ObjectLogger m_logger;
-
 	private float m_damage;
 
 	private string m_shooter;
@@ -15,17 +13,27 @@ public class Bullet : MonoBehaviour {
 
 	private Rigidbody2D m_rb;
 
-	public void Initalize( Vector2 p_direction, float p_damage, string p_shooter, ObjectLogger p_logger, GameController p_controller){
+	private TimeoutEventManager m_timeout;
+
+	public void Initalize( Vector2 p_direction, float p_damage, string p_shooter, GameController p_controller){
 		m_rb = gameObject.GetComponent<Rigidbody2D>();
 		this.m_rb.velocity = p_direction * m_speed * p_controller.m_game_speed;
 		m_damage = p_damage;
 		m_shooter = p_shooter;
 
-		m_logger = p_logger;
-		m_logger.log(gameObject, EObjectTypes.BULLET);
+		ObjectLogger.log(gameObject, EObjectTypes.BULLET);
+
+		m_timeout = new TimeoutEventManager();
+		
+		m_timeout.addTimeout(2f, ()=>{ ObjectLogger.unlog(gameObject, EObjectTypes.BULLET); Destroy(gameObject);  });
 	}
 
 	// Update is called once per frame
+	void Update(){
+		//Debug.Log(m_timeout);
+		m_timeout.tick(Time.deltaTime);
+	}
+
 	void OnBecameInvisible() {
 		Destroy(gameObject);
 	}
@@ -43,7 +51,7 @@ public class Bullet : MonoBehaviour {
 			damagable.damage(m_damage);
 		}
 
-		m_logger.unlog(gameObject, EObjectTypes.BULLET);
+		ObjectLogger.unlog(gameObject, EObjectTypes.BULLET);
 		Destroy(gameObject);
 	}
 

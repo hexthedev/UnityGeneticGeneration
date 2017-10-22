@@ -9,7 +9,6 @@ public class BehaviourTree {
 	private IBehaviourNode m_current_behav;
 	
 	//Reference Infomation
-	private ObjectLogger m_logger;
 	private GameObject m_actor;	
 //	private EnemyController m_actor_controller;
 	private Rigidbody2D m_actor_body;
@@ -19,8 +18,7 @@ public class BehaviourTree {
 
 	//CONSTRUCTORS
 	//For manually constructing behaviour trees
-	public BehaviourTree(ObjectLogger p_logger, GameObject p_actor, BehaviourDNA p_dna){
-		m_logger = p_logger;
+	public BehaviourTree(GameObject p_actor, BehaviourDNA p_dna){
 		m_actor = p_actor;
 		m_dna = p_dna;
 
@@ -49,11 +47,6 @@ public class BehaviourTree {
 	public Rigidbody2D getActorBody(){
 		return m_actor_body;
 	}
-
-	public ObjectLogger GetLogger(){
-		return m_logger;
-	}
-
 
 	private VTreeNode<IBehaviourNode> generatePhenotype(VTreeNode<IBehaviourGenoType> p_node, VTreeNode<IBehaviourNode> p_parent){
 

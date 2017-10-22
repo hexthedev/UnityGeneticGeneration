@@ -22,7 +22,7 @@ public class DirectionDetector : VDetector
 
   public override bool detect()
   {
-    GameObject[] objects = m_tree.GetLogger().getByType(m_of);
+    GameObject[] objects = ObjectLogger.getByType(m_of);
 
 		int count = 0;
 

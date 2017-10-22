@@ -10,12 +10,13 @@ public class FitnessList
 	public FitnessList(int p_size)
 	{
 		m_objects = new FitnessObject[p_size];
+		
+		m_species = new NeuralDNA();
+		
 		randomFill();
 	}
 
-	public void randomFill(){
-		m_species = new NeuralDNA();
-				
+	public void randomFill(){			
 		for(int i = 0; i<m_objects.Length; i++){
 			m_objects[i] = new FitnessObject(0, new DNA(new PhysicalDNA(), new NeuralDNA(m_species)));
 		}

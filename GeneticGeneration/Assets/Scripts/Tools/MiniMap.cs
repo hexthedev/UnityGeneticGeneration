@@ -6,8 +6,6 @@ using Calc;
 
 public class MiniMap : MonoBehaviour {
 
-	public ObjectLogger m_logger;
-
 	private Texture2D m_tex;
 
 	private RawImage m_image;
@@ -21,9 +19,6 @@ public class MiniMap : MonoBehaviour {
 		m_tex = new Texture2D(132,95);
 
 		m_image.texture = m_tex;
-
-		m_logger = GameObject.FindGameObjectWithTag("GameController").GetComponent<ObjectLogger>();
-
 	}
 	
 	// Update is called once per frame
@@ -37,7 +32,7 @@ public class MiniMap : MonoBehaviour {
 
 		m_tex.SetPixels(colors);
 
-		GameObject[] player = m_logger.getByType(EObjectTypes.PLAYER);
+		GameObject[] player = ObjectLogger.getByType(EObjectTypes.PLAYER);
 
 		foreach(GameObject x in player){
 			Vector2 position = VectorCalc.CalcVec3to2(x.transform.position);
@@ -51,7 +46,7 @@ public class MiniMap : MonoBehaviour {
 		}
 
 
-		GameObject[] enemies = m_logger.getByType(EObjectTypes.ENEMY);
+		GameObject[] enemies = ObjectLogger.getByType(EObjectTypes.ENEMY);
 
 		foreach(GameObject x in enemies){
 			Vector2 position = VectorCalc.CalcVec3to2(x.transform.position);

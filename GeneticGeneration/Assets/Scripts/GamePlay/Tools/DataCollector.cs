@@ -2,11 +2,11 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class DataCollector : MonoBehaviour {
+public static class DataCollector {
 
-	CSVWriter m_csv;
+	static CSVWriter m_csv;
 
-	void Awake(){
+	static DataCollector(){
 
 	/*	if(!PlayerPrefs.HasKey("trail")){
 			PlayerPrefs.SetInt("trail", 0);
@@ -21,7 +21,7 @@ public class DataCollector : MonoBehaviour {
 		m_csv.WriteCSVRow(headers);*/
 	}
 
-	public void recordData(PhysicalDNA p_dna, int p_creature, float p_fitness){
+	public static void recordData(PhysicalDNA p_dna, int p_creature, float p_fitness){
 		//m_csv.WriteCSVRow(p_dna.getStatsCSV(p_creature, p_fitness));
 	}
 

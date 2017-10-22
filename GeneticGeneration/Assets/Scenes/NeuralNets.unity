@@ -249,7 +249,6 @@ GameObject:
   - component: {fileID: 384172681}
   - component: {fileID: 384172680}
   - component: {fileID: 384172679}
-  - component: {fileID: 384172684}
   m_Layer: 0
   m_Name: Player
   m_TagString: Player
@@ -305,7 +304,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_game_controller: {fileID: 2068381735}
   m_hp: 100
-  m_speed: 7
+  m_speed: 4
   m_bullet: {fileID: 1122462939011534, guid: 929b0d1aafcc40642b42c4e74f55f09e, type: 2}
   shot_rate: 0.4
   m_damage: 30
@@ -367,17 +366,6 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &384172684
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 384172678}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 7192457a74585f9459c5e165670a9cb3, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1 &984556403
 GameObject:
   m_ObjectHideFlags: 0
@@ -858,7 +846,6 @@ GameObject:
   - component: {fileID: 1771996360}
   - component: {fileID: 1771996359}
   - component: {fileID: 1771996358}
-  - component: {fileID: 1771996357}
   m_Layer: 0
   m_Name: Main Camera
   m_TagString: MainCamera
@@ -866,17 +853,6 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!114 &1771996357
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 1771996356}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 78c40662125d1174681d4bfd73c961de, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!81 &1771996358
 AudioListener:
   m_ObjectHideFlags: 0
@@ -955,9 +931,6 @@ GameObject:
   m_Component:
   - component: {fileID: 2068381736}
   - component: {fileID: 2068381735}
-  - component: {fileID: 2068381734}
-  - component: {fileID: 2068381733}
-  - component: {fileID: 2068381732}
   m_Layer: 0
   m_Name: GameController
   m_TagString: GameController
@@ -965,42 +938,6 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!114 &2068381732
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 2068381731}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 6c50e1b70f49b1d4bb1857dd5c510526, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
---- !u!114 &2068381733
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 2068381731}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 56ff6105a013bad49ab29cf83eac5d5b, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
---- !u!114 &2068381734
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 2068381731}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 90e9b6b3ce48f9945801be803c4d20a0, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_start_spawn: 10
-  m_seconds_per_birth: 10
-  m_mutation_chance_percentage: 5
 --- !u!114 &2068381735
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1014,7 +951,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_enemy: {fileID: 1368618367434496, guid: 7088a0503a153f6459f3bbb5cdf50e7b, type: 2}
   m_game_speed: 1
-  m_reset_speed: 0
 --- !u!4 &2068381736
 Transform:
   m_ObjectHideFlags: 0
