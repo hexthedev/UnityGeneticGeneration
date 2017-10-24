@@ -5,6 +5,8 @@ using Calc;
 
 public class Bullet : MonoBehaviour {
 
+	GameController m_game_controller;
+
 	private float m_damage;
 
 	private string m_shooter;
@@ -12,12 +14,15 @@ public class Bullet : MonoBehaviour {
 	public float m_speed = 20;
 
 	private Rigidbody2D m_rb;
+	private Vector3 m_standard_velocity;
 
 	private TimeoutEventManager m_timeout;
 
 	public void Initalize( Vector2 p_direction, float p_damage, string p_shooter, GameController p_controller){
 		m_rb = gameObject.GetComponent<Rigidbody2D>();
-		this.m_rb.velocity = p_direction * m_speed * p_controller.m_game_speed;
+		m_game_controller = p_controller;
+		
+		m_standard_velocity = p_direction * m_speed;
 		m_damage = p_damage;
 		m_shooter = p_shooter;
 
@@ -29,9 +34,11 @@ public class Bullet : MonoBehaviour {
 	}
 
 	// Update is called once per frame
-	void Update(){
-		//Debug.Log(m_timeout);
-		m_timeout.tick(Time.deltaTime);
+	void FixedUpdate(){
+		
+		m_rb.velocity = m_standard_velocity;
+		m_timeout.tick(Time.fixedDeltaTime);
+		
 	}
 
 	void OnBecameInvisible() {

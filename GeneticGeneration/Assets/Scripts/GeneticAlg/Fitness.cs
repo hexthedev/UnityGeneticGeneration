@@ -14,6 +14,7 @@ public class FitnessList
 		m_species = new NeuralDNA();
 		
 		randomFill();
+
 	}
 
 	public void randomFill(){			

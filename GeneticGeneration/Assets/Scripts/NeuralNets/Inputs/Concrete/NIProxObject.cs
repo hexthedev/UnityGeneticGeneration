@@ -11,10 +11,14 @@ public class NIProxObject : INeuralInput {
 
 	private float m_scale;
 
+	private int m_order_by_proximity;
+
+
 	public NIProxObject (CreatureController p_controller, float[] p_params){
 		m_controller = p_controller;
 		m_scale = p_params[0];
 		m_object = (EObjectTypes)(int)p_params[1];
+		m_order_by_proximity = (int)p_params[2];
 
 //		Debug.Log("PROX: " + m_object);
 	}
@@ -27,10 +31,11 @@ public class NIProxObject : INeuralInput {
 
     public float input()
     {	
-		if(!m_controller.senseExistsObject(m_object)) { return 0; }
+		if(!m_controller.senseExistsObject(m_object, m_order_by_proximity)) { return 0; }
 
 		float object_prox = (m_controller.sensePosition() - m_controller.senseNearestObjectPosition(m_object)).magnitude;
 	
+		Debug.DrawLine(m_controller.sensePosition(), m_controller.senseNearestObjectPosition(m_object), Color.red, Time.fixedDeltaTime );
 	
 		return (m_scale/object_prox)/m_scale;
     }

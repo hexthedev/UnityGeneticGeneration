@@ -34,10 +34,10 @@ public struct SNeuralInputDNA {
 
 		switch(p_input_type){
 			case ENeuralInput.DIRECTION: 
-				float[] dir_params = {RandomCalc.Rand(NeuralNetConfig.direction_mm), RandomCalc.Rand(NeuralNetConfig.direction_mm), (float)EnumCalc.randomValue<EObjectTypes>()};
+				float[] dir_params = {RandomCalc.Rand(NeuralNetConfig.direction_mm), RandomCalc.Rand(NeuralNetConfig.direction_mm), (float)EnumCalc.randomValue<EObjectTypes>(), 0};
 				return new SNeuralInputDNA(ENeuralInput.DIRECTION, dir_params); 
 			case ENeuralInput.PROXPLAYER: 
-				float[] prox_params = {RandomCalc.Rand(NeuralNetConfig.prox_mm), (float)EnumCalc.randomValue<EObjectTypes>()};
+				float[] prox_params = {RandomCalc.Rand(NeuralNetConfig.prox_mm), (float)EnumCalc.randomValue<EObjectTypes>(), 0};
 				return new SNeuralInputDNA(ENeuralInput.PROXPLAYER, prox_params); 
 		}
 
@@ -66,8 +66,16 @@ public struct SNeuralInputDNA {
 
 		List<SNeuralInputDNA> dna = new List<SNeuralInputDNA>();
 
-		dna.Add(new SNeuralInputDNA(ENeuralInput.PROXPLAYER, new float[] {7, 3}));
-		dna.Add(new SNeuralInputDNA(ENeuralInput.PROXPLAYER, new float[] {7, 0}));
+		dna.Add(new SNeuralInputDNA(ENeuralInput.PROXPLAYER, new float[] {7, 3, 0}));
+		dna.Add(new SNeuralInputDNA(ENeuralInput.PROXPLAYER, new float[] {7, 3, 1}));
+		dna.Add(new SNeuralInputDNA(ENeuralInput.PROXPLAYER, new float[] {7, 3, 2}));
+		
+		dna.Add(new SNeuralInputDNA(ENeuralInput.DIRECTION, new float[] {0, 1 , 3, 0}));
+		dna.Add(new SNeuralInputDNA(ENeuralInput.DIRECTION, new float[] {0, 1, 3, 1}));
+		dna.Add(new SNeuralInputDNA(ENeuralInput.DIRECTION, new float[] {0, 1, 3, 2}));
+
+		dna.Add(new SNeuralInputDNA(ENeuralInput.PROXPLAYER, new float[] {7, 0, 0}));
+		dna.Add(new SNeuralInputDNA(ENeuralInput.DIRECTION, new float[] {0, 1 , 0, 0}));
 
 		for(int i = 0; i<size; i++){
 			dna.Add(randomInputDNA(ArrayCalc.randomElement(NeuralNetConfig.active_inputs)));
@@ -75,8 +83,5 @@ public struct SNeuralInputDNA {
 
 		return dna.ToArray(); 
 	}
-
-
-
 
 }

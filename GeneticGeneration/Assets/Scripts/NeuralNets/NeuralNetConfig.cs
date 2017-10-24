@@ -11,7 +11,7 @@ public static class NeuralNetConfig {
 	//Neural DNA
 	public static bool debug_net_dna = false;
 
-	public static MinMaxInt input_mm= new MinMaxInt(2,4);
+	public static MinMaxInt input_mm= new MinMaxInt(0,0);
 	public static MinMaxInt output_mm= new MinMaxInt(2,4);
 	public static MinMaxInt hidden_layer_mm= new MinMaxInt(1,2);
 	public static MinMaxInt hidden_size_mm= new MinMaxInt(1,3);

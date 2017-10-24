@@ -7,7 +7,6 @@ public class CreatureController : MonoBehaviour, IDamagable {
 
 	//Global Mono Objects
 	private GameController m_game_controller;
-	private EvolutionController m_evolution_controller;
 	
 	//Enemy Specific Objects
 	private Rigidbody2D m_rb;
@@ -23,6 +22,7 @@ public class CreatureController : MonoBehaviour, IDamagable {
 
 	//BASIC INFO (this will change a lot)
 	private int m_creature_id;
+	private int m_species_id;
 	private float m_fitness;
 	
 	// Use this for initialization
@@ -31,7 +31,6 @@ public class CreatureController : MonoBehaviour, IDamagable {
 		GameObject game_controller_object = GameObject.FindGameObjectWithTag("GameController");
 
 		m_game_controller = game_controller_object.GetComponent<GameController>();
-//		m_evolution_controller = game_controller_object.GetComponent<EvolutionController>();
 
 		ObjectLogger.log(gameObject, EObjectTypes.ENEMY);
 
@@ -41,27 +40,29 @@ public class CreatureController : MonoBehaviour, IDamagable {
 		//Setup Time based events
 		m_timeout = new TimeoutEventManager();
 		m_interval = new IntervalEventManager();
+		m_interval.addListener(3f, ()=> { m_game_controller.addDNA(m_dna, m_fitness, m_species_id); });
 
 		gameObject.GetComponent<SpriteRenderer>().color = new Color(Random.Range(0f,1f), Random.Range(0f,1f), Random.Range(0f,1f));
 	}
 	
 	// Update is called once per frame
-	void Update () {
+	void FixedUpdate () {		
 		m_brain.propagate();
 
-		m_fitness += (1/Mathf.Pow((ObjectLogger.getByType(EObjectTypes.PLAYER)[0].transform.position - gameObject.transform.position).magnitude,2))*Time.deltaTime*m_game_controller.m_game_speed;
+		m_fitness += Time.fixedDeltaTime * 1/(((ObjectLogger.getByTypeByDistance(EObjectTypes.PLAYER, gameObject.transform.position)[0].transform.position - gameObject.transform.position).magnitude)/2);
 
-		m_timeout.tick(Time.deltaTime*m_game_controller.m_game_speed);
-		m_interval.tick(Time.deltaTime*m_game_controller.m_game_speed);
+		m_timeout.tick(Time.fixedDeltaTime);
+		m_interval.tick(Time.fixedDeltaTime);
 	}
 
-	public void Initalize(DNA p_dna, int p_id){
+	public void Initalize(DNA p_dna, int p_creature_id, int p_species_id){
 		m_dna = p_dna;
 
 		m_stats = p_dna.expressBody();
 		m_brain = p_dna.expressMind(this);
 
-		m_creature_id = p_id;
+		m_creature_id = p_creature_id;
+		m_species_id = p_species_id;
 	}
 
 	//OCCURENT EVENTS
@@ -87,7 +88,9 @@ public class CreatureController : MonoBehaviour, IDamagable {
 		//ON DEATH, creature pass on their fitness, and DNA only
 		ObjectLogger.unlog(gameObject, EObjectTypes.ENEMY);
 
-//		m_evolution_controller.addDNA(m_dna, m_fitness);
+		m_game_controller.addDNA(m_dna, m_fitness, m_species_id);
+
+		DataCollector.recordData(m_dna.dataCSVlog(m_creature_id, m_fitness));
 
 		Destroy(gameObject);
 	}
@@ -101,8 +104,8 @@ public class CreatureController : MonoBehaviour, IDamagable {
 		return gameObject.transform.position;
 	}
 
-	public bool senseExistsObject(EObjectTypes p_object){
-		return !(ObjectLogger.getByType(p_object).Length == 0);
+	public bool senseExistsObject(EObjectTypes p_object, int p_order_by_proximity){
+		return !(ObjectLogger.getByType(p_object).Length <= p_order_by_proximity);
 	}
 
 	public Vector3 senseNearestObjectPosition(EObjectTypes p_object){

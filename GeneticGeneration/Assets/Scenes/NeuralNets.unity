@@ -950,7 +950,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_enemy: {fileID: 1368618367434496, guid: 7088a0503a153f6459f3bbb5cdf50e7b, type: 2}
-  m_game_speed: 1
+  m_game_speed: 2
 --- !u!4 &2068381736
 Transform:
   m_ObjectHideFlags: 0

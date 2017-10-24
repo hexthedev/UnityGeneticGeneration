@@ -33,15 +33,15 @@ public class PlayerController : MonoBehaviour, IDamagable {
 	}
 	
 	// Update is called once per frame
-	void Update () {
-		manager.tick(Time.deltaTime);
+	void FixedUpdate () {
+
+		manager.tick(Time.fixedDeltaTime);
 
 		if(Input.GetKeyDown(KeyCode.Space)){
 			NumberTester.print();
 		}
 		
-		shot_timer += Time.deltaTime * m_game_controller.m_game_speed;
-		m_damage_increase_timer += Time.deltaTime * m_game_controller.m_game_speed;
+		shot_timer += Time.fixedDeltaTime;
 
 //		m_rb.velocity = playerVelocityUpdate();
 
@@ -58,13 +58,6 @@ public class PlayerController : MonoBehaviour, IDamagable {
 			ObjectLogger.getAll();
 		}
 
-		if(m_damage_increase_timer >= m_damage_increase_time){
-			m_damage_increase_timer = 0;
-			m_damage += 1f;
-			shot_rate *= 0.995f;
-//			m_evo.playerChangeFitMod();
-		}
-
 		//m_rb.velocity += playerVelocityUpdate();
 
 		
@@ -78,7 +71,7 @@ public class PlayerController : MonoBehaviour, IDamagable {
 			//m_evo.playerChangeFitMod();
 		}
 
-		m_rb.velocity += VectorCalc.CalcVec3to2((ArrayCalc.randomElement(ObjectLogger.getByType(EObjectTypes.ENEMY)).transform.position - gameObject.transform.position).normalized * m_speed * m_game_controller.m_game_speed /10f);
+		m_rb.velocity += VectorCalc.CalcVec3to2((ArrayCalc.randomElement(ObjectLogger.getByType(EObjectTypes.ENEMY)).transform.position - gameObject.transform.position).normalized * m_speed /10f);
 
 		if(m_rb.velocity.magnitude > m_speed){
 			m_rb.velocity = m_rb.velocity.normalized*m_speed;
@@ -115,8 +108,8 @@ public class PlayerController : MonoBehaviour, IDamagable {
 			
 		}
 
-
-
+	
+		
 	}
 
 	/*Vector2 playerVelocityUpdate(){

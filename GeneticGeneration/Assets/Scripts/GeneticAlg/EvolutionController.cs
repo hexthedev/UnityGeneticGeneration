@@ -41,4 +41,8 @@ public class EvolutionController {
 		return m_creatures_birthed;
 	}
 
+	public string print(){
+		return m_gene_pool.print();
+	}
+
 }

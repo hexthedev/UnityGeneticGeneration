@@ -38,4 +38,8 @@ public class DNA {
 	public DNA clone(){
 		return new DNA(m_body.clone(), m_mind.clone());
 	}
+
+	public string[] dataCSVlog(int p_id, float p_fitness){
+		return m_body.getStatsCSV(p_id, p_fitness);
+	}
 }
