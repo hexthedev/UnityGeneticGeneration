@@ -5,15 +5,15 @@ using Calc;
 
 public class PointingAtDetector : VDetector {
 
-	float m_angle_threshold;
-	EObjectTypes m_pointing_at;
-	int m_count;
+//	float m_angle_threshold;
+//	EObjectTypes m_pointing_at;
+//	int m_count;
 
   public PointingAtDetector(EObjectTypes p_pointing_at, float p_angle_threshold, int p_count, BehaviourTree p_tree, VTreeNode<IBehaviourNode> p_parent) : base(p_tree, p_parent)
   {
-		m_pointing_at = p_pointing_at;
-		m_angle_threshold = p_angle_threshold;
-		m_count = p_count;
+	//	m_pointing_at = p_pointing_at;
+	//	m_angle_threshold = p_angle_threshold;
+	//	m_count = p_count;
   }
 
   public override bool detect()

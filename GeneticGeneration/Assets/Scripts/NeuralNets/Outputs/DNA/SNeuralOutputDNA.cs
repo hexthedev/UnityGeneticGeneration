@@ -52,15 +52,22 @@ public struct SNeuralOutputDNA {
 		return dna.ToArray(); 
 	}
 
+	public static SNeuralOutputDNA transformActivator(SNeuralOutputDNA p_dna){
+		SNeuralOutputDNA dna = new SNeuralOutputDNA();
+		dna.m_output_type = p_dna.m_output_type;
+		dna.m_activate = Activators.random();
+		return dna;
+	}
+
 	//HELPER FUNCTIONS
 	public static DActivationFunction randomOutputFunction(ENeuralOutput p_output){
 
-    if(p_output == ENeuralOutput.NOVeloX || p_output == ENeuralOutput.NOVeloY){
-      return ArrayCalc.randomElement(NeuralNetConfig.all_functions);
-    }
+		if(p_output == ENeuralOutput.NOVeloX || p_output == ENeuralOutput.NOVeloY){
+		return ArrayCalc.randomElement(NeuralNetConfig.all_functions);
+		}
 
-    Debug.LogError("MUST RETURN AN ACTIAVTOR");
+		Debug.LogError("MUST RETURN AN ACTIAVTOR");
 
-    return null;
-  }
+		return null;
+ 	}	
 }

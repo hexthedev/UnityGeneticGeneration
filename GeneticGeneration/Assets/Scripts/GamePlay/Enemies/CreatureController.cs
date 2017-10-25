@@ -40,9 +40,7 @@ public class CreatureController : MonoBehaviour, IDamagable {
 		//Setup Time based events
 		m_timeout = new TimeoutEventManager();
 		m_interval = new IntervalEventManager();
-		m_interval.addListener(3f, ()=> { m_game_controller.addDNA(m_dna, m_fitness, m_species_id); });
-
-		gameObject.GetComponent<SpriteRenderer>().color = new Color(Random.Range(0f,1f), Random.Range(0f,1f), Random.Range(0f,1f));
+		//m_interval.addListener(3f, ()=> { m_game_controller.addDNA(m_dna, m_fitness, m_species_id); });
 	}
 	
 	// Update is called once per frame
@@ -63,6 +61,17 @@ public class CreatureController : MonoBehaviour, IDamagable {
 
 		m_creature_id = p_creature_id;
 		m_species_id = p_species_id;
+
+		m_stats[ETrait.ATTACK].adjust(1);
+		m_stats[ETrait.DEFENSE].adjust(0.5f);
+		m_stats[ETrait.HP].adjust(4);
+		m_stats[ETrait.SPEED].adjust(1.5f);
+		
+		m_stats[ETrait.CBLUE].adjust(0.1f);
+		m_stats[ETrait.CRED].adjust(0.1f);
+		m_stats[ETrait.CGREEN].adjust(0.1f);
+		
+		gameObject.GetComponent<SpriteRenderer>().color = new Color(m_stats[ETrait.CRED].getTotal(), m_stats[ETrait.CGREEN].getTotal(), m_stats[ETrait.CBLUE].getTotal());
 	}
 
 	//OCCURENT EVENTS
@@ -108,15 +117,18 @@ public class CreatureController : MonoBehaviour, IDamagable {
 		return !(ObjectLogger.getByType(p_object).Length <= p_order_by_proximity);
 	}
 
-	public Vector3 senseNearestObjectPosition(EObjectTypes p_object){
-				
-		GameObject[] objects = ObjectLogger.getByTypeByDistance(p_object, gameObject.transform.position);
-		
-		if(objects.Length == 0)  return gameObject.transform.position; 
+	public GameObject senseNthNearestObject(int p_n, EObjectTypes p_object){
+		GameObject nth_near_object = ObjectLogger.getNthClosest(p_n, p_object, gameObject.transform.position);
+		if(nth_near_object == null)  return gameObject; 
+		return nth_near_object;
+	}
 
-		if(p_object == EObjectTypes.ENEMY && objects.Length > 1) return objects[1].transform.position;
+	public Vector3 senseNthNearestObjectPosition(int p_n, EObjectTypes p_object){
+		return senseNthNearestObject(p_n, p_object).transform.position;
+	}
 
-		return objects[0].transform.position;
+	public float senseNthNearestObjectRotation(int p_n, EObjectTypes p_object){
+		return senseNthNearestObject(p_n, p_object).transform.rotation.eulerAngles.z;
 	}
 
 	public GameObject[] senseVisibleObjects(EObjectTypes p_object){
@@ -129,13 +141,7 @@ public class CreatureController : MonoBehaviour, IDamagable {
 
 
 	//CREATURE CONTROLS
-	public void moveForce(Vector2 p_change){
-		//SCAFF
-		if(m_stats == null){
-			m_stats = new Dictionary<ETrait, StatTuple>();
-			m_stats.Add(ETrait.SPEED, new StatTuple(5,5));
-		}
-		
+	public void moveForce(Vector2 p_change){		
 		float total_speed = m_stats[ETrait.SPEED].getTotal();
 
 		m_rb.velocity += p_change*(total_speed/10f);

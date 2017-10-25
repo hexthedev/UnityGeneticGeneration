@@ -39,14 +39,14 @@ public static class ObjectLogger {
 		return m_objects[p_type].ToArray();
 	}
 
-	public static GameObject[] getByTypeByDistance(EObjectTypes p_type, Vector3 point){
+	public static GameObject[] getByTypeByDistance(EObjectTypes p_type, Vector3 p_point){
 		List<GameObject> objects = m_objects[p_type];
 
 		SortedDictionary<float, GameObject> ob_by_dist = new SortedDictionary<float, GameObject>();
 
 		for(int i = 0; i<objects.Count; i++){
 			
-			float mag = (objects[i].transform.position - point).magnitude;
+			float mag = (objects[i].transform.position - p_point).magnitude;
 
 			while(ob_by_dist.ContainsKey(mag)){
 				mag += 0.001f;
@@ -61,6 +61,15 @@ public static class ObjectLogger {
 		return to_return_temp;
 	}
 
+	public static GameObject getNthClosest(int p_n, EObjectTypes p_type, Vector3 p_point){
+		GameObject[] objects_of_type = getByTypeByDistance(p_type, p_point);
+
+		if(objects_of_type.Length < p_n-1){
+			return null; //No gameobject avaialble
+		}
+
+		return objects_of_type[p_n];
+	}
 	
 
 	public static GameObject[] getAll(){

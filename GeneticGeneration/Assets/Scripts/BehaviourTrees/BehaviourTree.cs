@@ -13,14 +13,14 @@ public class BehaviourTree {
 //	private EnemyController m_actor_controller;
 	private Rigidbody2D m_actor_body;
 
-	private BehaviourDNA m_dna;
+//	private BehaviourDNA m_dna;
 
 
 	//CONSTRUCTORS
 	//For manually constructing behaviour trees
 	public BehaviourTree(GameObject p_actor, BehaviourDNA p_dna){
 		m_actor = p_actor;
-		m_dna = p_dna;
+	//	m_dna = p_dna;
 
 		//m_actor_controller = m_actor.GetComponent<EnemyController>();
 		m_actor_body = m_actor.GetComponent<Rigidbody2D>();

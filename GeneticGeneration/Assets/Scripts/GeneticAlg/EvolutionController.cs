@@ -14,6 +14,11 @@ public class EvolutionController {
 		m_mutation_chance_percentage = p_mutation_chance_percentage;
 	}
 
+	public EvolutionController(float p_mutation_chance_percentage, NeuralDNA p_species){
+		m_gene_pool = new FitnessList(25, p_species);
+		m_mutation_chance_percentage = p_mutation_chance_percentage;
+	}
+
 	public void addDNA(DNA p_dna, float fitness){
 		m_gene_pool.add(fitness, p_dna);
 	} 

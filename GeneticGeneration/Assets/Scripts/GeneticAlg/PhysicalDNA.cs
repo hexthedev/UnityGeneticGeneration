@@ -7,10 +7,9 @@ public class PhysicalDNA {
 	private Dictionary<ETrait, Chromo> m_chromos = new Dictionary<ETrait, Chromo>();
 	
 	public PhysicalDNA(){
-		m_chromos.Add(ETrait.ATTACK, new Chromo());
-		m_chromos.Add(ETrait.DEFENSE, new Chromo());
-		m_chromos.Add(ETrait.HP, new Chromo());
-		m_chromos.Add(ETrait.SPEED, new Chromo());
+		foreach(ETrait trait in System.Enum.GetValues(typeof(ETrait))){
+			m_chromos.Add(trait, new Chromo());
+		}
 	}
 
 	public PhysicalDNA(Dictionary<ETrait, Chromo> p_chromos){
@@ -30,10 +29,9 @@ public class PhysicalDNA {
 	public PhysicalDNA clone(){
 		Dictionary<ETrait, Chromo> clone_chromos = new Dictionary<ETrait, Chromo>();
 
-		clone_chromos.Add(ETrait.ATTACK, m_chromos[ETrait.ATTACK].clone());
-		clone_chromos.Add(ETrait.DEFENSE, m_chromos[ETrait.DEFENSE].clone());
-		clone_chromos.Add(ETrait.SPEED, m_chromos[ETrait.SPEED].clone());
-		clone_chromos.Add(ETrait.HP, m_chromos[ETrait.HP].clone());
+		foreach(ETrait trait in System.Enum.GetValues(typeof(ETrait))){
+			clone_chromos.Add(trait, m_chromos[trait].clone());
+		}
 
 		return new PhysicalDNA(clone_chromos);
 	}
@@ -60,10 +58,9 @@ public class PhysicalDNA {
 	public PhysicalDNA mutate(){
 		PhysicalDNA clone = this.clone();
 
-		clone.m_chromos[ETrait.ATTACK] = clone.m_chromos[ETrait.ATTACK].mutate();
-		clone.m_chromos[ETrait.DEFENSE] = clone.m_chromos[ETrait.DEFENSE].mutate();
-		clone.m_chromos[ETrait.SPEED] = clone.m_chromos[ETrait.SPEED].mutate();
-		clone.m_chromos[ETrait.HP] = clone.m_chromos[ETrait.HP].mutate();
+		foreach(ETrait trait in System.Enum.GetValues(typeof(ETrait))){
+			clone.m_chromos[trait] = clone.m_chromos[trait].mutate();
+		}
 		
 		return clone;
 	}
@@ -71,10 +68,9 @@ public class PhysicalDNA {
 	public static PhysicalDNA crossover(PhysicalDNA p_dna1, PhysicalDNA p_dna2){
 		Dictionary<ETrait, Chromo> chromos = new Dictionary<ETrait, Chromo>();
 
-		chromos.Add(ETrait.ATTACK, Chromo.crossover(p_dna1.getChromo(ETrait.ATTACK), p_dna2.getChromo(ETrait.ATTACK)));
-		chromos.Add(ETrait.DEFENSE, Chromo.crossover(p_dna1.getChromo(ETrait.DEFENSE), p_dna2.getChromo(ETrait.DEFENSE)));
-		chromos.Add(ETrait.SPEED, Chromo.crossover(p_dna1.getChromo(ETrait.SPEED), p_dna2.getChromo(ETrait.SPEED)));
-		chromos.Add(ETrait.HP, Chromo.crossover(p_dna1.getChromo(ETrait.HP), p_dna2.getChromo(ETrait.HP)));
+		foreach(ETrait trait in System.Enum.GetValues(typeof(ETrait))){
+			chromos.Add(trait, Chromo.crossover(p_dna1.getChromo(trait), p_dna2.getChromo(trait)));
+		}
 		
 		return new PhysicalDNA(chromos);
 	}

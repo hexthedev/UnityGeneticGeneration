@@ -13,8 +13,10 @@ public class NIProxObject : INeuralInput {
 
 	private int m_order_by_proximity;
 
-
+	//PARAMS {Scale, ObjType, NthObject}
 	public NIProxObject (CreatureController p_controller, float[] p_params){
+		if(p_params.Length != 3) Debug.LogError("INVLAID PROXIMITY PARAMS");
+		
 		m_controller = p_controller;
 		m_scale = p_params[0];
 		m_object = (EObjectTypes)(int)p_params[1];
@@ -26,18 +28,18 @@ public class NIProxObject : INeuralInput {
     public SNeuralInputDNA dnaify()
     {
         float[] l_params = {m_scale};
-		return new SNeuralInputDNA(ENeuralInput.PROXPLAYER, l_params);
+		return new SNeuralInputDNA(ENeuralInput.PROXIMITY, l_params);
     }
 
     public float input()
     {	
 		if(!m_controller.senseExistsObject(m_object, m_order_by_proximity)) { return 0; }
 
-		float object_prox = (m_controller.sensePosition() - m_controller.senseVisibleObjects(m_object)[m_order_by_proximity].transform.position).magnitude;
+		float object_prox = (m_controller.sensePosition() - m_controller.senseNthNearestObjectPosition(m_order_by_proximity, m_object)).magnitude;
 	
 		// Debug.DrawLine(m_controller.sensePosition(), m_controller.senseNearestObjectPosition(m_object), Color.red, Time.fixedDeltaTime );
 	
-		float input = (m_scale/object_prox)/m_scale;
+		float input = (object_prox/(m_scale/2))-1f;
 		// Debug.Log(m_object + " " + m_order_by_proximity + " " +  input);
 
 		return input;

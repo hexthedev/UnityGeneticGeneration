@@ -12,7 +12,10 @@ public class NIDirection : INeuralInput {
 
 	private int m_order_by_proximity;
 
+	//PARAMS {VecX, VecY, ObjType, NthObject}
 	public NIDirection (CreatureController p_controller, float[] p_params){
+		if(p_params.Length != 4) Debug.LogError("INVLAID DIRECTION PARAMS");
+		
 		m_controller = p_controller;
 		m_direction = new Vector2(p_params[0], p_params[1]);
 		m_object = (EObjectTypes)(int)p_params[2];
@@ -31,7 +34,7 @@ public class NIDirection : INeuralInput {
     {
 		if(!m_controller.senseExistsObject(m_object, m_order_by_proximity)) { return 0; }
 
-		Vector3 object_direction = m_controller.sensePosition() - m_controller.senseVisibleObjects(m_object)[m_order_by_proximity].transform.position;
+		Vector3 object_direction = m_controller.sensePosition() - m_controller.senseNthNearestObjectPosition(m_order_by_proximity, m_object);
 		
 		float input = VectorCalc.getAngle( m_direction, object_direction )/180f;
 		

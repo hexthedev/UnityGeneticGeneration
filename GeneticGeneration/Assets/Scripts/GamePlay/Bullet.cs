@@ -5,7 +5,7 @@ using Calc;
 
 public class Bullet : MonoBehaviour {
 
-	GameController m_game_controller;
+//	GameController m_game_controller;
 
 	private float m_damage;
 
@@ -20,7 +20,7 @@ public class Bullet : MonoBehaviour {
 
 	public void Initalize( Vector2 p_direction, float p_damage, string p_shooter, GameController p_controller){
 		m_rb = gameObject.GetComponent<Rigidbody2D>();
-		m_game_controller = p_controller;
+	//	m_game_controller = p_controller;
 		
 		m_standard_velocity = p_direction * m_speed;
 		m_damage = p_damage;
@@ -30,7 +30,7 @@ public class Bullet : MonoBehaviour {
 
 		m_timeout = new TimeoutEventManager();
 		
-		m_timeout.addTimeout(2f, ()=>{ ObjectLogger.unlog(gameObject, EObjectTypes.BULLET); Destroy(gameObject);  });
+		m_timeout.addTimeout(4f, ()=>{ ObjectLogger.unlog(gameObject, EObjectTypes.BULLET); Destroy(gameObject);  });
 	}
 
 	// Update is called once per frame

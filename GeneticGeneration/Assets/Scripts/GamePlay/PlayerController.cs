@@ -13,7 +13,7 @@ public class PlayerController : MonoBehaviour, IDamagable {
 
 	public float m_hp = 100f;
 	public float m_speed = 20;
-	private Rigidbody2D m_rb;
+//	private Rigidbody2D m_rb;
 	public GameObject m_bullet;
 
 	public float shot_rate;
@@ -25,7 +25,7 @@ public class PlayerController : MonoBehaviour, IDamagable {
 	private bool m_can_shoot = true;
 
 	public float m_damage_increase_time;
-	private float m_damage_increase_timer = 0f;
+//	private float m_damage_increase_timer = 0f;
 	
 
 	TimeoutEventManager m_timeout_manager = new TimeoutEventManager();
@@ -33,7 +33,7 @@ public class PlayerController : MonoBehaviour, IDamagable {
 
 	// Use this for initialization
 	void Start () {
-		m_rb = gameObject.GetComponent<Rigidbody2D>();
+	//	m_rb = gameObject.GetComponent<Rigidbody2D>();
 		ObjectLogger.log(gameObject, EObjectTypes.PLAYER);
 
 		

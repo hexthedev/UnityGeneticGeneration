@@ -5,22 +5,22 @@ using Calc;
 
 public class MoveAction : VSequenceAction  {
 	
-	Rigidbody2D m_rb;
+	//Rigidbody2D m_rb;
 	//EnemyController m_controller;
-	IDirection m_direction;
+	//IDirection m_direction;
 
 	float m_timer = 0;
 	float m_timeLimit;
-	float m_speed_percentage;
-	bool m_sudden;
+//	float m_speed_percentage;
+//	bool m_sudden;
 
 	public MoveAction(float p_timerLimit, float p_speed_percentage, bool p_sudden, IDirectionGenoType p_direction, ActionSequence p_sequence):base(p_sequence){
 		m_timeLimit = p_timerLimit;
-		m_speed_percentage = p_speed_percentage;
-		m_direction = p_direction.phenotype(this);
-		m_sudden = p_sudden;
+		//m_speed_percentage = p_speed_percentage;
+		//m_direction = p_direction.phenotype(this);
+	//	m_sudden = p_sudden;
 
-		m_rb = m_sequence.getTree().getActorBody();
+		//m_rb = m_sequence.getTree().getActorBody();
 		//m_controller = m_sequence.getTree().getActorController();
 	}
 	//BEHAVIOUR

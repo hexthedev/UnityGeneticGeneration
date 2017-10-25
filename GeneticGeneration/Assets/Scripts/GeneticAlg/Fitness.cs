@@ -14,6 +14,15 @@ public class FitnessList
 		m_species = new NeuralDNA();
 		
 		randomFill();
+	}
+
+	public FitnessList(int p_size, NeuralDNA p_species){
+
+		m_objects = new FitnessObject[p_size];
+
+		m_species = p_species;
+
+		randomFill();
 
 	}
 

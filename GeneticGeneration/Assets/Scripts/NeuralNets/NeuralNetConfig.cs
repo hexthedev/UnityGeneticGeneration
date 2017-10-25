@@ -29,7 +29,7 @@ public static class NeuralNetConfig {
 	public static MinMaxFloat weight_mm= new MinMaxFloat(-1f,1f);
 
 	//InputLayerDNA
-	public static ENeuralInput[] active_inputs = {ENeuralInput.DIRECTION, ENeuralInput.PROXPLAYER};
+	public static ENeuralInput[] active_inputs = {ENeuralInput.DIRECTION, ENeuralInput.PROXIMITY};
 	public static MinMaxFloat direction_mm= new MinMaxFloat(-1f,1f);
 	public static MinMaxFloat prox_mm= new MinMaxFloat(5f,8f);
 

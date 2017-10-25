@@ -31,4 +31,9 @@ public class StatTuple {
 	public float getTotal(){
 		return m_total;
 	}
+
+	public void adjust(float p_mod){
+		m_current *= p_mod;
+		m_total *= p_mod;
+	}
 }

@@ -70,19 +70,22 @@ public class NeuralDNA {
 	//This maintains the structure of the passed in NeuralDNA
 	public NeuralDNA(NeuralDNA p_structure){
 		m_inputs = (SNeuralInputDNA[])p_structure.m_inputs.Clone();
-		m_outputs = (SNeuralOutputDNA[])p_structure.m_outputs.Clone();
+		m_outputs = new SNeuralOutputDNA[p_structure.m_outputs.Length];
 		m_hiddens = new List<DActivationFunction[]>();
 
-		foreach(DActivationFunction[] activate in p_structure.m_hiddens){
-			m_hiddens.Add((DActivationFunction[])activate.Clone());
+		//OUTPUTS
+		for(int i = 0; i<p_structure.m_outputs.Length; i++){
+			m_outputs[i] = SNeuralOutputDNA.transformActivator( p_structure.m_outputs[i] );
 		}
-		
-		m_links = new Matrix[p_structure.m_links.Length];
 
-		for(int i = 0 ; i< m_links.Length; i++){
-			m_links[i] = p_structure.m_links[i].randomClone(NeuralNetConfig.weight_mm, true);
-//			Debug.Log(m_links[i]);
+		//HIDDEN LAYERS
+		for(int i = 0; i<p_structure.m_hiddens.Count; i++){
+			m_hiddens.Add(Activators.randomArrayOfSize(p_structure.getActivators(i).Length));
 		}
+
+		Debug.Log(m_hiddens.Count);
+
+		constructLinks();
 	}
 
 	//Set random number and size of hiddens
@@ -190,7 +193,15 @@ public class NeuralDNA {
 			weights[i] = Matrix.crossover(p_dna1.m_links[i], p_dna2.m_links[i]);
 		}
 
-		return new NeuralDNA(p_dna1.m_inputs, p_dna1.m_hiddens, weights, p_dna1.m_outputs);
+		List<DActivationFunction[]> activation_functions = new List<DActivationFunction[]>();
+
+		for(int i = 0; i<p_dna1.m_hiddens.Count; i++){
+			activation_functions.Add(ArrayCalc.crossover(p_dna1.m_hiddens[i], p_dna2.m_hiddens[i]));
+		}
+
+		SNeuralOutputDNA[] outputs = ArrayCalc.crossover(p_dna1.m_outputs, p_dna2.m_outputs);
+
+		return new NeuralDNA(p_dna1.m_inputs, activation_functions, weights, outputs);
 	}
 
 	public void mutate(){
@@ -232,7 +243,6 @@ public class NeuralDNA {
 			Debug.Log(p);
 		}
 	}
-
 
 
 }

@@ -51,11 +51,11 @@ public class DirectionDetector : VDetector
 	public void debug(Vector3 p_actual_direction, Vector3 p_target_direction, float p_duration){
 		
 		Vector3 origin = m_tree.getActor().transform.position;
-		Vector3 actual_direction = origin + p_actual_direction;
+		//Vector3 actual_direction = origin + p_actual_direction;
 		Vector3 actual_direction_big = origin + p_actual_direction*5;
 
 		Vector3 target_direction = origin + p_target_direction;
-		Vector3 target_direction_big = origin + p_target_direction*5;
+//		Vector3 target_direction_big = origin + p_target_direction*5;
 	
 
 		Debug.DrawLine(origin, actual_direction_big, Color.cyan, p_duration);

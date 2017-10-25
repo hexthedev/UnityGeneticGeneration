@@ -100,6 +100,22 @@ namespace Calc{
       int rand = RandomCalc.Rand(new MinMaxInt(0,p_array.Length-1));
       return rand;
     }
+
+    public static T[] crossover<T>(T[] thing_1, T[] thing_2){
+      if(thing_1.Length != thing_2.Length) Debug.LogError("Crossover arrays wrong size");
+
+      T[] new_array = new T[thing_1.Length];
+
+      for(int i = 0; i<thing_1.Length; i++){
+        if(BoolCalc.random()){
+          new_array[i] = thing_1[i];
+        } else {
+          new_array[i] = thing_2[i];
+        }
+      }
+
+      return new_array;
+    }
   }
 
   public static class EnumCalc{

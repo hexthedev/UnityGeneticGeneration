@@ -77,4 +77,8 @@ public static class Activators{
     return to_return;
   }
 
+  public static DActivationFunction random(){
+    return ArrayCalc.randomElement(NeuralNetConfig.all_functions);
+  }
+
 }

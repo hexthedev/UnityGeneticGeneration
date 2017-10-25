@@ -20,8 +20,10 @@ public struct SNeuralInputDNA {
 		switch(m_input_type){
 			case ENeuralInput.DIRECTION: 
 				return new NIDirection(p_controller, (float[])m_params.Clone());
-			case ENeuralInput.PROXPLAYER:
+			case ENeuralInput.PROXIMITY:
 				return new NIProxObject(p_controller, (float[])m_params.Clone());
+			case ENeuralInput.ROTATION:
+				return new NIRotation(p_controller, (float[])m_params.Clone());
 		}
 		Debug.LogError("SHOULD ALWAYS RETURN A INeuralInput");
 		return null;
@@ -36,9 +38,9 @@ public struct SNeuralInputDNA {
 			case ENeuralInput.DIRECTION: 
 				float[] dir_params = {RandomCalc.Rand(NeuralNetConfig.direction_mm), RandomCalc.Rand(NeuralNetConfig.direction_mm), (float)EnumCalc.randomValue<EObjectTypes>(), 0};
 				return new SNeuralInputDNA(ENeuralInput.DIRECTION, dir_params); 
-			case ENeuralInput.PROXPLAYER: 
+			case ENeuralInput.PROXIMITY: 
 				float[] prox_params = {RandomCalc.Rand(NeuralNetConfig.prox_mm), (float)EnumCalc.randomValue<EObjectTypes>(), 0};
-				return new SNeuralInputDNA(ENeuralInput.PROXPLAYER, prox_params); 
+				return new SNeuralInputDNA(ENeuralInput.PROXIMITY, prox_params); 
 		}
 
 		Debug.LogError("SHOULD ALWAYS RETURN A SNEURALINPUTDNA");
@@ -65,17 +67,6 @@ public struct SNeuralInputDNA {
 	public static SNeuralInputDNA[] randomInputArrayRepeat(int size){ 
 
 		List<SNeuralInputDNA> dna = new List<SNeuralInputDNA>();
-
-		dna.Add(new SNeuralInputDNA(ENeuralInput.PROXPLAYER, new float[] {7, 3, 0}));
-		dna.Add(new SNeuralInputDNA(ENeuralInput.PROXPLAYER, new float[] {7, 3, 1}));
-		dna.Add(new SNeuralInputDNA(ENeuralInput.PROXPLAYER, new float[] {7, 3, 2}));
-		
-		dna.Add(new SNeuralInputDNA(ENeuralInput.DIRECTION, new float[] {0, 1 , 3, 0}));
-		dna.Add(new SNeuralInputDNA(ENeuralInput.DIRECTION, new float[] {0, 1, 3, 1}));
-		dna.Add(new SNeuralInputDNA(ENeuralInput.DIRECTION, new float[] {0, 1, 3, 2}));
-
-		dna.Add(new SNeuralInputDNA(ENeuralInput.PROXPLAYER, new float[] {7, 0, 0}));
-		dna.Add(new SNeuralInputDNA(ENeuralInput.DIRECTION, new float[] {0, 1 , 0, 0}));
 
 		for(int i = 0; i<size; i++){
 			dna.Add(randomInputDNA(ArrayCalc.randomElement(NeuralNetConfig.active_inputs)));

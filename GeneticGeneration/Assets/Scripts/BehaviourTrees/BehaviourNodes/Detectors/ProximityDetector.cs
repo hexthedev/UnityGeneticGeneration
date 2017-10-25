@@ -5,14 +5,14 @@ using Calc;
 
 public class ProximityDetector : VDetector {
   
-	private EObjectTypes m_of;
-	private float m_threshold;
-	private int m_count;
+//	private EObjectTypes m_of;
+//	private float m_threshold;
+//	private int m_count;
 
 	public ProximityDetector(EObjectTypes p_of, float p_threshold, int p_count, BehaviourTree p_tree, VTreeNode<IBehaviourNode> p_parent) : base(p_tree, p_parent){
-		m_of = p_of;
-		m_count = p_count;
-		m_threshold = p_threshold;
+	//	m_of = p_of;
+	//	m_count = p_count;
+	//	m_threshold = p_threshold;
 	}
 
 	public override bool detect()
