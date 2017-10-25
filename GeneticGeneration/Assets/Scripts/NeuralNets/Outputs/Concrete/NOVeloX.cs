@@ -13,6 +13,8 @@ public class NOVeloX : INeuralOutput {
 
     public void output(float p_value)
     {
+        // Debug.Log("X " + p_value );
+
         NumberTester.log(p_value);
         
         if(p_value != p_value) p_value = 0;

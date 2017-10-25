@@ -49,7 +49,7 @@ public class CreatureController : MonoBehaviour, IDamagable {
 	void FixedUpdate () {		
 		m_brain.propagate();
 
-		m_fitness += Time.fixedDeltaTime * 1/(((ObjectLogger.getByTypeByDistance(EObjectTypes.PLAYER, gameObject.transform.position)[0].transform.position - gameObject.transform.position).magnitude)/2);
+		m_fitness += Time.fixedDeltaTime; /* * 1/(((ObjectLogger.getByTypeByDistance(EObjectTypes.PLAYER, gameObject.transform.position)[0].transform.position - gameObject.transform.position).magnitude)/2); */
 
 		m_timeout.tick(Time.fixedDeltaTime);
 		m_interval.tick(Time.fixedDeltaTime);

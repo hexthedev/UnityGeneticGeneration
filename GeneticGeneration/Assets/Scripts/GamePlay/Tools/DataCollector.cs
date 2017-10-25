@@ -6,7 +6,7 @@ public static class DataCollector {
 
 	static bool m_reset = false;
 
-	static string m_title = "TesterRound";
+	static string m_title = "ConvergenceTest";
 
 	static CSVWriter m_csv;
 

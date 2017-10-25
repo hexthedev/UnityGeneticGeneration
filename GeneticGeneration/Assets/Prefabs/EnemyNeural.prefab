@@ -21,7 +21,7 @@ GameObject:
   - component: {fileID: 4932494127618658}
   - component: {fileID: 23290150302598862}
   - component: {fileID: 102079884894736236}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: Energy
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -41,9 +41,9 @@ GameObject:
   - component: {fileID: 114840860813073252}
   - component: {fileID: 114650765039605506}
   - component: {fileID: 58390656813140382}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: EnemyNeural
-  m_TagString: Untagged
+  m_TagString: Enemy
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0

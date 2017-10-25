@@ -31,7 +31,11 @@ public class NIDirection : INeuralInput {
     {
 		if(!m_controller.senseExistsObject(m_object, m_order_by_proximity)) { return 0; }
 
-		Vector3 object_direction = m_controller.sensePosition() - m_controller.senseNearestObjectPosition(m_object);
-		return VectorCalc.getAngle( m_direction, object_direction )/180f;
+		Vector3 object_direction = m_controller.sensePosition() - m_controller.senseVisibleObjects(m_object)[m_order_by_proximity].transform.position;
+		
+		float input = VectorCalc.getAngle( m_direction, object_direction )/180f;
+		
+//		Debug.Log(input);
+		return input;
     }
 }

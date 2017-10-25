@@ -15,6 +15,12 @@ public class GameController : MonoBehaviour {
 	private int num_of_species;
 	private List<EvolutionController> m_species;
 
+	//For Testing
+	public int m_spawn_amount;
+	public float m_spawn_rate;
+	public bool m_print_fitness;
+	public float m_mutation_rate;
+
 	//Event Management
 	private IntervalEventManager m_interval;
 
@@ -24,17 +30,17 @@ public class GameController : MonoBehaviour {
 		m_species = new List<EvolutionController>();
 
 		addSpecies();
-		massSpawn(10, 0);
+		massSpawn(m_spawn_amount, 0);
 
 		m_interval = new IntervalEventManager();
-		m_interval.addListener(10f, () => { massSpawn(10,0); } );
-		m_interval.addListener(10f, () => { 
-				foreach(EvolutionController evo in m_species){
-					evo.ageFitness(5f);
-				} 
-			} 
-		);
-		m_interval.addListener(4f, () => { Debug.Log(m_species_dict[0].print()); });
+		m_interval.addListener(m_spawn_rate, () => { massSpawn(m_spawn_amount,0); } );
+		// m_interval.addListener(10f, () => { 
+		// 		foreach(EvolutionController evo in m_species){
+		// 			evo.ageFitness(0f);
+		// 		} 
+		// 	} 
+		// );
+		if(m_print_fitness) m_interval.addListener(4f, () => { Debug.Log(m_species_dict[0].print()); });
 	}
 
 	void FixedUpdate(){
@@ -57,7 +63,7 @@ public class GameController : MonoBehaviour {
 
 	//Species Managment
 	private void addSpecies(){
-		EvolutionController evo = new EvolutionController(2);
+		EvolutionController evo = new EvolutionController(m_mutation_rate);
 		m_species.Add(evo);
 		m_species_dict.Add(num_of_species++, evo);
 	}

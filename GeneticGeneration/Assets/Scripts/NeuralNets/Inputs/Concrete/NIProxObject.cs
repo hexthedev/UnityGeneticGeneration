@@ -33,10 +33,13 @@ public class NIProxObject : INeuralInput {
     {	
 		if(!m_controller.senseExistsObject(m_object, m_order_by_proximity)) { return 0; }
 
-		float object_prox = (m_controller.sensePosition() - m_controller.senseNearestObjectPosition(m_object)).magnitude;
+		float object_prox = (m_controller.sensePosition() - m_controller.senseVisibleObjects(m_object)[m_order_by_proximity].transform.position).magnitude;
 	
-		Debug.DrawLine(m_controller.sensePosition(), m_controller.senseNearestObjectPosition(m_object), Color.red, Time.fixedDeltaTime );
+		// Debug.DrawLine(m_controller.sensePosition(), m_controller.senseNearestObjectPosition(m_object), Color.red, Time.fixedDeltaTime );
 	
-		return (m_scale/object_prox)/m_scale;
+		float input = (m_scale/object_prox)/m_scale;
+		// Debug.Log(m_object + " " + m_order_by_proximity + " " +  input);
+
+		return input;
     }
 }

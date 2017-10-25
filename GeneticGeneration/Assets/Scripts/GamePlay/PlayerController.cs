@@ -7,142 +7,66 @@ public class PlayerController : MonoBehaviour, IDamagable {
 	
 	public GameController m_game_controller;
 	private EvolutionController m_evo;	
-	
+		
+	public GameObject m_barrel_start;
+	public GameObject m_barrel_end;
+
 	public float m_hp = 100f;
 	public float m_speed = 20;
 	private Rigidbody2D m_rb;
 	public GameObject m_bullet;
 
-	private float shot_timer;
 	public float shot_rate;
 	public float m_damage;
+	public float m_rotation_speed;
+	private float m_current_angle = 0f;
+	private Vector3 m_rotation_axis = new Vector3(0,0,1);	
+
+	private bool m_can_shoot = true;
 
 	public float m_damage_increase_time;
 	private float m_damage_increase_timer = 0f;
+	
 
-	TimeoutEventManager manager = new TimeoutEventManager();
+	TimeoutEventManager m_timeout_manager = new TimeoutEventManager();
+	IntervalEventManager m_interval_manager = new IntervalEventManager();
 
 	// Use this for initialization
 	void Start () {
 		m_rb = gameObject.GetComponent<Rigidbody2D>();
-//		m_evo = m_game_controller.GetComponent<EvolutionController>();
-		shot_timer = shot_rate;
-
 		ObjectLogger.log(gameObject, EObjectTypes.PLAYER);
 
+		
 	}
 	
 	// Update is called once per frame
 	void FixedUpdate () {
+		gameObject.transform.position = Vector3.zero;
 
-		manager.tick(Time.fixedDeltaTime);
+		m_timeout_manager.tick(Time.fixedDeltaTime);
+		m_interval_manager.tick(Time.fixedDeltaTime);
 
-		if(Input.GetKeyDown(KeyCode.Space)){
-			NumberTester.print();
-		}
+		m_current_angle += 1*m_rotation_speed;
+		gameObject.transform.rotation = Quaternion.AngleAxis(m_current_angle, m_rotation_axis);
+
+		RaycastHit2D test = Physics2D.Raycast(m_barrel_start.transform.position, m_barrel_end.transform.position, 20f, 1 << 9);
+		Debug.DrawLine(m_barrel_start.transform.position, (m_barrel_end.transform.position - m_barrel_start.transform.position)*20, Color.red, Time.fixedDeltaTime);
+
+
+		if(test.collider != null && m_can_shoot) shoot(m_barrel_end.transform.position - m_barrel_start.transform.position); 
 		
-		shot_timer += Time.fixedDeltaTime;
-
-//		m_rb.velocity = playerVelocityUpdate();
-
-		if((shot_timer > shot_rate) && Input.GetKey(KeyCode.Mouse0)){
-			//shoot();
-			shot_timer = 0;
-		}
-
-		if(Input.GetKeyDown(KeyCode.P)){
-			ObjectLogger.getByType(EObjectTypes.ENEMY);
-		}
-
-		if(Input.GetKeyDown(KeyCode.O)){
-			ObjectLogger.getAll();
-		}
-
-		//m_rb.velocity += playerVelocityUpdate();
-
-		
-		if(Input.GetKeyDown(KeyCode.Comma)){
-			shot_rate -= 0.025f;
-			//m_evo.playerChangeFitMod();
-		}
-
-		if(Input.GetKeyDown(KeyCode.Period)){
-			m_damage += 1f;
-			//m_evo.playerChangeFitMod();
-		}
-
-		m_rb.velocity += VectorCalc.CalcVec3to2((ArrayCalc.randomElement(ObjectLogger.getByType(EObjectTypes.ENEMY)).transform.position - gameObject.transform.position).normalized * m_speed /10f);
-
-		if(m_rb.velocity.magnitude > m_speed){
-			m_rb.velocity = m_rb.velocity.normalized*m_speed;
-		}
-
-		if(shot_timer > shot_rate){
-			
-			float closest_distance = -1f;
-			Vector3 closest_position = Vector3.zero;
-
-			Vector3 player_position = gameObject.transform.position;
-
-			foreach(GameObject obj in ObjectLogger.getByType(EObjectTypes.ENEMY)){
-				float test = (obj.transform.position - player_position).magnitude;
-				
-				if(closest_distance == -1f){
-					closest_position = obj.transform.position;
-					closest_distance = test;
-				} else {
-					
-					if(test < closest_distance){
-						closest_distance = test;
-						closest_position = obj.transform.position;
-					} 
-				}				
-			}
-
-			if(!(closest_position == Vector3.zero)){
-				Debug.DrawLine(gameObject.transform.position, closest_position, Color.red, 2f);
-				shoot(closest_position);
-			}
-
-			shot_timer = 0;
-			
-		}
-
-	
 		
 	}
 
-	/*Vector2 playerVelocityUpdate(){
-
-		Vector2 toReturn = Vector2.zero;
-
-		if(Input.GetKey(KeyCode.A)){
-			toReturn += new Vector2(-1, 0);
-		}
-
-		if(Input.GetKey(KeyCode.W)){
-			toReturn += new Vector2(0, 1);
-		}
-
-
-		if(Input.GetKey(KeyCode.D)){
-			toReturn += new Vector2(1, 0);
-		}
-
-		if(Input.GetKey(KeyCode.S)){
-			toReturn += new Vector2(0, -1);
-		}
-				
-		return toReturn * m_speed;
-	}*/
-
 	void shoot(Vector3 p_direction){
-		Vector2 direction = VectorCalc.CalcVec3to2( p_direction - gameObject.transform.position ).normalized;
+		Vector2 direction = p_direction.normalized;
 
-		GameObject bullet = Instantiate(m_bullet, VectorCalc.CalcVec3to2(gameObject.transform.position) + direction*0.5f, Quaternion.identity);	
-		//Vector3 position  = Camera.allCameras[0].ScreenToWorldPoint(Input.mousePosition);
+		GameObject bullet = Instantiate(m_bullet, VectorCalc.CalcVec3to2(m_barrel_end.transform.position) + direction*0.5f, Quaternion.identity);	
 
 		bullet.GetComponent<Bullet>().Initalize(direction, m_damage, "Player", m_game_controller);
+
+		m_can_shoot = false;
+		m_timeout_manager.addTimeout(shot_rate, () => {	m_can_shoot = true;	});
 	}
 
   public void damage(float damage)
