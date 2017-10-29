@@ -36,12 +36,12 @@ public class GameController : MonoBehaviour {
 			new SNeuralInputDNA(ENeuralInput.DIRECTION, new float[] {1f, 1f, (int)EObjectTypes.BULLET, 0} ),
 			new SNeuralInputDNA(ENeuralInput.DIRECTION, new float[] {1f, 1f, (int)EObjectTypes.BULLET, 1} ),
 			new SNeuralInputDNA(ENeuralInput.DIRECTION, new float[] {1f, 1f, (int)EObjectTypes.BULLET, 2} ),
-			new SNeuralInputDNA(ENeuralInput.DIRECTION, new float[] {1f, 1f, (int)EObjectTypes.ENEMY, 0} ),
+			// new SNeuralInputDNA(ENeuralInput.DIRECTION, new float[] {1f, 1f, (int)EObjectTypes.ENEMY, 0} ),
 			new SNeuralInputDNA(ENeuralInput.PROXIMITY, new float[] {20f, (int)EObjectTypes.PLAYER, 0} ),
 			new SNeuralInputDNA(ENeuralInput.PROXIMITY, new float[] {20f, (int)EObjectTypes.BULLET, 0} ),
 			new SNeuralInputDNA(ENeuralInput.PROXIMITY, new float[] {20f, (int)EObjectTypes.BULLET, 1} ),
 			new SNeuralInputDNA(ENeuralInput.PROXIMITY, new float[] {20f, (int)EObjectTypes.BULLET, 2} ),
-			new SNeuralInputDNA(ENeuralInput.PROXIMITY, new float[] {20f, (int)EObjectTypes.ENEMY, 0} ),
+			// new SNeuralInputDNA(ENeuralInput.PROXIMITY, new float[] {20f, (int)EObjectTypes.ENEMY, 0} ),
 			new SNeuralInputDNA(ENeuralInput.ROTATION, new float[] { (int)EObjectTypes.PLAYER, 0} )
 		};
 
@@ -51,7 +51,7 @@ public class GameController : MonoBehaviour {
 		};
 
 
-		addSpecies(new NeuralDNA(inputs, ouputs, 1, 7));
+		addSpecies(new NeuralDNA(inputs, ouputs, 3, 3));
 		massSpawn(m_spawn_amount, 0);
 
 		m_interval = new IntervalEventManager();

@@ -99,7 +99,7 @@ public class CreatureController : MonoBehaviour, IDamagable {
 
 		m_game_controller.addDNA(m_dna, m_fitness, m_species_id);
 
-		DataCollector.recordData(m_dna.dataCSVlog(m_creature_id, m_fitness));
+		DataCollector.recordData(m_dna.dataCSVlog(m_creature_id, m_fitness, (float)m_game_controller.m_time));
 
 		Destroy(gameObject);
 	}

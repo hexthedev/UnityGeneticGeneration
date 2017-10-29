@@ -82,7 +82,4 @@ public class NeuralNet {
 			Debug.Log(p);
 		}
 	}
-
-	
-
 }

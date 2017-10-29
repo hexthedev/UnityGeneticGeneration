@@ -39,7 +39,13 @@ public class DNA {
 		return new DNA(m_body.clone(), m_mind.clone());
 	}
 
-	public string[] dataCSVlog(int p_id, float p_fitness){
-		return m_body.getStatsCSV(p_id, p_fitness);
+	public string[] dataCSVlog(int p_id, float p_fitness, float p_time){
+		List<string> toAdd = new List<string>(m_body.getStatsCSV(p_id, p_fitness));
+		toAdd.Insert(0, p_time+"");
+		toAdd.Add(m_mind.dataColumnSums());
+		toAdd.Add(m_mind.dataTotalWeightSum() + '\n');
+
+
+		return toAdd.ToArray();
 	}
 }

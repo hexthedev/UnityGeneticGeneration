@@ -44,4 +44,5 @@ public class NeuralLink {
 	public Matrix dnaify(){
 		return m_weights.clone();
 	}
+
 }

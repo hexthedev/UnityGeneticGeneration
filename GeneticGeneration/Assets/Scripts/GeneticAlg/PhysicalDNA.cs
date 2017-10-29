@@ -77,7 +77,7 @@ public class PhysicalDNA {
 
 	//Data Collection
 	public string[] getStatsCSV(int creature, float p_fitness){
-		string[] stats = {creature.ToString(), m_chromos[ETrait.ATTACK].getGeneValue().ToString(),  m_chromos[ETrait.DEFENSE].getGeneValue().ToString(), m_chromos[ETrait.SPEED].getGeneValue().ToString(), m_chromos[ETrait.HP].getGeneValue().ToString(), p_fitness + "\n"};
+		string[] stats = {creature.ToString(), m_chromos[ETrait.ATTACK].getGeneValue().ToString(),  m_chromos[ETrait.DEFENSE].getGeneValue().ToString(), m_chromos[ETrait.SPEED].getGeneValue().ToString(), m_chromos[ETrait.HP].getGeneValue().ToString(), p_fitness + ""};
 		return stats;
 	}
 

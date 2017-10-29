@@ -6,7 +6,7 @@ public static class DataCollector {
 
 	static bool m_reset = false;
 
-	static string m_title = "ConvergenceTest";
+	static string m_title = "115H-1P_dpr-3B_dp-20mins";
 
 	static CSVWriter m_csv;
 
@@ -26,7 +26,7 @@ public static class DataCollector {
 
 		m_csv = new CSVWriter(m_title + PlayerPrefs.GetInt("trial", 0));
 
-		string[] headers = {"Creature", "Attack", "Defence", "Speed", "HP", "Fitness", "\n"};
+		string[] headers = {"Time", "Creature", "Attack", "Defence", "Speed", "HP", "Fitness", "ColSums", "WeightSum", "\n"};
 		m_csv.WriteCSVRow(headers);
 	}
 

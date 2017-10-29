@@ -245,4 +245,53 @@ public class NeuralDNA {
 	}
 
 
+	//DATA	
+	public string dataColumnSums(){
+		string data = "{";
+
+		for(int i = 0; i<m_links.Length; i++){
+			data += sumOfWeightsArray(m_links[i]);
+			if(i != m_links.Length) data += "-";
+		}
+
+		data += "}";
+
+		return data;
+	}
+
+
+	private string sumOfWeightsArray(Matrix mat){
+
+		string data = "[";
+
+		for(int i = 0; i<mat.numRows(); i++){
+			float value = 0;
+			
+			for(int j = 0; j<mat.numColumns(); j++){
+				value += mat.get(j, i);
+			}
+			data += Mathf.Round(value*100)/100f;
+
+			if(i != mat.numRows()) data += "-"; 
+		}
+
+		data += "] ";
+
+		return data;
+	}
+
+	public string dataTotalWeightSum(){
+		float data = 0;
+
+		foreach(Matrix m in m_links){
+			for(int i = 0; i <m.numColumns(); i++){
+				for(int j = 0; j < m.numRows(); j++){
+					data += m.get(i, j);
+				}
+			}
+		}
+
+		return "" + Mathf.Round(data*100)/100f;
+	}
+	
 }
