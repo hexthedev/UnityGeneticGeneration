@@ -1,7 +1,11 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+
 using Calc;
+using Calc.Rand;
+using Calc.Array;
+
 
 public delegate float DActivationFunction(float value);
 
@@ -54,7 +58,7 @@ public static class Activators{
   }
 
   //RANDOM ARRAY GETTER FUNCTIONS
-  public static DActivationFunction[] randomArray(MinMaxInt p_range){
+  public static DActivationFunction[] randomArray(Range<int> p_range){
 
     DActivationFunction[] to_return = new DActivationFunction[RandomCalc.Rand(p_range)];
 

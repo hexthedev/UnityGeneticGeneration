@@ -2,7 +2,11 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public interface IAction {
-	bool performAction();
-	void reset();
+namespace GeneticBehaviourTrees
+{
+  public interface IAction
+  {
+    bool performAction();
+    void reset();
+  }
 }

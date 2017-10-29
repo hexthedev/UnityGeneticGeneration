@@ -2,65 +2,82 @@
 using System.Collections.Generic;
 using UnityEngine;
 using Calc;
+using Calc.Bool;
+using Calc.Array;
 
-public class BehaviourDNA {
+namespace GeneticBehaviourTrees
+{
+  public class BehaviourDNA
+  {
 
-	VTreeNode<IBehaviourGenoType> m_root;
+    VTreeNode<IBehaviourGenoType> m_root;
 
-	public BehaviourDNA(VTreeNode<IBehaviourGenoType> p_root){
-		m_root = p_root;
-	}
+    public BehaviourDNA(VTreeNode<IBehaviourGenoType> p_root)
+    {
+      m_root = p_root;
+    }
 
-	void random(){
-		m_root = RandomGen.BehaviourDNARoot();
-	}
+    void random()
+    {
+      m_root = RandomGen.BehaviourDNARoot();
+    }
 
-	public VTreeNode<IBehaviourGenoType> getRoot(){
-		return m_root;
-	}
+    public VTreeNode<IBehaviourGenoType> getRoot()
+    {
+      return m_root;
+    }
 
-	public BehaviourDNA clone(){
-		return new BehaviourDNA(m_root.getSelf().clone(null));
-	}
+    public BehaviourDNA clone()
+    {
+      return new BehaviourDNA(m_root.getSelf().clone(null));
+    }
 
-	public void mutate(){
-		m_root.getSelf().mutate();
-	}
+    public void mutate()
+    {
+      m_root.getSelf().mutate();
+    }
 
-	public static BehaviourDNA crossover(BehaviourDNA p_dna1, BehaviourDNA p_dna2){
+    public static BehaviourDNA crossover(BehaviourDNA p_dna1, BehaviourDNA p_dna2)
+    {
 
-		BehaviourDNA master;
-		BehaviourDNA lesser;
-		 
-		if(BoolCalc.random()){
-			master = p_dna1;
-			lesser = p_dna2;
-		} else {
-			master = p_dna2;
-			lesser = p_dna1;
-		}
+      BehaviourDNA master;
+      BehaviourDNA lesser;
 
-		VTreeNode<IBehaviourGenoType>[] randomPathMaster = getRandomPath(master.getRoot()); 
-		VTreeNode<IBehaviourGenoType>[] randomPathLesser = getRandomPath(lesser.getRoot());
+      if (BoolCalc.random())
+      {
+        master = p_dna1;
+        lesser = p_dna2;
+      }
+      else
+      {
+        master = p_dna2;
+        lesser = p_dna1;
+      }
 
-		VTreeNode<IBehaviourGenoType> master_node = ArrayCalc.randomElement<VTreeNode<IBehaviourGenoType>>(randomPathMaster);
-		VTreeNode<IBehaviourGenoType> lesser_node = ArrayCalc.randomElement<VTreeNode<IBehaviourGenoType>>(randomPathLesser);
+      VTreeNode<IBehaviourGenoType>[] randomPathMaster = getRandomPath(master.getRoot());
+      VTreeNode<IBehaviourGenoType>[] randomPathLesser = getRandomPath(lesser.getRoot());
 
-		master_node.addRandomChild(lesser_node);
+      VTreeNode<IBehaviourGenoType> master_node = ArrayCalc.randomElement<VTreeNode<IBehaviourGenoType>>(randomPathMaster);
+      VTreeNode<IBehaviourGenoType> lesser_node = ArrayCalc.randomElement<VTreeNode<IBehaviourGenoType>>(randomPathLesser);
 
-		return master.clone();
-	}
+      master_node.addRandomChild(lesser_node);
 
-	private static VTreeNode<IBehaviourGenoType>[] getRandomPath(VTreeNode<IBehaviourGenoType> m_root){
+      return master.clone();
+    }
 
-		VTreeNode<IBehaviourGenoType> testing = m_root;
-		List<VTreeNode<IBehaviourGenoType>> list = new List<VTreeNode<IBehaviourGenoType>>();
+    private static VTreeNode<IBehaviourGenoType>[] getRandomPath(VTreeNode<IBehaviourGenoType> m_root)
+    {
 
-		while(testing != null){
-			list.Add(testing);
-			testing = testing.getRandomChild();
-		}
+      VTreeNode<IBehaviourGenoType> testing = m_root;
+      List<VTreeNode<IBehaviourGenoType>> list = new List<VTreeNode<IBehaviourGenoType>>();
 
-		return list.ToArray();
-	}
+      while (testing != null)
+      {
+        list.Add(testing);
+        testing = testing.getRandomChild();
+      }
+
+      return list.ToArray();
+    }
+  }
 }

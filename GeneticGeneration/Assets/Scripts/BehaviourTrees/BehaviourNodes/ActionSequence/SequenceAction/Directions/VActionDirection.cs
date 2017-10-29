@@ -2,14 +2,18 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public abstract class VActionDirection : IDirection
+namespace GeneticBehaviourTrees
 {
+  public abstract class VActionDirection : IDirection
+  {
 
-	protected VSequenceAction m_action;
-  
-	protected VActionDirection(VSequenceAction p_action){
-		m_action = p_action;
-	}
+    protected VSequenceAction m_action;
 
-	public abstract Vector2 direction();
+    protected VActionDirection(VSequenceAction p_action)
+    {
+      m_action = p_action;
+    }
+
+    public abstract Vector2 direction();
+  }
 }

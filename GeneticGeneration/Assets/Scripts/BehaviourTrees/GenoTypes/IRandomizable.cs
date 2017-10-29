@@ -2,7 +2,11 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public interface IRandomizable {
+namespace GeneticBehaviourTrees
+{
+  public interface IRandomizable
+  {
 
-	void randomize();
+    void randomize();
+  }
 }

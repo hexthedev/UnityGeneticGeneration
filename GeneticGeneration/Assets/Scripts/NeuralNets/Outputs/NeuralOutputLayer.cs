@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using UnityEngine;
 using Calc;
 
+using MathNet.Numerics.LinearAlgebra;
+
 public class NeuralOutputLayer : IRecievable {
  
  //Has outputs and activation functions
@@ -27,15 +29,17 @@ public class NeuralOutputLayer : IRecievable {
   }
 
   //Recieve propagation and activate
-  public void recievePropagation(Matrix p_propagation)
+  public void recievePropagation(Matrix<float> p_propagation)
   {
-    Matrix prop = p_propagation.clone();
-    
-    prop.activate(m_activators);
+    Matrix<float> prop = p_propagation.Clone();
+
+    for(int i = 0; i<m_activators.Length; i++){
+      prop[0, i] = m_activators[i]( prop[0, i] );
+    }
 
     //Complete Output
     for(int i = 0; i<m_outputs.Length; i++){
-      m_outputs[i].output(prop.get(i, 0));
+      m_outputs[i].output(prop[0,i]);
     }
   }
 

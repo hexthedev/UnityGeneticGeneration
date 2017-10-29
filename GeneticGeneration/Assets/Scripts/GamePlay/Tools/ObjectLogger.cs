@@ -23,14 +23,16 @@ public static class ObjectLogger {
 
 	public static void unlog(GameObject p_object, EObjectTypes p_type){
 		m_objects[p_type].Remove(p_object);
+		m_objects[EObjectTypes.ALL].Remove(p_object);
 		//debug(p_object.transform.position, Color.blue, 1f);
-		//Debug.Log("REMOVE: " +  m_objects[p_type].Count);
+		// Debug.Log("REMOVE: " +  m_objects[p_type].Count);
+		// Debug.Log(p_type);
 	}
 
 	public static GameObject[] getByType(EObjectTypes p_type){
-		/*foreach(GameObject x in m_objects[p_type].ToArray()){
-			debug(x.transform.position, Color.cyan, 10f);
-		}*/
+		foreach(GameObject x in m_objects[p_type].ToArray()){
+			//debug(x.transform.position, Color.cyan, 10f);
+		}
 
 		if(p_type == EObjectTypes.ALL){
 			return getAll();
@@ -40,13 +42,26 @@ public static class ObjectLogger {
 	}
 
 	public static GameObject[] getByTypeByDistance(EObjectTypes p_type, Vector3 p_point){
+		
+		//if(p_type == EObjectTypes.BULLET) Debug.Log(m_objects[p_type].Count);
+
+		
 		List<GameObject> objects = m_objects[p_type];
 
 		SortedDictionary<float, GameObject> ob_by_dist = new SortedDictionary<float, GameObject>();
 
-		for(int i = 0; i<objects.Count; i++){
+		for(int i = 0; i<objects.Count; i++){	
+
 			
-			float mag = (objects[i].transform.position - p_point).magnitude;
+			float mag = objects[i] == null ? 0 : (objects[i].transform.position - p_point).magnitude;
+			
+			//THIS SHOULD NEVER HAPPEN, CANT FIND BUG RIGHT NOW
+			if(objects[i] == null) {
+				// Debug.Log("Happens: " + m_objects[p_type].Count);
+				m_objects[p_type].Remove(objects[i]);
+				m_objects[EObjectTypes.ALL].Remove(objects[i]);
+				// Debug.Log("Happens2: " + m_objects[p_type].Count);
+			}
 
 			while(ob_by_dist.ContainsKey(mag)){
 				mag += 0.001f;

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using Calc;
+using Calc.Vector;
 
 public class NIDirection : INeuralInput {
 
@@ -36,7 +37,7 @@ public class NIDirection : INeuralInput {
 
 		Vector3 object_direction = m_controller.sensePosition() - m_controller.senseNthNearestObjectPosition(m_order_by_proximity, m_object);
 		
-		float input = VectorCalc.getAngle( m_direction, object_direction )/180f;
+		float input = Vector2Calc.getAngle( m_direction, object_direction )/180f;
 		
 //		Debug.Log(input);
 		return input;

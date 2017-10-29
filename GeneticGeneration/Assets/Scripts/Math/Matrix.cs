@@ -1,4 +1,4 @@
-﻿using System.Collections;
+﻿/*using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using Calc;
@@ -151,5 +151,5 @@ public class Matrix {
 		
 		return new Matrix(result);
 	}
+}*/
 
-}

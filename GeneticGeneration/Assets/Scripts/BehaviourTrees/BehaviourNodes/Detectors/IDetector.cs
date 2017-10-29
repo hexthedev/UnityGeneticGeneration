@@ -2,6 +2,10 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public interface IDetector {
-	bool detect();
+namespace GeneticBehaviourTrees
+{
+  public interface IDetector
+  {
+    bool detect();
+  }
 }

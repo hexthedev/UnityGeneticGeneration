@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using Calc;
+using Calc.Array;
 
 public class Chromo {
 

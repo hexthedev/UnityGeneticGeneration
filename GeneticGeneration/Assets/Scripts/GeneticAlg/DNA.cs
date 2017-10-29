@@ -43,7 +43,7 @@ public class DNA {
 		List<string> toAdd = new List<string>(m_body.getStatsCSV(p_id, p_fitness));
 		toAdd.Insert(0, p_time+"");
 		toAdd.Add(m_mind.dataColumnSums());
-		toAdd.Add(m_mind.dataTotalWeightSum() + '\n');
+		//toAdd.Add(m_mind.dataTotalWeightSum() + '\n');
 
 
 		return toAdd.ToArray();

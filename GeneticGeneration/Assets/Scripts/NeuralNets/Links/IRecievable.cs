@@ -2,9 +2,11 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+using MathNet.Numerics.LinearAlgebra;
+
 public interface IRecievable {
 
-	void recievePropagation(Matrix p_propagation);
+	void recievePropagation( Matrix<float> p_propagation);
 	int count();
 
 }

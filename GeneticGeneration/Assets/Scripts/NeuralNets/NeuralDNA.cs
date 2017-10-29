@@ -1,17 +1,24 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+
 using Calc;
+using Calc.Rand;
+using Calc.Matrices;
+using Calc.Array;
+
+
+using MathNet.Numerics.LinearAlgebra;
 
 public class NeuralDNA {
 
 	SNeuralInputDNA[] m_inputs;	//Represents the number of inputs in input layer
 	List<DActivationFunction[]> m_hiddens;		//Represents the number of hidden layers. Activation functions act on hidden layer
-	Matrix[] m_links;			//Represents the weight between two layers in order
+	Matrix<float>[] m_links;			//Represents the weight between two layers in order
 	SNeuralOutputDNA[] m_outputs;		//Represents the outputs in the output layer
 
 	//Constructs DNA from parts when creatures die
-	public NeuralDNA( SNeuralInputDNA[] p_inputs, List<DActivationFunction[]> p_hiddens, Matrix[] p_weights, SNeuralOutputDNA[] p_outputs ){
+	public NeuralDNA( SNeuralInputDNA[] p_inputs, List<DActivationFunction[]> p_hiddens, Matrix<float>[] p_weights, SNeuralOutputDNA[] p_outputs ){
 		m_inputs = (SNeuralInputDNA[])p_inputs.Clone();
 	
 		m_hiddens = new List<DActivationFunction[]>();
@@ -21,7 +28,7 @@ public class NeuralDNA {
 		}
 		debug("HIDDENS: " + m_hiddens.Count);
 		
-		m_links = (Matrix[])p_weights.Clone();
+		m_links = (Matrix<float>[])p_weights.Clone();
 		debug("WEIGHTS: " + m_links.Length);
 
 		m_outputs = (SNeuralOutputDNA[])p_outputs.Clone();
@@ -113,15 +120,15 @@ public class NeuralDNA {
 	}
 
 	private void constructLinks(){
-		m_links = new Matrix[m_hiddens.Count+1];
+		m_links = new Matrix<float>[m_hiddens.Count+1];
 
-		m_links[0] = new Matrix(m_hiddens[0].Length, m_inputs.Length, NeuralNetConfig.weight_mm, true);
-
+		m_links[0] = MatrixCalc.randomFloatMatrix(m_inputs.Length, m_hiddens[0].Length, NeuralNetConfig.weight_mm);
+		
 		for(int i = 1; i<m_links.Length-1; i++){
-			m_links[i] = new Matrix(m_hiddens[i].Length, m_hiddens[i-1].Length, NeuralNetConfig.weight_mm, true);
+			m_links[i] = MatrixCalc.randomFloatMatrix(m_hiddens[i-1].Length, m_hiddens[i].Length, NeuralNetConfig.weight_mm);
 		}
 
-		m_links[m_links.Length-1] = new Matrix(m_outputs.Length, m_hiddens[m_hiddens.Count-1].Length, NeuralNetConfig.weight_mm, true);
+		m_links[m_links.Length-1] = MatrixCalc.randomFloatMatrix(m_hiddens[m_hiddens.Count-1].Length, m_outputs.Length, NeuralNetConfig.weight_mm);
 	}
 
 	//BIRTHING FUNCTIONS
@@ -165,12 +172,12 @@ public class NeuralDNA {
 	}
 
 	//Return weights of link at certain index
-	public Matrix getWeights(int p_layer_index){
+	public Matrix<float> getWeights(int p_layer_index){
 		return m_links[p_layer_index];
 	}
 
 	//Returns weights for the final link to output
-	public Matrix getOutputWeights(){					
+	public Matrix<float> getOutputWeights(){					
 		return m_links[m_links.Length-1];
 	}
 
@@ -187,10 +194,10 @@ public class NeuralDNA {
 	//EVOLUTION FUNCTIONS
 	public static NeuralDNA crossover(NeuralDNA p_dna1, NeuralDNA p_dna2){
 
-		Matrix[] weights = new Matrix[p_dna1.m_links.Length];
+		Matrix<float>[] weights = new Matrix<float>[p_dna1.m_links.Length];
 
 		for(int i = 0 ; i<weights.Length; i++){
-			weights[i] = Matrix.crossover(p_dna1.m_links[i], p_dna2.m_links[i]);
+			weights[i] = MatrixCalc.crossover(p_dna1.m_links[i], p_dna2.m_links[i]);
 		}
 
 		List<DActivationFunction[]> activation_functions = new List<DActivationFunction[]>();
@@ -205,8 +212,8 @@ public class NeuralDNA {
 	}
 
 	public void mutate(){
-		foreach(Matrix m in m_links){
-			m.mutate(NeuralNetConfig.mutation_chance, NeuralNetConfig.mutation_amount);
+		for(int i = 0; i<m_links.Length; i++){
+			m_links[i] = MatrixCalc.elementwiseRandomMultiply(m_links[i], NeuralNetConfig.mutation_amount);
 		}
 	}
 
@@ -250,7 +257,7 @@ public class NeuralDNA {
 		string data = "{";
 
 		for(int i = 0; i<m_links.Length; i++){
-			data += sumOfWeightsArray(m_links[i]);
+			//data += sumOfWeightsArray(m_links[i]);
 			if(i != m_links.Length) data += "-";
 		}
 
@@ -260,7 +267,7 @@ public class NeuralDNA {
 	}
 
 
-	private string sumOfWeightsArray(Matrix mat){
+	/*private string sumOfWeightsArray(Matrix mat){
 
 		string data = "[";
 
@@ -278,9 +285,9 @@ public class NeuralDNA {
 		data += "] ";
 
 		return data;
-	}
+	}*/
 
-	public string dataTotalWeightSum(){
+	/*public string dataTotalWeightSum(){
 		float data = 0;
 
 		foreach(Matrix m in m_links){
@@ -292,6 +299,6 @@ public class NeuralDNA {
 		}
 
 		return "" + Mathf.Round(data*100)/100f;
-	}
+	}*/
 	
 }

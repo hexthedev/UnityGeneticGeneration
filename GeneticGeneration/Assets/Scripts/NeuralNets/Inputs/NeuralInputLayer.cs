@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using UnityEngine;
 using Calc;
 
+using MathNet.Numerics.LinearAlgebra;
+
 public class NeuralInputLayer : IInputable
 {
   //Aggregation of inputs
@@ -20,15 +22,15 @@ public class NeuralInputLayer : IInputable
   }
 
   //Gets input values for current frame and passes as a matrix
-  public Matrix getInputs()
+  public Matrix<float> getInputs()
   {
-    float[,] m_prop = new float[count(),1]; 
-    
+    Matrix<float> inputs = Matrix<float>.Build.Dense(1, count());
+        
     for(int i = 0; i<m_inputs.Length;i++){
-      m_prop[i, 0] = m_inputs[i].input();
+     inputs[0, i] = m_inputs[i].input();
     }
 
-    return new Matrix(m_prop);
+    return inputs;
   }
 
   //Returns an array of dnaified NeuralInputs. The represents input layer

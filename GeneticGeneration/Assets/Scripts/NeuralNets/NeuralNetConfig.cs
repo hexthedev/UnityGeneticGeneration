@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+using Calc;
+
 public static class NeuralNetConfig {
 
 	//Neural Net
@@ -11,12 +13,12 @@ public static class NeuralNetConfig {
 	//Neural DNA
 	public static bool debug_net_dna = false;
 
-	public static MinMaxInt input_mm= new MinMaxInt(0,0);
-	public static MinMaxInt output_mm= new MinMaxInt(2,4);
-	public static MinMaxInt hidden_layer_mm= new MinMaxInt(1,2);
-	public static MinMaxInt hidden_size_mm= new MinMaxInt(1,3);
+	public static Range<int> input_mm= new Range<int>(0,0);
+	public static Range<int> output_mm= new Range<int>(2,4);
+	public static Range<int> hidden_layer_mm= new Range<int>(1,2);
+	public static Range<int> hidden_size_mm= new Range<int>(1,3);
 
-	public static MinMaxFloat mutation_amount = new MinMaxFloat(0.2f, 0.6f);
+	public static Range<float> mutation_amount = new Range<float>(0.2f, 0.6f);
 
 	public static float mutation_chance = 20f;
 
@@ -26,12 +28,12 @@ public static class NeuralNetConfig {
   	public static DActivationFunction[] binary_functions = {Activators.Bipolar()};
 
 	//Links
-	public static MinMaxFloat weight_mm= new MinMaxFloat(-1f,1f);
+	public static Range<float> weight_mm= new Range<float>(-1f,1f);
 
 	//InputLayerDNA
 	public static ENeuralInput[] active_inputs = {ENeuralInput.DIRECTION, ENeuralInput.PROXIMITY};
-	public static MinMaxFloat direction_mm= new MinMaxFloat(-1f,1f);
-	public static MinMaxFloat prox_mm= new MinMaxFloat(5f,8f);
+	public static Range<float> direction_mm= new Range<float>(-1f,1f);
+	public static Range<float> prox_mm= new Range<float>(5f,8f);
 
 
 	//OutputLayerDNA

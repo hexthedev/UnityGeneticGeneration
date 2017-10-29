@@ -2,7 +2,11 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public interface IMutatable {
+namespace GeneticBehaviourTrees
+{
+  public interface IMutatable
+  {
 
-	void mutate();
+    void mutate();
+  }
 }

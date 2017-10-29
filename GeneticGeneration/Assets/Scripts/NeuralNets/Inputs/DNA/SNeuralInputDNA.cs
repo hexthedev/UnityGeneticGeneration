@@ -2,6 +2,9 @@
 using System.Collections.Generic;
 using UnityEngine;
 using Calc;
+using Calc.Rand;
+using Calc.Enum;
+using Calc.Array;
 
 public struct SNeuralInputDNA {
 
@@ -56,7 +59,7 @@ public struct SNeuralInputDNA {
 		for(int i = 0; i<size; i++){
 			if(inputs.Count == 0){		break;	}
 			
-			ENeuralInput input = inputs[RandomCalc.Rand(new MinMaxInt(0, inputs.Count-1))];
+			ENeuralInput input = inputs[RandomCalc.Rand(new Range<int>(0, inputs.Count-1))];
 			dna.Add(randomInputDNA(input));
 			inputs.Remove(input);
 		}

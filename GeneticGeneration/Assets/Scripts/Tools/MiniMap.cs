@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using Calc;
+using Calc.Vector;
 
 public class MiniMap : MonoBehaviour {
 
@@ -35,7 +36,7 @@ public class MiniMap : MonoBehaviour {
 		GameObject[] player = ObjectLogger.getByType(EObjectTypes.PLAYER);
 
 		foreach(GameObject x in player){
-			Vector2 position = VectorCalc.CalcVec3to2(x.transform.position);
+			Vector2 position = Vector2Calc.fromVector3(x.transform.position);
 			position *= 5;
 			position.x += 66;
 			position.y += 47;
@@ -49,7 +50,7 @@ public class MiniMap : MonoBehaviour {
 		GameObject[] enemies = ObjectLogger.getByType(EObjectTypes.ENEMY);
 
 		foreach(GameObject x in enemies){
-			Vector2 position = VectorCalc.CalcVec3to2(x.transform.position);
+			Vector2 position = Vector2Calc.fromVector3(x.transform.position);
 			position *= 5;
 			position.x += 66;
 			position.y += 47;

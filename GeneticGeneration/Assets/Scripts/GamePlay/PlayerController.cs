@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using Calc;
+using Calc.Vector;
 
 public class PlayerController : MonoBehaviour, IDamagable {
 	
@@ -61,7 +62,7 @@ public class PlayerController : MonoBehaviour, IDamagable {
 	void shoot(Vector3 p_direction){
 		Vector2 direction = p_direction.normalized;
 
-		GameObject bullet = Instantiate(m_bullet, VectorCalc.CalcVec3to2(m_barrel_end.transform.position) + direction*0.5f, Quaternion.identity);	
+		GameObject bullet = Instantiate(m_bullet, Vector2Calc.fromVector3(m_barrel_end.transform.position) + direction*0.5f, Quaternion.identity);	
 
 		bullet.GetComponent<Bullet>().Initalize(direction, m_damage, "Player", m_game_controller);
 

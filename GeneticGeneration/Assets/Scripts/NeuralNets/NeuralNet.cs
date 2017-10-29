@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using MathNet.Numerics.LinearAlgebra;
 
 public class NeuralNet {
 
@@ -68,7 +69,7 @@ public class NeuralNet {
 		}
 
 		//Links DNA
-		Matrix[] links = new Matrix[m_links.Count];
+		Matrix<float>[] links = new Matrix<float>[m_links.Count];
 
 		for(int i = 0; i<m_links.Count; i++){
 			links[i] = m_links[i].dnaify();

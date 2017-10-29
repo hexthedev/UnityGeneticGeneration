@@ -1,7 +1,10 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-
-public interface IBehaviourNode {
-	IBehaviourNode act();	
+namespace GeneticBehaviourTrees
+{
+  public interface IBehaviourNode
+  {
+    IBehaviourNode act();
+  }
 }

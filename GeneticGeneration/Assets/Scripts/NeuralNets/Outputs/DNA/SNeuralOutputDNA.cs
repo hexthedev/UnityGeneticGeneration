@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using UnityEngine;
 using Calc;
+using Calc.Array;
+using Calc.Rand;
 
 public struct SNeuralOutputDNA {
 
@@ -44,7 +46,7 @@ public struct SNeuralOutputDNA {
 		for(int i = 0; i<size; i++){
 			if(outputs.Count == 0){		break;	}
 			
-			ENeuralOutput output = outputs[RandomCalc.Rand(new MinMaxInt(0, outputs.Count-1))];
+			ENeuralOutput output = outputs[RandomCalc.Rand(new Range<int>(0, outputs.Count-1))];
 			dna.Add(outputDNAwithRandomActivator(output));
 			outputs.Remove(output);
 		}
