@@ -9,36 +9,41 @@ namespace Genetic{
 
 	namespace Base {
 
-		///<summary>Type T refers to </summary>
-		public class DNABasedEvolutionController<T1, T2> {
+		///<summary>Type T refers to the Concrete DNA object</summary>
+		public class DNABasedEvolutionController<T> {
 
-			private ISpecies<IDNA<T1, T2>> m_species;
-			private FitnessList<IDNA<T1, T2>> m_gene_pool;
+			private ISpecies<IDNA<T>> m_species;
+			public FitnessList<IDNA<T>> m_gene_pool;
 			private float m_mutation_chance_percentage;
 			private int m_creatures_birthed = 0;
 
 			///<summary>Pass in a species and a number between 0 and 100 as mutation chance</summary>
-			public DNABasedEvolutionController(ISpecies<IDNA<T1, T2>> p_species, float p_mutation_chance_percentage){
-				m_gene_pool = new FitnessList<IDNA<T1, T2>>(25);
+			public DNABasedEvolutionController(ISpecies<IDNA<T>> p_species, float p_mutation_chance_percentage, int p_size){
+				m_gene_pool = new FitnessList<IDNA<T>>(p_size);
 				m_mutation_chance_percentage = p_mutation_chance_percentage;
+				m_species = p_species;
 			}
 
 			///<summary>DNA will be added by fitness and sorted</summary>
-			public void addDNA(IDNA<T1, T2> p_dna, float fitness){
+			public void addDNA(IDNA<T> p_dna, float fitness){
 				m_gene_pool.add(fitness, p_dna);
 			} 
 
-			///<summary>Return a piece of DNA by doing crossover and mutation on random DNA in gene pool weighted by fitness</summary>
-			public IDNA<T1, T2> birth(){
+			public void addRandom(){
+				m_gene_pool.add(0, m_species.randomInstance());
+			}
 
-				IDNA<T1, T2> dna = m_gene_pool.getRandomObject().crossover(m_gene_pool.getRandomObject().getSelf() );
+			///<summary>Return a piece of DNA by doing crossover and mutation on random DNA in gene pool weighted by fitness</summary>
+			public T birth(){
+
+				IDNA<T> dna = m_gene_pool.getRandomObject().crossover(m_gene_pool.getRandomObject().getSelf() );
 				
 				if(RandomCalc.ChanceRoll(m_mutation_chance_percentage)){
 					dna = dna.mutate();
 				}
 
 				m_creatures_birthed++;
-				return dna;
+				return dna.getSelf();
 			}
 
 			public int CreaturesBirthed { get { return m_creatures_birthed; } } 
@@ -55,7 +60,7 @@ namespace Genetic{
 			@@@@@@@@@@@@@@@@@ */
 
 		///<summary>DNA must be able to do crossover and mutate itself</summary>
-		public interface IDNA<T1, T2> : ICrossoverable<T1, T2>, IMutatable<T1, T2>, IBirthable<T1, T2>, ISelf<T1>{ }
+		public interface IDNA<T> : ICrossoverable<T>, IMutatable<T>, ISelf<T>{ }
 
 		///<summary>Return object as it's specific type.!-- Useful for cing objects own type maps to a generic type</summary>
 		public interface ISelf<T>{
@@ -64,22 +69,17 @@ namespace Genetic{
 		}
 
 		///<summary>Object can perform crossover and return IDNA</summary>
-		public interface ICrossoverable<T1, T2>{
+		public interface ICrossoverable<T>{
 
 			///<summary>Crossover with another object of same type returns object type</summary>
-			IDNA<T1, T2> crossover(T1 p_object);
+			IDNA<T> crossover(T p_object);
 		}
 
 		///<summary>Object can mutate and return IDNA</summary>
-		public interface IMutatable<T1, T2>{
+		public interface IMutatable<T>{
 
 			///<summary>This object can mutate</summary>
-			IDNA<T1,T2> mutate();
-		}
-
-		///<summary>Object can take in T1 and bith T2</summary>
-		public interface IBirthable<T1, T2>{
-			T2 birth(T1 p_birth_object);
+			IDNA<T> mutate();
 		}
 
     /* @@@@@@@@@@@@@@@@@
@@ -89,11 +89,11 @@ namespace Genetic{
     ///<summary>Structure of a genetic creature. Some implementations of DNA require a strict structure</summary>
     public interface ISpecies<T>{
 
-		int ID { get;}
+			int ID { get;}
 
-		///<summary>A Random instance of a spceies is DNA whos structure adhers to the species structure</summary>
-		T randomInstance();
-	}
+			///<summary>A Random instance of a spceies is DNA whos structure adhers to the species structure</summary>
+			T randomInstance();
+		}
 
 
 /* @@@@@@@@@@@@@@@@@
@@ -103,7 +103,7 @@ namespace Genetic{
 		///<summary>Data Structure holds fitness and objects in an order list</summary>
 		public class FitnessList<T>
 		{
-			List<FitnessObject<T>> m_objects;
+			private List<FitnessObject<T>> m_objects;
 
 			int m_size;
 
