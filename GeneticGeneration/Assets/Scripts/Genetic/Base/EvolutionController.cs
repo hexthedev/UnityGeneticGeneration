@@ -2,8 +2,10 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-using Calc;
-using Calc.Rand;
+using JTools.Calc;
+using JTools.Calc.Rand;
+
+using JTools.Interfaces;
 
 namespace Genetic{
 
@@ -36,10 +38,10 @@ namespace Genetic{
 			///<summary>Return a piece of DNA by doing crossover and mutation on random DNA in gene pool weighted by fitness</summary>
 			public T birth(){
 
-				IDNA<T> dna = m_gene_pool.getRandomObject().crossover(m_gene_pool.getRandomObject().getSelf() );
+				IDNA<T> dna = m_gene_pool.getRandomObject().DNAcrossover(m_gene_pool.getRandomObject().getSelf() );
 				
 				if(RandomCalc.ChanceRoll(m_mutation_chance_percentage)){
-					dna = dna.mutate();
+					dna = dna.DNAmutate();
 				}
 
 				m_creatures_birthed++;
@@ -60,27 +62,15 @@ namespace Genetic{
 			@@@@@@@@@@@@@@@@@ */
 
 		///<summary>DNA must be able to do crossover and mutate itself</summary>
-		public interface IDNA<T> : ICrossoverable<T>, IMutatable<T>, ISelf<T>{ }
-
-		///<summary>Return object as it's specific type.!-- Useful for cing objects own type maps to a generic type</summary>
-		public interface ISelf<T>{
-			///<summary>Should always implement as return this;</summary>
-			T getSelf();
-		}
-
-		///<summary>Object can perform crossover and return IDNA</summary>
-		public interface ICrossoverable<T>{
+		public interface IDNA<T> : ISelf<T>{ 
 
 			///<summary>Crossover with another object of same type returns object type</summary>
-			IDNA<T> crossover(T p_object);
-		}
-
-		///<summary>Object can mutate and return IDNA</summary>
-		public interface IMutatable<T>{
+			IDNA<T> DNAcrossover(T p_object);
 
 			///<summary>This object can mutate</summary>
-			IDNA<T> mutate();
+			IDNA<T> DNAmutate();
 		}
+
 
     /* @@@@@@@@@@@@@@@@@
         Species
