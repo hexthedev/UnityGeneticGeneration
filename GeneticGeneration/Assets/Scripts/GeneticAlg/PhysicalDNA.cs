@@ -65,6 +65,10 @@ public class PhysicalDNA {
 		return clone;
 	}
 
+	public PhysicalDNA crossover(PhysicalDNA p_dna2){
+		return new PhysicalDNA();
+	}
+
 	public static PhysicalDNA crossover(PhysicalDNA p_dna1, PhysicalDNA p_dna2){
 		Dictionary<ETrait, Chromo> chromos = new Dictionary<ETrait, Chromo>();
 

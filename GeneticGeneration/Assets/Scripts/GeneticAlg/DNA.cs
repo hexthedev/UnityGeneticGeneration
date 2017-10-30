@@ -2,50 +2,45 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class DNA {
+using Genetic.Base;
+
+public class MindBodyDNA : IDNA<MindBodyDNA, MindBody>{
 
 	private PhysicalDNA m_body;
 
-	private NeuralDNA m_mind;
+	private PhysicalDNA m_mind;
 
-	public DNA(PhysicalDNA p_body, NeuralDNA p_mind){
+	public MindBodyDNA(PhysicalDNA p_body, PhysicalDNA p_mind){
 		m_body = p_body;
 		m_mind = p_mind;
 	}
 
-	public NeuralNet expressMind(CreatureController p_controller){
-		return m_mind.expressDNA(p_controller);
-	}
 
-	public Dictionary<ETrait, StatTuple> expressBody(){
-		return m_body.expressDNA();
-	}
+  public MindBody birth(MindBodyDNA p_birth_object)
+  {
+    new MindBody(p_birth_object);
+  }
 
+  public IDNA<MindBodyDNA, MindBody> crossover(MindBodyDNA p_object)
+  {
+     return new MindBodyDNA(m_body.crossover(p_object.m_body), m_mind.crossover(p_object.m_mind));
+  }
 
-	//EVOLUTION FUNCTIONS
-	public static DNA crossover(DNA dna_1, DNA dna_2){
-		PhysicalDNA body = PhysicalDNA.crossover(dna_1.m_body, dna_2.m_body);
-		NeuralDNA mind = NeuralDNA.crossover(dna_1.m_mind, dna_2.m_mind);
+  public MindBodyDNA getSelf()
+  {
+    return this;
+  }
 
-		return new DNA(body, mind);
-	}
-	
-	public void mutate(){
-		m_body.mutate();
-		m_mind.mutate();
-	}
-
-	public DNA clone(){
-		return new DNA(m_body.clone(), m_mind.clone());
-	}
-
-	public string[] dataCSVlog(int p_id, float p_fitness, float p_time){
-		List<string> toAdd = new List<string>(m_body.getStatsCSV(p_id, p_fitness));
-		toAdd.Insert(0, p_time+"");
-		toAdd.Add(m_mind.dataColumnSums());
-		//toAdd.Add(m_mind.dataTotalWeightSum() + '\n');
+  public IDNA<MindBodyDNA, MindBody> mutate()
+  {
+    return new MindBodyDNA(m_body.mutate(), m_mind.mutate());
+  }
+}
 
 
-		return toAdd.ToArray();
-	}
+public class MindBody{
+
+	public PhysicalDNA m_mind;
+	public PhysicalDNA m_body;
+
 }
