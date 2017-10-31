@@ -14,8 +14,8 @@ namespace Genetic{
     }
 
     ///<summary>Transform object from DNA state to birthed useable state</summary>
-    public interface IBirthable<T1, T2>{
-      T2 birth(T1 p_birth_object);
+    public interface IBirthable<T>{
+      T birth();
     }
 
   }

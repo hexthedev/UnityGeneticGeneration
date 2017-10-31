@@ -2,181 +2,146 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-using Genetic.Base;
-
-using JTools.Calc;
+using JTools.Calc.Base;
 using JTools.Calc.Rand;
 using JTools.Calc.Array;
 using JTools.Calc.Bool;
+using JTools.Calc.DataStructures;
+
+using JTools.Interfaces;
+
+using Genetic.Base;
+using Genetic.Numerical.Base;
 
 namespace Genetic
 {
   namespace Numerical
   {
-
-    public class TraitGenesDNA
+    namespace TraitGenes
     {
-
-      private Dictionary<ETrait, Gene> m_chromos = new Dictionary<ETrait, Gene>();
-
-      public PhysicalDNA()
+      public class TraitGenesDNA : IMutatable<TraitGenesDNA>, ICrossoverable<TraitGenesDNA>, IBirthable<Dictionary<ETrait, float>>, IDNA<TraitGenesDNA>, ICloneable<TraitGenesDNA>
       {
-        foreach (ETrait trait in System.Enum.GetValues(typeof(ETrait)))
+        private Dictionary<ETrait, Gene> m_traits = new Dictionary<ETrait, Gene>();
+
+        ///<summary> Create a Random selection of trait genes</summary>
+        public TraitGenesDNA(HashSet<ETrait> p_traits, int p_size, Range<float> p_range, int p_mutation_iterations, Range<float> p_mutation_range)
         {
-          m_chromos.Add(trait, new Gene());
-        }
-      }
-
-      public PhysicalDNA(Dictionary<ETrait, Gene> p_chromos)
-      {
-        m_chromos = p_chromos;
-      }
-
-      //This is the stat representation
-      private Gene getChromo(ETrait p_trait)
-      {
-        return m_chromos[p_trait];
-      }
-
-      public float getTraitValue(ETrait p_trait)
-      {
-        return m_chromos[p_trait].getGeneValue();
-      }
-
-      //Clonable
-      public PhysicalDNA clone()
-      {
-        Dictionary<ETrait, Gene> clone_chromos = new Dictionary<ETrait, Gene>();
-
-        foreach (ETrait trait in System.Enum.GetValues(typeof(ETrait)))
-        {
-          clone_chromos.Add(trait, m_chromos[trait].clone());
-        }
-
-        return new PhysicalDNA(clone_chromos);
-      }
-
-
-      //ToString
-      public override string ToString()
-      {
-        return "DNA -- At: " + m_chromos[ETrait.ATTACK].getGeneValue() + ", De: " + m_chromos[ETrait.DEFENSE].getGeneValue() + ", Sp: " + m_chromos[ETrait.SPEED].getGeneValue() + ", Hp: " + m_chromos[ETrait.HP].getGeneValue();
-      }
-
-      //DNA Expression Functions
-      public Dictionary<ETrait, StatTuple> expressDNA()
-      {
-        Dictionary<ETrait, StatTuple> to_return = new Dictionary<ETrait, StatTuple>();
-
-        foreach (ETrait stat in m_chromos.Keys)
-        {
-          float value = getTraitValue(stat);
-          to_return.Add(stat, new StatTuple(value, value));
-        }
-
-        return to_return;
-      }
-
-      //Evolution Functions
-      public PhysicalDNA mutate()
-      {
-        PhysicalDNA clone = this.clone();
-
-        foreach (ETrait trait in System.Enum.GetValues(typeof(ETrait)))
-        {
-          clone.m_chromos[trait] = clone.m_chromos[trait].mutate();
-        }
-
-        return clone;
-      }
-
-      public PhysicalDNA crossover(PhysicalDNA p_dna2)
-      {
-        return new PhysicalDNA();
-      }
-
-      public static PhysicalDNA crossover(PhysicalDNA p_dna1, PhysicalDNA p_dna2)
-      {
-        Dictionary<ETrait, Gene> chromos = new Dictionary<ETrait, Gene>();
-
-        foreach (ETrait trait in System.Enum.GetValues(typeof(ETrait)))
-        {
-          chromos.Add(trait, Gene.crossover(p_dna1.getChromo(trait), p_dna2.getChromo(trait)));
-        }
-
-        return new PhysicalDNA(chromos);
-      }
-
-      //Data Collection
-      public string[] getStatsCSV(int creature, float p_fitness)
-      {
-        string[] stats = { creature.ToString(), m_chromos[ETrait.ATTACK].getGeneValue().ToString(), m_chromos[ETrait.DEFENSE].getGeneValue().ToString(), m_chromos[ETrait.SPEED].getGeneValue().ToString(), m_chromos[ETrait.HP].getGeneValue().ToString(), p_fitness + "" };
-        return stats;
-      }
-
-    }
-
-    ///<summary> A crossoverable, mutatable array of floats</summary>
-    public class Gene : IMutatable<Gene>, ICrossoverable<Gene>{
-
-      private float[] m_genes;
-
-      private int m_mutation_iterations;
-      private Range<float> m_mutation_range;
-
-      public Gene(int p_number, Range<float> p_range, int p_mutation_iterations, Range<float> p_mutation_range){
-        m_genes = new float[p_number];
-
-        for(int i = 0; i<m_genes.Length; i++){
-          m_genes[i] = RandomCalc.Rand(p_range);
-        }
-
-        m_mutation_iterations = p_mutation_iterations;
-        m_mutation_range = p_mutation_range;
-      }
-
-      public float GeneValue { get { return ArrayCalc.floatArraySum(m_genes); } }
-
-      private float getGene(int index){
-        return m_genes[index];
-      }   
-
-      public Gene Clone(){
-        Gene clone = new Gene(m_genes.Length, new Range<float>(0,0), m_mutation_iterations, m_mutation_range);
-
-        for(int i = 0; i<m_genes.Length; i++){
-          clone.m_genes[i] = m_genes[i];
-        }
-
-        return clone;
-      }
-
-      public Gene mutate()
-      {
-          Gene clone = this.Clone();
-
-          for(int i = 0; i<m_mutation_iterations; i++){
-            int index = Random.Range(0,5);
-            clone.m_genes[index] += RandomCalc.Rand(m_mutation_range);
+          foreach (ETrait trait in p_traits)
+          {
+            m_traits.Add(trait, new Gene(p_size, p_range, p_mutation_iterations, p_mutation_range));
           }
+
+          Debug.Log(ToString());
+        }
+
+        ///<summary> Manually create TraitGenesDNA. FOR TESTING ONLY -- inputs is mutable</summary>
+        public TraitGenesDNA(Dictionary<ETrait, Gene> p_chromos)
+        {
+          m_traits = new Dictionary<ETrait, Gene>();
+
+          foreach(ETrait trait in p_chromos.Keys){
+            m_traits.Add(trait, p_chromos[trait].Clone());
+          }
+        }
+
+        ///<summary> Mutate each traits genes</summary>
+        public TraitGenesDNA mutate()
+        {
+          TraitGenesDNA mutated = new TraitGenesDNA(m_traits);
+
+          foreach(ETrait trait in mutated.m_traits.Keys){
+            mutated.m_traits[trait] = mutated.m_traits[trait].mutate();
+          }
+
+          return mutated;
+        }
+
+        ///<summary> Create new TraitGenesDNA by performing crossover on each Traits genes</summary>
+        public TraitGenesDNA crossover(TraitGenesDNA p_crossover_object)
+        {
+          TraitGenesDNA crossovered = new TraitGenesDNA(m_traits);
+          crossovered.m_traits = new Dictionary<ETrait, Gene>();
+
+          foreach(ETrait trait in crossovered.m_traits.Keys){
+            crossovered.m_traits.Add(trait, m_traits[trait].crossover(p_crossover_object.m_traits[trait]));
+          }
+
+          return crossovered;
+        }
+
+        ///<summary> Translate DNA into Dictionary of ETraits to floats</summary>
+        public Dictionary<ETrait, float> birth()
+        {
+          Dictionary<ETrait, float> born = new Dictionary<ETrait, float>();
+
+          foreach(ETrait trait in m_traits.Keys){
+            born.Add(trait, m_traits[trait].GeneValue);
+          }
+
+          return born;
+        }
+
+        public TraitGenesDNA Clone()
+        {
+          return new TraitGenesDNA(m_traits);
+        }
+
+        public override string ToString()
+        {
+          string to_return = "TraitDNA: [";
           
-          return clone;
-      }
-
-      public Gene crossover(Gene p_crossover_object)
-      {
-          Gene new_gene = new Gene(m_genes.Length, new Range<float>(0,0), m_mutation_iterations, m_mutation_range);
-
-          for(int i=0; i < new_gene.m_genes.Length; i++){
-            new_gene.m_genes[i] = BoolCalc.random() ? m_genes[i]: p_crossover_object.m_genes[i];
+          foreach(ETrait trait in m_traits.Keys){
+            to_return += trait.ToString() + ":" + m_traits[trait].GeneValue + ",";
           }
 
-          return new_gene;
+          to_return.Remove(to_return.Length-1);
+
+          return to_return + "]";
+        }
+
+        //IDNA FUNCTIONS DESIGNED FOR EVOLUTION CONTROLLER GENERALIZATION
+        public IDNA<TraitGenesDNA> DNAcrossover(TraitGenesDNA p_object)
+        {
+          return crossover(p_object);
+        }
+
+        public IDNA<TraitGenesDNA> DNAmutate()
+        {
+          return mutate();
+        }
+
+        public TraitGenesDNA getSelf()
+        {
+          return this;
+        }
+      }
+
+      public class TraitGenesSpecies : ISpecies<IDNA<TraitGenesDNA>>
+      {
+        int m_id;
+        HashSet<ETrait> m_traits;
+        int m_size;
+        Range<float> m_range;        
+        int m_mutation_iterations;
+        Range<float> m_mutation_range;
+
+        public TraitGenesSpecies(int p_id, HashSet<ETrait> p_traits, int p_size, Range<float> p_range, int p_mutation_iterations, Range<float> p_mutation_range){
+          m_id = p_id;
+          m_traits = HashSetCalc.ShallowClone(p_traits);
+          m_size = p_size;
+          m_range = p_range.Clone();
+          m_mutation_iterations = p_mutation_iterations;
+          m_mutation_range = p_mutation_range.Clone();
+        }
+        
+        public int ID { get {return m_id;} }
+
+        public IDNA<TraitGenesDNA> randomInstance()
+        {
+          return new TraitGenesDNA(m_traits, m_size, m_range, m_mutation_iterations, m_mutation_range);
+        }
       }
     }
-
   }
-
-
 }
 

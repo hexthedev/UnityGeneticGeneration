@@ -2,8 +2,8 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
-using Calc;
-using Calc.Vector;
+using JTools.Calc.Base;
+using JTools.Calc.Vector;
 
 public class MiniMap : MonoBehaviour {
 

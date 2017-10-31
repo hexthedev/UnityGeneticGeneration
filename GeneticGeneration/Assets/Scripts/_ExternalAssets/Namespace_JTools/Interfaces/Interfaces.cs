@@ -9,6 +9,10 @@ namespace JTools{
 			T getSelf();
 		}
 
+
+		public interface ICloneable<T>{
+			T Clone();
+		}
   }
 
 }

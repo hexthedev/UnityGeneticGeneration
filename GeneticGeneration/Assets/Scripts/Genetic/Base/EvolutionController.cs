@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-using JTools.Calc;
+using JTools.Calc.Base;
 using JTools.Calc.Rand;
 
 using JTools.Interfaces;

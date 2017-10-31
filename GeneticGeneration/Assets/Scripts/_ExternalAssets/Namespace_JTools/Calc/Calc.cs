@@ -4,34 +4,43 @@ using UnityEngine;
 using MathNet.Numerics.LinearAlgebra;   //WARNING, requires TaskParallelle to work
 using MathNet.Numerics.Random;   //WARNING, requires TaskParallelle to work
 
+using JTools.Interfaces;
+
 namespace JTools
 {
 
   ///<summary>Custom Calcuatoin functions written by James McCafferty for use in unity projects</summary>
   namespace Calc
   {
-    ///<summary>Represents a range from T min to T max</summary>
-    public struct Range<T>
-    {
 
-      private T m_min;
-      private T m_max;
-
-      public Range(T p_min, T p_max)
+    namespace Base{
+        
+      ///<summary>Represents a range from T min to T max</summary>
+      public struct Range<T>
       {
-        m_min = p_min;
-        m_max = p_max;
+
+        private T m_min;
+        private T m_max;
+
+        public Range(T p_min, T p_max)
+        {
+          m_min = p_min;
+          m_max = p_max;
+        }
+
+        public T Min { get { return m_min; } }
+        public T Max { get { return m_max; } }
+
+        public Range<T> Clone(){
+          return new Range<T>(m_min, m_max);
+        }
       }
 
-      public T Min { get { return m_min; } }
-      public T Max { get { return m_max; } }
+
+      ///<summary>Delegate function used to convert Type 1 to Type 2</summary>
+      public delegate T2 DConversion<T1, T2>(T1 p_convert);
+
     }
-
-
-    ///<summary>Delegate function used to convert Type 1 to Type 2</summary>
-    public delegate T2 DConversion<T1, T2>(T1 p_convert);
-
-
 
     ///<summary>Calcuation functions for Vector2 and Vector3</summary>
     namespace Vector
@@ -91,11 +100,11 @@ namespace JTools
         ///<summary>Rotates a normalized direction vector around the origin by degrees. CounterClockwise </summary>
         public static Vector2 randomDirection()
         {
-          return (new Vector2(Rand.RandomCalc.Rand(new Range<float>(-1f, 1)), Rand.RandomCalc.Rand(new Range<float>(-1f, 1)))).normalized;
+          return (new Vector2(Rand.RandomCalc.Rand(new Base.Range<float>(-1f, 1)), Rand.RandomCalc.Rand(new Base.Range<float>(-1f, 1)))).normalized;
         }
 
         ///<summary>Multiplies each element of Vector2 by random number represented by range</summary>
-        public static Vector2 elementwiseRandomMultiply(Vector2 p_mutate, Range<float> p_range)
+        public static Vector2 elementwiseRandomMultiply(Vector2 p_mutate, Base.Range<float> p_range)
         {
           return new Vector2(p_mutate.x * Rand.RandomCalc.Rand(p_range), p_mutate.y * Rand.RandomCalc.Rand(p_range));
         }
@@ -148,7 +157,7 @@ namespace JTools
         }
 
         ///<summary>Converts array from type T1 to type T2 </summary>
-        public static T2[] map<T1, T2>(T1[] p_to_convert, DConversion<T1, T2> p_converter)
+        public static T2[] map<T1, T2>(T1[] p_to_convert, Base.DConversion<T1, T2> p_converter)
         {
           T2[] to_return = new T2[p_to_convert.Length];
 
@@ -171,7 +180,7 @@ namespace JTools
         ///<summary>Returns a random index that contains an element from an array </summary>
         public static int randomIndex<T>(T[] p_array)
         {
-          int rand = Rand.RandomCalc.Rand(new Range<int>(0, p_array.Length - 1));
+          int rand = Rand.RandomCalc.Rand(new Base.Range<int>(0, p_array.Length - 1));
           return rand;
         }
 
@@ -209,7 +218,7 @@ namespace JTools
         public static T randomValue<T>()
         {
           System.Array array = System.Enum.GetValues(typeof(T));
-          return (T)array.GetValue(Rand.RandomCalc.Rand(new Range<int>(0, array.Length - 1)));
+          return (T)array.GetValue(Rand.RandomCalc.Rand(new Base.Range<int>(0, array.Length - 1)));
         }
 
       }
@@ -223,7 +232,7 @@ namespace JTools
         ///<summary>Return true or false randomly </summary>
         public static bool random()
         {
-          return Rand.RandomCalc.Rand(new Range<int>(0, 1)) == 1 ? true : false;
+          return Rand.RandomCalc.Rand(new Base.Range<int>(0, 1)) == 1 ? true : false;
         }
       }
     }
@@ -235,7 +244,7 @@ namespace JTools
       {
 
         ///<summary>Multiplies a float that can only take on a value between a range </summary>
-        public static float boundedMultiply(float p_value, Range<float> p_range, float p_mutation_value)
+        public static float boundedMultiply(float p_value, Base.Range<float> p_range, float p_mutation_value)
         {
           return Mathf.Clamp(p_value * p_mutation_value, p_range.Min, p_range.Max);
         }
@@ -249,9 +258,9 @@ namespace JTools
       {
 
         ///<summary>Multiplies a int that can only take on a value between a range. Multiplication done using a float then rounding </summary>
-        public static int boundedMultiply(int p_value, Range<int> p_range, float p_mutation_value)
+        public static int boundedMultiply(int p_value, Base.Range<int> p_range, float p_mutation_value)
         {
-          return (int)Mathf.RoundToInt(Float.FloatCalc.boundedMultiply(p_value, new Range<float>(p_range.Min, p_range.Max), p_mutation_value));
+          return (int)Mathf.RoundToInt(Float.FloatCalc.boundedMultiply(p_value, new Base.Range<float>(p_range.Min, p_range.Max), p_mutation_value));
         }
 
       }
@@ -265,7 +274,7 @@ namespace JTools
       {
 
         ///<summary>Get a randomly populated float matrix</summary>
-        public static Matrix<float> randomFloatMatrix(int p_rows, int p_cols, Range<float> p_range)
+        public static Matrix<float> randomFloatMatrix(int p_rows, int p_cols, Base.Range<float> p_range)
         {
           return Matrix<float>.Build.Dense(p_rows, p_cols, (i, j) => { return Rand.RandomCalc.Rand(p_range); });
         }
@@ -291,7 +300,7 @@ namespace JTools
           return to_return;
         }
 
-        public static Matrix<float> elementwiseRandomMultiply(Matrix<float> p_matrix, Range<float> p_range)
+        public static Matrix<float> elementwiseRandomMultiply(Matrix<float> p_matrix, Base.Range<float> p_range)
         {
 
           Matrix<float> matrix = Matrix<float>.Build.Dense(p_matrix.RowCount, p_matrix.ColumnCount);
@@ -338,13 +347,13 @@ namespace JTools
         }
 
         ///<summary>Return random float in range</summary>
-        public static float Rand(Range<float> p)
+        public static float Rand(Base.Range<float> p)
         {
           return (float)m_random.NextDouble() * (p.Max - p.Min) + p.Min;
         }
 
         ///<summary>Return a random int in range</summary>
-        public static int Rand(Range<int> p)
+        public static int Rand(Base.Range<int> p)
         {
           return m_random.Next(p.Min, p.Max + 1);
         }
@@ -352,13 +361,42 @@ namespace JTools
         ///<summary>True if random number is lower than p_chance (percentage 0-100)</summary>
         public static bool ChanceRoll(float p_chance)
         {
-          return p_chance >= Rand(new Range<float>(0, 100)) ? true : false;
+          return p_chance >= Rand(new Base.Range<float>(0, 100)) ? true : false;
         }
 
       }
     }
 
+    namespace DataStructures{
 
+        public static class HashSetCalc{
+         
+          public static HashSet<T> ShallowClone<T>(HashSet<T> set){
+            HashSet<T> new_set = new HashSet<T>();
+
+            foreach(T element in set){
+              new_set.Add(element);
+            }
+
+            return new_set;
+          }
+
+          public static HashSet<T> DeepClone<T>(HashSet<ICloneable<T>> set){
+            HashSet<T> new_set = new HashSet<T>();
+
+            foreach(ICloneable<T> element in set){
+              new_set.Add(element.Clone());
+            }
+
+            return new_set;
+          }
+
+        }
+
+
+      
+
+    }
 
   }
 }
