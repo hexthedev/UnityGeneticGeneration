@@ -204,6 +204,21 @@ namespace JTools
           }
           return new_array;
         }
+
+
+        public static T[] shallowClone<T>(T[] p_array){
+          return (T[]) p_array.Clone();
+        }
+
+        public static T[] deepClone<T>(ICloneable<T>[] p_array){
+          List<T> clone = new List<T>();
+
+          foreach(ICloneable<T> cloneable in p_array){
+            clone.Add(cloneable.Clone());
+          }
+          
+          return clone.ToArray();
+        }
       }
 
     }
@@ -219,6 +234,11 @@ namespace JTools
         {
           System.Array array = System.Enum.GetValues(typeof(T));
           return (T)array.GetValue(Rand.RandomCalc.Rand(new Base.Range<int>(0, array.Length - 1)));
+        }
+
+        ///<summary>Return System.Array of enums.T must be an enum type </summary>
+        public static System.Array getValues<T>(){
+          return System.Enum.GetValues(typeof(T));         
         }
 
       }
@@ -325,6 +345,22 @@ namespace JTools
           }
 
           return true;
+        }
+
+        public static bool isSize(Matrix<float> p_matrix, int p_rows, int p_columns){
+          return p_matrix.RowCount == p_rows && p_matrix.ColumnCount == p_columns;
+        }
+
+        public static Matrix<T> shallowClone<T>(Matrix<T> p_clone) where T : struct, System.IEquatable<T>, System.IFormattable {
+          Matrix<T> clone = Matrix<T>.Build.Dense(p_clone.RowCount, p_clone.ColumnCount);
+
+          for(int i = 0; i< p_clone.RowCount; i++){
+            for(int j = 0; j<p_clone.ColumnCount; j++){
+              clone[i,j] = p_clone[i,j];
+            }
+          }
+
+          return clone;
         }
 
       }

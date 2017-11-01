@@ -15,9 +15,15 @@ public class Tester : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
-		m_evolution = new DNABasedEvolutionController<TraitGenesDNA>( new TraitGenesSpecies( 0, new HashSet<ETrait> {ETrait.ATTACK, ETrait.DEFENSE}, 5, new Range<float>(0, 2), 3, new Range<float>(-1, 2)), 4, 5 );
+		m_evolution = new DNABasedEvolutionController<TraitGenesDNA>( 
+			new TraitGenesSpecies( 0, new HashSet<ETrait> {ETrait.ATTACK, ETrait.DEFENSE}, 
+			2, 
+			new Range<float>(0, 2), 
+			3, 
+			new Range<float>(-1, 2)), 0.04f, 10 
+		);
 	
-		for(int i = 0; i<2; i++){
+		for(int i = 0; i<40; i++){
 			m_evolution.addRandom();
 		}
 

@@ -5,6 +5,7 @@ using UnityEngine.UI;
 using JTools.Calc.Base;
 using JTools.Calc.Vector;
 
+using JTools.Gameplay;
 public class MiniMap : MonoBehaviour {
 
 	private Texture2D m_tex;

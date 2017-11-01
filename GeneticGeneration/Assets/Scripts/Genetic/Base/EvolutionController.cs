@@ -19,7 +19,7 @@ namespace Genetic{
 			private float m_mutation_chance_percentage;
 			private int m_creatures_birthed = 0;
 
-			///<summary>Pass in a species and a number between 0 and 100 as mutation chance</summary>
+			///<summary>Pass in a species and a number between 0 and 1 as mutation chance</summary>
 			public DNABasedEvolutionController(ISpecies<IDNA<T>> p_species, float p_mutation_chance_percentage, int p_size){
 				m_gene_pool = new FitnessList<IDNA<T>>(p_size);
 				m_mutation_chance_percentage = p_mutation_chance_percentage;
@@ -40,7 +40,7 @@ namespace Genetic{
 
 				IDNA<T> dna = m_gene_pool.getRandomObject().DNAcrossover(m_gene_pool.getRandomObject().getSelf() );
 				
-				if(RandomCalc.ChanceRoll(m_mutation_chance_percentage)){
+				if(RandomCalc.ChanceRoll(m_mutation_chance_percentage*100)){
 					dna = dna.DNAmutate();
 				}
 
@@ -62,13 +62,29 @@ namespace Genetic{
 			@@@@@@@@@@@@@@@@@ */
 
 		///<summary>DNA must be able to do crossover and mutate itself</summary>
-		public interface IDNA<T> : ISelf<T>{ 
+		public abstract class IDNA<T> : ISelf<T>, ICrossoverable<T>, IMutatable<T>{
 
-			///<summary>Crossover with another object of same type returns object type</summary>
-			IDNA<T> DNAcrossover(T p_object);
+			///<summary>Translate T into IDNA for processing</summary>
+			public abstract IDNA<T> getIDNA(T p_dnaify);
+
+			///<summary>Translate IDNA back to T for concrete functions</summary>
+      public abstract T getSelf();
+
+			///<summary>Implmentation of crossover on concrete level</summary>
+			public abstract T crossover(T p_crossover_object);
+
+			///<summary>Implmentation of mutation on the concrete level</summary>
+      public abstract T mutate();
+
+      ///<summary>Crossover with another object of same type returns object type</summary>
+      public IDNA<T> DNAcrossover(T p_object){
+				return getIDNA(crossover(p_object));
+			}
 
 			///<summary>This object can mutate</summary>
-			IDNA<T> DNAmutate();
+			public IDNA<T> DNAmutate(){
+				return getIDNA(mutate());
+			}
 		}
 
 

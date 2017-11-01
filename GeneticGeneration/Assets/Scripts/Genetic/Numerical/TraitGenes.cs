@@ -19,13 +19,15 @@ namespace Genetic
   {
     namespace TraitGenes
     {
-      public class TraitGenesDNA : IMutatable<TraitGenesDNA>, ICrossoverable<TraitGenesDNA>, IBirthable<Dictionary<ETrait, float>>, IDNA<TraitGenesDNA>, ICloneable<TraitGenesDNA>
+      public class TraitGenesDNA :  IDNA<TraitGenesDNA>, IExpressable<Dictionary<ETrait, float>>, ICloneable<TraitGenesDNA>
       {
+        int m_species;
         private Dictionary<ETrait, Gene> m_traits = new Dictionary<ETrait, Gene>();
 
         ///<summary> Create a Random selection of trait genes</summary>
-        public TraitGenesDNA(HashSet<ETrait> p_traits, int p_size, Range<float> p_range, int p_mutation_iterations, Range<float> p_mutation_range)
+        public TraitGenesDNA(int p_species, HashSet<ETrait> p_traits, int p_size, Range<float> p_range, int p_mutation_iterations, Range<float> p_mutation_range)
         {
+          m_species = p_species;
           foreach (ETrait trait in p_traits)
           {
             m_traits.Add(trait, new Gene(p_size, p_range, p_mutation_iterations, p_mutation_range));
@@ -35,7 +37,7 @@ namespace Genetic
         }
 
         ///<summary> Manually create TraitGenesDNA. FOR TESTING ONLY -- inputs is mutable</summary>
-        public TraitGenesDNA(Dictionary<ETrait, Gene> p_chromos)
+        public TraitGenesDNA(int p_species, Dictionary<ETrait, Gene> p_chromos)
         {
           m_traits = new Dictionary<ETrait, Gene>();
 
@@ -45,24 +47,26 @@ namespace Genetic
         }
 
         ///<summary> Mutate each traits genes</summary>
-        public TraitGenesDNA mutate()
+        public override TraitGenesDNA mutate()
         {
-          TraitGenesDNA mutated = new TraitGenesDNA(m_traits);
+          TraitGenesDNA mutated = new TraitGenesDNA(m_species, m_traits);
 
-          foreach(ETrait trait in mutated.m_traits.Keys){
-            mutated.m_traits[trait] = mutated.m_traits[trait].mutate();
+          foreach(ETrait trait in m_traits.Keys){
+            Gene mut_gene = mutated.m_traits[trait].mutate();
+            mutated.m_traits.Remove(trait);
+            mutated.m_traits.Add(trait, mut_gene);
           }
 
           return mutated;
         }
 
         ///<summary> Create new TraitGenesDNA by performing crossover on each Traits genes</summary>
-        public TraitGenesDNA crossover(TraitGenesDNA p_crossover_object)
+        public override TraitGenesDNA crossover(TraitGenesDNA p_crossover_object)
         {
-          TraitGenesDNA crossovered = new TraitGenesDNA(m_traits);
+          TraitGenesDNA crossovered = new TraitGenesDNA(m_species, m_traits);
           crossovered.m_traits = new Dictionary<ETrait, Gene>();
 
-          foreach(ETrait trait in crossovered.m_traits.Keys){
+          foreach(ETrait trait in m_traits.Keys){
             crossovered.m_traits.Add(trait, m_traits[trait].crossover(p_crossover_object.m_traits[trait]));
           }
 
@@ -70,7 +74,7 @@ namespace Genetic
         }
 
         ///<summary> Translate DNA into Dictionary of ETraits to floats</summary>
-        public Dictionary<ETrait, float> birth()
+        public Dictionary<ETrait, float> express()
         {
           Dictionary<ETrait, float> born = new Dictionary<ETrait, float>();
 
@@ -83,7 +87,7 @@ namespace Genetic
 
         public TraitGenesDNA Clone()
         {
-          return new TraitGenesDNA(m_traits);
+          return new TraitGenesDNA(m_species, m_traits);
         }
 
         public override string ToString()
@@ -100,19 +104,14 @@ namespace Genetic
         }
 
         //IDNA FUNCTIONS DESIGNED FOR EVOLUTION CONTROLLER GENERALIZATION
-        public IDNA<TraitGenesDNA> DNAcrossover(TraitGenesDNA p_object)
-        {
-          return crossover(p_object);
-        }
-
-        public IDNA<TraitGenesDNA> DNAmutate()
-        {
-          return mutate();
-        }
-
-        public TraitGenesDNA getSelf()
+        public override TraitGenesDNA getSelf()
         {
           return this;
+        }
+
+        public override IDNA<TraitGenesDNA> getIDNA(TraitGenesDNA p_dnaify)
+        {
+          return p_dnaify;
         }
       }
 
@@ -138,7 +137,7 @@ namespace Genetic
 
         public IDNA<TraitGenesDNA> randomInstance()
         {
-          return new TraitGenesDNA(m_traits, m_size, m_range, m_mutation_iterations, m_mutation_range);
+          return new TraitGenesDNA(m_id, m_traits, m_size, m_range, m_mutation_iterations, m_mutation_range);
         }
       }
     }
