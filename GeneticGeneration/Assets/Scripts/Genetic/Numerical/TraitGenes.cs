@@ -108,11 +108,6 @@ namespace Genetic
         {
           return this;
         }
-
-        public override IDNA<TraitGenesDNA> getIDNA(TraitGenesDNA p_dnaify)
-        {
-          return p_dnaify;
-        }
       }
 
       public class TraitGenesSpecies : ISpecies<IDNA<TraitGenesDNA>>

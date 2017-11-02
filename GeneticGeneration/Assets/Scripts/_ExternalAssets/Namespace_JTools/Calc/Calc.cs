@@ -363,6 +363,18 @@ namespace JTools
           return clone;
         }
 
+        public static float sum(Matrix<float> p_sum_matrix){
+          float sum = 0;
+
+          for(int i = 0; i< p_sum_matrix.RowCount; i++){
+            for(int j = 0; j<p_sum_matrix.ColumnCount; j++){
+              sum += p_sum_matrix[i,j];
+            }
+          }
+
+          return sum;
+        }
+
       }
 
 

@@ -17,23 +17,61 @@ namespace Genetic
 
   namespace Behaviour
   {
-
     namespace DecisionNets
     {
+			public class DecisionNet : IBrain{
+				DDecisionNetInput[] m_inputs;
+        DDecisionNetOutput[] m_outputs;
+        Matrix<float> m_weights;
 
-			public class DecisionNet{
-				
-			}
+        public DecisionNet(DDecisionNetInput[] p_inputs, DDecisionNetOutput[] p_outputs, Matrix<float> p_weights){
+          if(!MatrixCalc.isSize(p_weights, p_inputs.Length,  p_outputs.Length)) Debug.LogError("Constructing DecisionNet with wrong sized matrix");
 
-      public class DecisionNetDNA<T> : IDNA<DecisionNet>, IControllerExpressable<T, DecisionNet>, ICloneable<DecisionNetDNA<T>>
+          m_inputs = p_inputs;
+          m_outputs = p_outputs;
+          m_weights = MatrixCalc.shallowClone(p_weights);
+        }
+
+        public void brainAction()
+        {
+          performOutputs(getInputValueMatrix()*m_weights);
+        }
+
+        private void performOutputs(Matrix<float> p_output_values){
+          if(!MatrixCalc.isSize(p_output_values, 1, m_outputs.Length)) Debug.LogError("Trying to perform outputs in Decision net with malformed output_values matrix");
+
+          for(int i = 0; i<m_outputs.Length; i++){
+            m_outputs[i](p_output_values[0,i]);
+          }          
+        }
+
+        private Matrix<float> getInputValueMatrix(){
+          Matrix<float> input_values = Matrix<float>.Build.Dense(1, m_inputs.Length);
+          
+          for(int i = 0; i<m_inputs.Length; i++){
+            input_values[0, i] = m_inputs[i]();
+          }
+
+          return input_values;
+        }
+
+        public override string ToString(){
+          return "DECISION NET :: Inputs: " + m_inputs.Length + " - Outputs: " + m_outputs.Length + " - Weight Sum: " + MatrixCalc.sum(m_weights);
+        }
+
+        //MAYBE ADD LEARNING TO THIS MODEL EVENTUALLY
+      }
+
+      ///<summary> In this case T is the controller </summary>
+      public class DecisionNetDNA<T> : IDNA<DecisionNetDNA<T>>, IControllerExpressable<T, DecisionNet>, ICloneable<DecisionNetDNA<T>>
       {
         int m_id;
 				DDecisionNetInputFactory<T>[] m_inputs;
 				DDecisionNetOutputFactory<T>[] m_outputs;
 				Matrix<float> m_weights;
+        Range<float> m_mutation_multiplier;
 
-
-				public DecisionNetDNA(int p_id, DDecisionNetInputFactory<T>[] p_inputs, DDecisionNetOutputFactory<T>[] p_outputs, Matrix<float> p_weights){
+				public DecisionNetDNA(int p_id, DDecisionNetInputFactory<T>[] p_inputs, DDecisionNetOutputFactory<T>[] p_outputs, Matrix<float> p_weights, Range<float> p_mutation_multiplier){
 
 					if (!MatrixCalc.isSize(p_weights, p_inputs.Length, p_outputs.Length)) Debug.LogError("DecisionNetDNA requires Matrix input size inputs by outputs");
 
@@ -41,59 +79,89 @@ namespace Genetic
 					m_inputs = ArrayCalc.shallowClone(p_inputs);
 					m_outputs = ArrayCalc.shallowClone(p_outputs);
 					m_weights = MatrixCalc.shallowClone(p_weights);
+          m_mutation_multiplier = p_mutation_multiplier;
 				}	
 
 				public DecisionNetDNA<T> Clone()
         {
-          throw new System.NotImplementedException();
+          return new DecisionNetDNA<T>(m_id, m_inputs, m_outputs, m_weights, m_mutation_multiplier);
         }
 
-        public override DecisionNet crossover(DecisionNet p_crossover_object)
+        public override DecisionNetDNA<T> crossover(DecisionNetDNA<T> p_crossover_object)
         {
-          throw new System.NotImplementedException();
+          DecisionNetDNA<T> crossovered = Clone();
+          crossovered.m_weights = MatrixCalc.crossover(m_weights, p_crossover_object.m_weights);
+          return crossovered;
+        }
+
+        public override DecisionNetDNA<T> getSelf()
+        {
+          return this;
+        }
+
+        public override DecisionNetDNA<T> mutate()
+        {
+          DecisionNetDNA<T> mutated = Clone();
+          mutated.m_weights = MatrixCalc.elementwiseRandomMultiply(m_weights, m_mutation_multiplier);
+          return mutated;
         }
 
         public DecisionNet express(T p_controller)
         {
-          throw new System.NotImplementedException();
+          DDecisionNetInput[] inputs = new DDecisionNetInput[m_inputs.Length];
+
+          for(int i = 0; i<m_inputs.Length; i++){
+            inputs[i] = m_inputs[i](p_controller);
+          }
+
+          DDecisionNetOutput[] outputs = new DDecisionNetOutput[m_outputs.Length];
+
+          for(int i = 0; i<outputs.Length; i++){
+            outputs[i] = m_outputs[i](p_controller);
+          }
+          
+          return new DecisionNet(inputs, outputs, m_weights);
         }
 
-        public override IDNA<DecisionNet> getIDNA(DecisionNet p_dnaify)
-        {
-          throw new System.NotImplementedException();
+        public void receiveLearnedMatrix(Matrix<float> p_matrix){
+          if(!MatrixCalc.isSameSize(p_matrix, m_weights)) Debug.LogError("Learned matrix must be same size as non-learned matrix");
+
+          m_weights = MatrixCalc.shallowClone(p_matrix);
         }
 
-        public override DecisionNet getSelf()
-        {
-          throw new System.NotImplementedException();
+        public override string ToString(){
+          return "DECISION NET DNA:: ID: " + m_id + " - Inputs: " + m_inputs.Length + " - Outputs: " + m_outputs.Length + " - Weights: " + MatrixCalc.sum(m_weights) + " - Mutation Rate: " + m_mutation_multiplier.Min + " to " + m_mutation_multiplier.Max;
         }
-
-        public override DecisionNet mutate()
-        {
-          throw new System.NotImplementedException();
-        }
+        
       }
 
-      public class DecisionNetSpecies<T> : ISpecies<DecisionNetDNA<T>>
+      ///<summary> In this case T is the controller </summary>
+      public class DecisionNetSpecies<T> : ISpecies<IDNA<DecisionNetDNA<T>>>
       {
         private int m_id;
 				private DDecisionNetInputFactory<T>[] m_inputs;
 				private DDecisionNetOutputFactory<T>[] m_outputs;
 
-				private Range<float> weight_range = new Range<float>(0,1);
+				private Range<float> m_weight_range = new Range<float>(0,1);
+        private Range<float> m_mutation_multiplier;
 
-        public DecisionNetSpecies(int p_id, DDecisionNetInputFactory<T>[] p_inputs, DDecisionNetOutputFactory<T>[] p_outputs)
+        public DecisionNetSpecies(int p_id, DDecisionNetInputFactory<T>[] p_inputs, DDecisionNetOutputFactory<T>[] p_outputs, Range<float> p_mutation_multiplier)
         {	
 					m_id = p_id;
 					m_inputs = p_inputs;
 					m_outputs = p_outputs;
+          m_mutation_multiplier = p_mutation_multiplier;
         }
 
         public int ID { get { return m_id; } }
 
-        public DecisionNetDNA<T> randomInstance()
+        public override string ToString(){
+          return "DECISION NET SPECIES:: ID: " + m_id + " - Inputs: " + m_inputs.Length + " - Ouputs: " + m_outputs.Length + " - Mutation Range: " + m_mutation_multiplier.Min + " to " + m_mutation_multiplier.Max;
+        }
+
+        IDNA<DecisionNetDNA<T>> ISpecies<IDNA<DecisionNetDNA<T>>>.randomInstance()
         {
-          return new DecisionNetDNA<T>(m_id, m_inputs, m_outputs, Matrix<float>.Build.Dense(m_inputs.Length, m_outputs.Length, (i,j) => { return RandomCalc.Rand(weight_range);}));
+          return new DecisionNetDNA<T>(m_id, m_inputs, m_outputs, Matrix<float>.Build.Dense(m_inputs.Length, m_outputs.Length, (i,j) => { return RandomCalc.Rand(m_weight_range);}), m_mutation_multiplier);
         }
       }
 
@@ -104,7 +172,7 @@ namespace Genetic
 
 			public delegate void DDecisionNetOutput(float p_value);
 
-			public delegate DDecisionNetInput DDecisionNetOutputFactory<T>(T p_controller);
+			public delegate DDecisionNetOutput DDecisionNetOutputFactory<T>(T p_controller);
 
 
 

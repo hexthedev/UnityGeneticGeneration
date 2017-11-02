@@ -12,7 +12,7 @@ namespace Genetic{
 	namespace Base {
 
 		///<summary>Type T refers to the Concrete DNA object</summary>
-		public class DNABasedEvolutionController<T> {
+		public class DNABasedEvolutionController<T> where T:IDNA<T>{
 
 			private ISpecies<IDNA<T>> m_species;
 			public FitnessList<IDNA<T>> m_gene_pool;
@@ -62,10 +62,7 @@ namespace Genetic{
 			@@@@@@@@@@@@@@@@@ */
 
 		///<summary>DNA must be able to do crossover and mutate itself</summary>
-		public abstract class IDNA<T> : ISelf<T>, ICrossoverable<T>, IMutatable<T>{
-
-			///<summary>Translate T into IDNA for processing</summary>
-			public abstract IDNA<T> getIDNA(T p_dnaify);
+		public abstract class IDNA<T> : ISelf<T>, ICrossoverable<T>, IMutatable<T> where T:IDNA<T>{
 
 			///<summary>Translate IDNA back to T for concrete functions</summary>
       public abstract T getSelf();
@@ -78,12 +75,12 @@ namespace Genetic{
 
       ///<summary>Crossover with another object of same type returns object type</summary>
       public IDNA<T> DNAcrossover(T p_object){
-				return getIDNA(crossover(p_object));
+				return crossover(p_object);
 			}
 
 			///<summary>This object can mutate</summary>
 			public IDNA<T> DNAmutate(){
-				return getIDNA(mutate());
+				return mutate();
 			}
 		}
 
