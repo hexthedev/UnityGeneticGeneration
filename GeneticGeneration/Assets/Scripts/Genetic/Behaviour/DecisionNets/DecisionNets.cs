@@ -20,16 +20,18 @@ namespace Genetic
     namespace DecisionNets
     {
 			public class DecisionNet : IBrain{
-				DDecisionNetInput[] m_inputs;
-        DDecisionNetOutput[] m_outputs;
+				DInput[] m_inputs;
+        DOutput[] m_outputs;
         Matrix<float> m_weights;
 
-        public DecisionNet(DDecisionNetInput[] p_inputs, DDecisionNetOutput[] p_outputs, Matrix<float> p_weights){
+        public DecisionNet(DInput[] p_inputs, DOutput[] p_outputs, Matrix<float> p_weights){
           if(!MatrixCalc.isSize(p_weights, p_inputs.Length,  p_outputs.Length)) Debug.LogError("Constructing DecisionNet with wrong sized matrix");
 
           m_inputs = p_inputs;
           m_outputs = p_outputs;
           m_weights = MatrixCalc.shallowClone(p_weights);
+
+          Debug.Log(m_weights);
         }
 
         public void brainAction()
@@ -63,15 +65,15 @@ namespace Genetic
       }
 
       ///<summary> In this case T is the controller </summary>
-      public class DecisionNetDNA<T> : IDNA<DecisionNetDNA<T>>, IControllerExpressable<T, DecisionNet>, ICloneable<DecisionNetDNA<T>>
+      public class DecisionNetDNA<T> : IDNA<DecisionNetDNA<T>>, IControllerExpressable<T, DecisionNet>, ICloneable<DecisionNetDNA<T>> where T:Controller
       {
         int m_id;
-				DDecisionNetInputFactory<T>[] m_inputs;
-				DDecisionNetOutputFactory<T>[] m_outputs;
+				DInputFactory<T>[] m_inputs;
+				DOutputFactory<T>[] m_outputs;
 				Matrix<float> m_weights;
         Range<float> m_mutation_multiplier;
 
-				public DecisionNetDNA(int p_id, DDecisionNetInputFactory<T>[] p_inputs, DDecisionNetOutputFactory<T>[] p_outputs, Matrix<float> p_weights, Range<float> p_mutation_multiplier){
+				public DecisionNetDNA(int p_id, DInputFactory<T>[] p_inputs, DOutputFactory<T>[] p_outputs, Matrix<float> p_weights, Range<float> p_mutation_multiplier){
 
 					if (!MatrixCalc.isSize(p_weights, p_inputs.Length, p_outputs.Length)) Debug.LogError("DecisionNetDNA requires Matrix input size inputs by outputs");
 
@@ -108,13 +110,13 @@ namespace Genetic
 
         public DecisionNet express(T p_controller)
         {
-          DDecisionNetInput[] inputs = new DDecisionNetInput[m_inputs.Length];
+          DInput[] inputs = new DInput[m_inputs.Length];
 
           for(int i = 0; i<m_inputs.Length; i++){
             inputs[i] = m_inputs[i](p_controller);
           }
 
-          DDecisionNetOutput[] outputs = new DDecisionNetOutput[m_outputs.Length];
+          DOutput[] outputs = new DOutput[m_outputs.Length];
 
           for(int i = 0; i<outputs.Length; i++){
             outputs[i] = m_outputs[i](p_controller);
@@ -136,16 +138,16 @@ namespace Genetic
       }
 
       ///<summary> In this case T is the controller </summary>
-      public class DecisionNetSpecies<T> : ISpecies<IDNA<DecisionNetDNA<T>>>
+      public class DecisionNetSpecies<T> : ISpecies<IDNA<DecisionNetDNA<T>>> where T:Controller
       {
         private int m_id;
-				private DDecisionNetInputFactory<T>[] m_inputs;
-				private DDecisionNetOutputFactory<T>[] m_outputs;
+				private DInputFactory<T>[] m_inputs;
+				private DOutputFactory<T>[] m_outputs;
 
 				private Range<float> m_weight_range = new Range<float>(0,1);
         private Range<float> m_mutation_multiplier;
 
-        public DecisionNetSpecies(int p_id, DDecisionNetInputFactory<T>[] p_inputs, DDecisionNetOutputFactory<T>[] p_outputs, Range<float> p_mutation_multiplier)
+        public DecisionNetSpecies(int p_id, DInputFactory<T>[] p_inputs, DOutputFactory<T>[] p_outputs, Range<float> p_mutation_multiplier)
         {	
 					m_id = p_id;
 					m_inputs = p_inputs;
@@ -164,18 +166,6 @@ namespace Genetic
           return new DecisionNetDNA<T>(m_id, m_inputs, m_outputs, Matrix<float>.Build.Dense(m_inputs.Length, m_outputs.Length, (i,j) => { return RandomCalc.Rand(m_weight_range);}), m_mutation_multiplier);
         }
       }
-
-
-      public delegate float DDecisionNetInput();
-
-			public delegate DDecisionNetInput DDecisionNetInputFactory<T>(T p_controller);
-
-			public delegate void DDecisionNetOutput(float p_value);
-
-			public delegate DDecisionNetOutput DDecisionNetOutputFactory<T>(T p_controller);
-
-
-
 
     }
 
