@@ -14,7 +14,6 @@ using Genetic.Base;
 
 namespace Genetic
 {
-
   namespace Behaviour
   {
     namespace DecisionNets
