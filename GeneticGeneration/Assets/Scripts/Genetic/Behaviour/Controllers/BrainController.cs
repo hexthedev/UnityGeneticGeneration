@@ -27,26 +27,26 @@ namespace Controllers{
 				DInputFactory<BrainController> half = ( BrainController p_controller ) => {
 					return () => {
 						GameObject ob = p_controller.gameObject;
-						return 0.5f;
+						return 1f;
 					};
 				};
 
 				DInputFactory<BrainController> dub = ( BrainController p_controller ) => {
 					return () => {
 						GameObject ob = p_controller.gameObject;
-						return 2f;
+						return -1f;
 					};
 				};
 
 				DOutputFactory<BrainController> oot = ( BrainController p_controller ) => {
 					return (float p_value) => {
-						p_controller.gameObject.GetComponent<Rigidbody2D>().velocity += new Vector2(p_value/40, 0);
+						p_controller.gameObject.GetComponent<Rigidbody2D>().velocity += new Vector2(0, p_value/40);
 					};
 				};
 
 				DOutputFactory<BrainController> oo2t = ( BrainController p_controller ) => {
 					return (float p_value) => {
-						p_controller.gameObject.GetComponent<Rigidbody2D>().velocity += new Vector2(0, p_value/40);
+						p_controller.gameObject.GetComponent<Rigidbody2D>().velocity += new Vector2(p_value/40, 0);
 					};
 				};
 				

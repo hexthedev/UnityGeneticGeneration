@@ -33,7 +33,6 @@ namespace Genetic
             m_traits.Add(trait, new Gene(p_size, p_range, p_mutation_iterations, p_mutation_range));
           }
 
-          Debug.Log(ToString());
         }
 
         ///<summary> Manually create TraitGenesDNA. FOR TESTING ONLY -- inputs is mutable</summary>
@@ -67,8 +66,6 @@ namespace Genetic
         ///<summary> Create new TraitGenesDNA by performing crossover on each Traits genes</summary>
         public override TraitGenesDNA crossover(TraitGenesDNA p_crossover_object)
         {
-          Debug.Log("Crossing=" + m_traits[0]);
-          Debug.Log("Crossing=" + p_crossover_object.m_traits[0]);
 
           TraitGenesDNA crossovered = new TraitGenesDNA(m_species, m_traits);
           crossovered.m_traits = new Dictionary<ETrait, Gene>();
@@ -76,8 +73,6 @@ namespace Genetic
           foreach(ETrait trait in m_traits.Keys){
             crossovered.m_traits.Add(trait, m_traits[trait].crossover(p_crossover_object.m_traits[trait]));
           }
-
-          Debug.Log("Crossed=" + crossovered.m_traits[0]);
 
           return crossovered;
         }

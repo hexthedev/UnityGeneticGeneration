@@ -30,7 +30,6 @@ namespace Genetic
           m_outputs = p_outputs;
           m_weights = MatrixCalc.shallowClone(p_weights);
 
-          Debug.Log(m_weights);
         }
 
         public void brainAction()
