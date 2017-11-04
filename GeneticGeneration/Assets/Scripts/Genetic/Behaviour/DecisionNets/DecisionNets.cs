@@ -64,7 +64,7 @@ namespace Genetic
       }
 
       ///<summary> In this case T is the controller </summary>
-      public class DecisionNetDNA<T> : IDNA<DecisionNetDNA<T>>, IControllerExpressable<T, DecisionNet>, ICloneable<DecisionNetDNA<T>> where T:Controller
+      public class DecisionNetDNA<T> : ADNA<DecisionNetDNA<T>>, IControllerExpressable<T, DecisionNet>, ICloneable<DecisionNetDNA<T>> where T:Controller
       {
         int m_id;
 				DInputFactory<T>[] m_inputs;
@@ -137,7 +137,7 @@ namespace Genetic
       }
 
       ///<summary> In this case T is the controller </summary>
-      public class DecisionNetSpecies<T> : ISpecies<IDNA<DecisionNetDNA<T>>> where T:Controller
+      public class DecisionNetSpecies<T> : ISpecies<ADNA<DecisionNetDNA<T>>> where T:Controller
       {
         private int m_id;
 				private DInputFactory<T>[] m_inputs;
@@ -160,7 +160,7 @@ namespace Genetic
           return "DECISION NET SPECIES:: ID: " + m_id + " - Inputs: " + m_inputs.Length + " - Ouputs: " + m_outputs.Length + " - Mutation Range: " + m_mutation_multiplier.Min + " to " + m_mutation_multiplier.Max;
         }
 
-        IDNA<DecisionNetDNA<T>> ISpecies<IDNA<DecisionNetDNA<T>>>.randomInstance()
+        public ADNA<DecisionNetDNA<T>> randomInstance()
         {
           return new DecisionNetDNA<T>(m_id, m_inputs, m_outputs, Matrix<float>.Build.Dense(m_inputs.Length, m_outputs.Length, (i,j) => { return RandomCalc.Rand(m_weight_range);}), m_mutation_multiplier);
         }

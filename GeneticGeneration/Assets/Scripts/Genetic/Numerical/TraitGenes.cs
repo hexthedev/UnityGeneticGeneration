@@ -19,7 +19,7 @@ namespace Genetic
   {
     namespace TraitGenes
     {
-      public class TraitGenesDNA :  IDNA<TraitGenesDNA>, IExpressable<Dictionary<ETrait, float>>, ICloneable<TraitGenesDNA>
+      public class TraitGenesDNA :  ADNA<TraitGenesDNA>, IExpressable<Dictionary<ETrait, float>>, ICloneable<TraitGenesDNA>
       {
         int m_species;
         private Dictionary<ETrait, Gene> m_traits = new Dictionary<ETrait, Gene>();
@@ -49,6 +49,8 @@ namespace Genetic
         ///<summary> Mutate each traits genes</summary>
         public override TraitGenesDNA mutate()
         {
+          
+
           TraitGenesDNA mutated = new TraitGenesDNA(m_species, m_traits);
 
           foreach(ETrait trait in m_traits.Keys){
@@ -57,18 +59,25 @@ namespace Genetic
             mutated.m_traits.Add(trait, mut_gene);
           }
 
+          
+          
           return mutated;
         }
 
         ///<summary> Create new TraitGenesDNA by performing crossover on each Traits genes</summary>
         public override TraitGenesDNA crossover(TraitGenesDNA p_crossover_object)
         {
+          Debug.Log("Crossing=" + m_traits[0]);
+          Debug.Log("Crossing=" + p_crossover_object.m_traits[0]);
+
           TraitGenesDNA crossovered = new TraitGenesDNA(m_species, m_traits);
           crossovered.m_traits = new Dictionary<ETrait, Gene>();
 
           foreach(ETrait trait in m_traits.Keys){
             crossovered.m_traits.Add(trait, m_traits[trait].crossover(p_crossover_object.m_traits[trait]));
           }
+
+          Debug.Log("Crossed=" + crossovered.m_traits[0]);
 
           return crossovered;
         }
@@ -110,7 +119,7 @@ namespace Genetic
         }
       }
 
-      public class TraitGenesSpecies : ISpecies<IDNA<TraitGenesDNA>>
+      public class TraitGenesSpecies : ISpecies<ADNA<TraitGenesDNA>>
       {
         int m_id;
         HashSet<ETrait> m_traits;
@@ -130,7 +139,7 @@ namespace Genetic
         
         public int ID { get {return m_id;} }
 
-        public IDNA<TraitGenesDNA> randomInstance()
+        public ADNA<TraitGenesDNA> randomInstance()
         {
           return new TraitGenesDNA(m_id, m_traits, m_size, m_range, m_mutation_iterations, m_mutation_range);
         }

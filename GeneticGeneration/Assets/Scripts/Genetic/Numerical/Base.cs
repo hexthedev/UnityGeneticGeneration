@@ -85,6 +85,18 @@ namespace Genetic
 
           return new_gene;
         }
+
+        public override string ToString(){
+          string str = "[ ";
+
+          foreach(float x in m_genes){
+            str += x + " ";
+          }
+
+          str += "]";
+
+          return str;
+        }
       }
 
     }

@@ -12,22 +12,22 @@ namespace Genetic{
 	namespace Base {
 
 		///<summary>Type T refers to the Concrete DNA object</summary>
-		public class DNABasedEvolutionController<T> where T:IDNA<T>{
+		public class DNABasedEvolutionController<T> where T:ADNA<T>{
 
-			private ISpecies<IDNA<T>> m_species;
-			public FitnessList<IDNA<T>> m_gene_pool;
+			private ISpecies<ADNA<T>> m_species;
+			public FitnessList<ADNA<T>> m_gene_pool;
 			private float m_mutation_chance_percentage;
 			private int m_creatures_birthed = 0;
 
 			///<summary>Pass in a species and a number between 0 and 1 as mutation chance</summary>
-			public DNABasedEvolutionController(ISpecies<IDNA<T>> p_species, float p_mutation_chance_percentage, int p_size){
-				m_gene_pool = new FitnessList<IDNA<T>>(p_size);
+			public DNABasedEvolutionController(ISpecies<ADNA<T>> p_species, float p_mutation_chance_percentage, int p_size){
+				m_gene_pool = new FitnessList<ADNA<T>>(p_size);
 				m_mutation_chance_percentage = p_mutation_chance_percentage;
 				m_species = p_species;
 			}
 
 			///<summary>DNA will be added by fitness and sorted</summary>
-			public void addDNA(IDNA<T> p_dna, float fitness){
+			public void addDNA(ADNA<T> p_dna, float fitness){
 				m_gene_pool.add(fitness, p_dna);
 			} 
 
@@ -38,7 +38,7 @@ namespace Genetic{
 			///<summary>Return a piece of DNA by doing crossover and mutation on random DNA in gene pool weighted by fitness</summary>
 			public T birth(){
 
-				IDNA<T> dna = m_gene_pool.getRandomObject().DNAcrossover(m_gene_pool.getRandomObject().getSelf() );
+				ADNA<T> dna = m_gene_pool.getRandomObject().DNAcrossover(m_gene_pool.getRandomObject().getSelf() );
 				
 				if(RandomCalc.ChanceRoll(m_mutation_chance_percentage*100)){
 					dna = dna.DNAmutate();
@@ -62,7 +62,7 @@ namespace Genetic{
 			@@@@@@@@@@@@@@@@@ */
 
 		///<summary>DNA must be able to do crossover and mutate itself</summary>
-		public abstract class IDNA<T> : ISelf<T>, ICrossoverable<T>, IMutatable<T> where T:IDNA<T>{
+		public abstract class ADNA<T> : ISelf<T>, ICrossoverable<T>, IMutatable<T> where T:ADNA<T>{
 
 			///<summary>Translate IDNA back to T for concrete functions</summary>
       public abstract T getSelf();
@@ -74,12 +74,12 @@ namespace Genetic{
       public abstract T mutate();
 
       ///<summary>Crossover with another object of same type returns object type</summary>
-      public IDNA<T> DNAcrossover(T p_object){
+      public ADNA<T> DNAcrossover(T p_object){
 				return crossover(p_object);
 			}
 
 			///<summary>This object can mutate</summary>
-			public IDNA<T> DNAmutate(){
+			public ADNA<T> DNAmutate(){
 				return mutate();
 			}
 		}
