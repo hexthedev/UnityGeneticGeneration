@@ -7,6 +7,8 @@ using JTools.Calc.Rand;
 
 using JTools.Interfaces;
 
+using JTools.Events;
+
 namespace Genetic{
 
 	namespace Base {
@@ -18,13 +20,27 @@ namespace Genetic{
 			public FitnessList<ADNA<T>> m_gene_pool;
 			private float m_mutation_chance_percentage;
 			private int m_creatures_birthed = 0;
+			private IntervalEventManager m_interval;
 
 			///<summary>Pass in a species and a number between 0 and 1 as mutation chance</summary>
 			public DNABasedEvolutionManager(ISpecies<ADNA<T>> p_species, float p_mutation_chance_percentage, int p_size){
 				m_gene_pool = new FitnessList<ADNA<T>>(p_size);
 				m_mutation_chance_percentage = p_mutation_chance_percentage;
 				m_species = p_species;
+				m_interval = new IntervalEventManager();
 			}
+
+			public DNABasedEvolutionManager(ISpecies<ADNA<T>> p_species, float p_mutation_chance_percentage, int p_size, DFitnessMod p_dna_ageing, float p_interval){			
+				m_gene_pool = new FitnessList<ADNA<T>>(p_size);
+				m_mutation_chance_percentage = p_mutation_chance_percentage;
+				m_species = p_species;
+
+				m_interval = new IntervalEventManager();
+				m_interval.addListener(p_interval, () => {
+					m_gene_pool.modifyFitness(p_dna_ageing);
+				});
+			}
+
 
 			///<summary>DNA will be added by fitness and sorted</summary>
 			public void addDNA(ADNA<T> p_dna, float fitness){
@@ -53,6 +69,10 @@ namespace Genetic{
 
 			public override string ToString(){
 				return m_gene_pool.ToString();
+			}
+
+			public void tick(float p_tick){
+				m_interval.tick(p_tick);
 			}
 
 		}

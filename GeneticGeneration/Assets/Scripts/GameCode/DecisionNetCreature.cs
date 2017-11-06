@@ -29,7 +29,7 @@ public class DecisionNetCreature : AController, IBrainInit {
 	Rigidbody2D m_rb;
 	TimeoutEventManager m_tm;
 	PriorityList m_actions;
-	Line2D m_goalLine = new Line2D(new Vector2(0,15), new Vector2(1,-0.5f));
+	Line2D m_goalLine;
 
 
   // Use this for initialization
@@ -82,7 +82,7 @@ public class DecisionNetCreature : AController, IBrainInit {
     m_brain = p_brain;
   }
 
-	public void Initialize(MindBodyDNA<DecisionNetCreature> p_dna, GameController p_controller){
+	public void Initialize(MindBodyDNA<DecisionNetCreature> p_dna, GameController p_controller, Line2D p_goalLine){
 		m_dna = p_dna.Clone();
 
 		MindBody mindbody = p_dna.express(this);
@@ -91,6 +91,8 @@ public class DecisionNetCreature : AController, IBrainInit {
 		InitializeBrain(mindbody.m_mind);
 
 		m_controller = p_controller;
+
+		m_goalLine = p_goalLine;
 	}
 
 
@@ -127,9 +129,9 @@ public class DecisionNetCreature : AController, IBrainInit {
 		return () => { 			
 			Vector2 intersection = new Vector2();
 			Vector3 creature_position = p_creature.gameObject.transform.position;
-			Line2D.intersectsCastToLine(new Line2D(creature_position, Vector2Calc.fromVector3(creature_position)+p_creature.m_forward), p_creature.m_goalLine, ref intersection);
+			bool can_mesure =  Line2D.intersectsCastToLine(new Line2D(creature_position, Vector2Calc.fromVector3(creature_position)+p_creature.m_forward), p_creature.m_goalLine, ref intersection);
 			//Debug.DrawLine(creature_position, intersection, Color.blue, 0.25f);			
-			return activator( (Vector2Calc.fromVector3(creature_position)-intersection).magnitude );
+			return can_mesure ? activator( (Vector2Calc.fromVector3(creature_position)-intersection).magnitude ) : 0;
 		};
 	};
 

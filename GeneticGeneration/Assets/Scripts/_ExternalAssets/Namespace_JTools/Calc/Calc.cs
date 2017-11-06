@@ -48,7 +48,7 @@ namespace JTools
     namespace Lines
     {
 
-      struct Line2D
+      public class Line2D
       {
         private Vector2 m_point;
         public Vector2 Point { get { return Vector2Calc.clone(m_point); } }
@@ -60,6 +60,10 @@ namespace JTools
         {
           m_point = Vector2Calc.clone(p_point);
           m_direction = Vector2Calc.clone(p_direction); ;
+        }
+
+        public void rotate(float degrees){
+          m_direction = Vector2Calc.rotateDirectionVector(m_direction, degrees);
         }
 
         public override string ToString()
