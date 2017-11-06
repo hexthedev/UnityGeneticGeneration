@@ -12,7 +12,7 @@ namespace Genetic{
 	namespace Base {
 
 		///<summary>Type T refers to the Concrete DNA object</summary>
-		public class DNABasedEvolutionController<T> where T:ADNA<T>{
+		public class DNABasedEvolutionManager<T> where T:ADNA<T>{
 
 			private ISpecies<ADNA<T>> m_species;
 			public FitnessList<ADNA<T>> m_gene_pool;
@@ -20,7 +20,7 @@ namespace Genetic{
 			private int m_creatures_birthed = 0;
 
 			///<summary>Pass in a species and a number between 0 and 1 as mutation chance</summary>
-			public DNABasedEvolutionController(ISpecies<ADNA<T>> p_species, float p_mutation_chance_percentage, int p_size){
+			public DNABasedEvolutionManager(ISpecies<ADNA<T>> p_species, float p_mutation_chance_percentage, int p_size){
 				m_gene_pool = new FitnessList<ADNA<T>>(p_size);
 				m_mutation_chance_percentage = p_mutation_chance_percentage;
 				m_species = p_species;
@@ -29,6 +29,7 @@ namespace Genetic{
 			///<summary>DNA will be added by fitness and sorted</summary>
 			public void addDNA(ADNA<T> p_dna, float fitness){
 				m_gene_pool.add(fitness, p_dna);
+				Debug.Log(m_gene_pool);
 			} 
 
 			public void addRandom(){

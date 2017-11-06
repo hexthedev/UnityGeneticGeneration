@@ -11,7 +11,7 @@ using Genetic.Base;
 namespace Genetic
 {
 
-  namespace Numerical
+  namespace Traits
   {
 
     namespace Base

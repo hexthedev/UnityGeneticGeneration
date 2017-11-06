@@ -27,6 +27,10 @@ namespace Genetic{
     public interface IBrain{
       void brainAction();
     }
+
+    public interface IBrainInit{
+      void InitializeBrain(IBrain p_brain);
+    }
   }
 
 }

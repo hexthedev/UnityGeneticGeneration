@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using JTools.Calc.Base;
-using JTools.Calc.Vector;
+using JTools.Calc.Vectors;
 
 using JTools.Gameplay;
 public class MiniMap : MonoBehaviour {

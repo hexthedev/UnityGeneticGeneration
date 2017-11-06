@@ -63,7 +63,7 @@ namespace Genetic
       }
 
       ///<summary> In this case T is the controller </summary>
-      public class DecisionNetDNA<T> : ADNA<DecisionNetDNA<T>>, IControllerExpressable<T, DecisionNet>, ICloneable<DecisionNetDNA<T>> where T:Controller
+      public class DecisionNetDNA<T> : ADNA<DecisionNetDNA<T>>, IControllerExpressable<T, DecisionNet>, ICloneable<DecisionNetDNA<T>> where T:AController
       {
         int m_id;
 				DInputFactory<T>[] m_inputs;
@@ -78,7 +78,7 @@ namespace Genetic
 					m_id = p_id;
 					m_inputs = ArrayCalc.shallowClone(p_inputs);
 					m_outputs = ArrayCalc.shallowClone(p_outputs);
-					m_weights = MatrixCalc.shallowClone(p_weights);
+					m_weights = MatrixCalc.shallowClone( MatrixCalc.columnNormalize(p_weights));
           m_mutation_multiplier = p_mutation_multiplier;
 				}	
 
@@ -103,6 +103,7 @@ namespace Genetic
         {
           DecisionNetDNA<T> mutated = Clone();
           mutated.m_weights = MatrixCalc.elementwiseRandomMultiply(m_weights, m_mutation_multiplier);
+          mutated.m_weights = MatrixCalc.columnNormalize(mutated.m_weights);
           return mutated;
         }
 
@@ -136,13 +137,13 @@ namespace Genetic
       }
 
       ///<summary> In this case T is the controller </summary>
-      public class DecisionNetSpecies<T> : ISpecies<ADNA<DecisionNetDNA<T>>> where T:Controller
+      public class DecisionNetSpecies<T> : ISpecies<ADNA<DecisionNetDNA<T>>> where T:AController
       {
         private int m_id;
 				private DInputFactory<T>[] m_inputs;
 				private DOutputFactory<T>[] m_outputs;
 
-				private Range<float> m_weight_range = new Range<float>(0,1);
+				private Range<float> m_weight_range = new Range<float>(-1f,1f);
         private Range<float> m_mutation_multiplier;
 
         public DecisionNetSpecies(int p_id, DInputFactory<T>[] p_inputs, DOutputFactory<T>[] p_outputs, Range<float> p_mutation_multiplier)

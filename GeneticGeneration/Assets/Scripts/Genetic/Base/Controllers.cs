@@ -8,43 +8,33 @@ namespace Genetic{
 
   namespace Base{
 
-    ///<summary>Controller Factories hold all possible inputs and outputs for a certain kind of controller without requiring an instance.!-- T is Controller</summary>
-    public abstract class ControllerFactory<T> where T:Controller{
+    ///<summary>Controller Factories hold all possible inputs and outputs for a certain kind of controller without requiring an instance. T is the Controller type. The child needs to choose the inputs it wants to expose in getInputs</summary>
+    public abstract class AControllerFactory<T> where T:AController{
 
+      ///<summary>Implement by returning inputs from the protected input functions in this parent class</summary>
       public abstract DInputFactory<T>[] getInputs();
 
+      ///<summary>Implement by returning output from the protected output functions in this parent class</summary>
       public abstract DOutputFactory<T>[] getOutputs();
-    
     }
 
     ///<summary>Instance of a Controller. Consists of the Act action, a cooldown Timeout manager and a Fixed update call to act (ALWAYS CALL BASE FOR START AND UPDATE OVERRIDES)</summary>
-    public abstract class Controller: MonoBehaviour{
-      TimeoutEventManager m_cooldowns;
-
-      protected virtual void Start(){
-        m_cooldowns = new TimeoutEventManager();
-      }
-
+    public abstract class AController: MonoBehaviour{
+  
       protected virtual void FixedUpdate(){
-        m_cooldowns.tick(Time.fixedDeltaTime);
         act();
       }
-
-      protected void logCooldown(float p_time, DTimeoutListener p_listener){
-        m_cooldowns.addTimeout(p_time, p_listener);
-      }
-
       protected abstract void act();
 
     }
 
     public delegate float DInput();
 
-    public delegate DInput DInputFactory<T>(T p_controller) where T:Controller;
+    public delegate DInput DInputFactory<T>(T p_controller) where T:AController;
 
     public delegate void DOutput(float p_value);
 
-    public delegate DOutput DOutputFactory<T>(T p_controller)  where T:Controller;
+    public delegate DOutput DOutputFactory<T>(T p_controller)  where T:AController;
 
   }
 

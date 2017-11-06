@@ -11,11 +11,11 @@ using JTools.Calc.DataStructures;
 using JTools.Interfaces;
 
 using Genetic.Base;
-using Genetic.Numerical.Base;
+using Genetic.Traits.Base;
 
 namespace Genetic
 {
-  namespace Numerical
+  namespace Traits
   {
     namespace TraitGenes
     {
@@ -48,7 +48,7 @@ namespace Genetic
         ///<summary> Mutate each traits genes</summary>
         public override TraitGenesDNA mutate()
         {
-          
+//          Debug.Log("mut" + this.m_traits[ETrait.SPEED]);
 
           TraitGenesDNA mutated = new TraitGenesDNA(m_species, m_traits);
 
@@ -58,7 +58,7 @@ namespace Genetic
             mutated.m_traits.Add(trait, mut_gene);
           }
 
-          
+//Debug.Log("mutd" + mutated.m_traits[ETrait.SPEED]);
           
           return mutated;
         }

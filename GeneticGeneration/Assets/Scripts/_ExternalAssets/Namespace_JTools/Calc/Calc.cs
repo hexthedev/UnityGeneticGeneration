@@ -5,6 +5,8 @@ using MathNet.Numerics.LinearAlgebra;   //WARNING, requires TaskParallelle to wo
 using MathNet.Numerics.Random;   //WARNING, requires TaskParallelle to work
 
 using JTools.Interfaces;
+using JTools.Calc.Vectors;
+using JTools.Calc.Base;
 
 namespace JTools
 {
@@ -13,8 +15,9 @@ namespace JTools
   namespace Calc
   {
 
-    namespace Base{
-        
+    namespace Base
+    {
+
       ///<summary>Represents a range from T min to T max</summary>
       public struct Range<T>
       {
@@ -31,7 +34,8 @@ namespace JTools
         public T Min { get { return m_min; } }
         public T Max { get { return m_max; } }
 
-        public Range<T> Clone(){
+        public Range<T> Clone()
+        {
           return new Range<T>(m_min, m_max);
         }
       }
@@ -39,11 +43,90 @@ namespace JTools
 
       ///<summary>Delegate function used to convert Type 1 to Type 2</summary>
       public delegate T2 DConversion<T1, T2>(T1 p_convert);
+    }
+
+    namespace Lines
+    {
+
+      struct Line2D
+      {
+        private Vector2 m_point;
+        public Vector2 Point { get { return Vector2Calc.clone(m_point); } }
+
+        private Vector2 m_direction;
+        public Vector2 Direction { get { return Vector2Calc.clone(m_direction); } }
+
+        public Line2D(Vector2 p_point, Vector2 p_direction)
+        {
+          m_point = Vector2Calc.clone(p_point);
+          m_direction = Vector2Calc.clone(p_direction); ;
+        }
+
+        public override string ToString()
+        {
+          return "[Point: " + m_point + ", Direction: " + m_direction + "]";
+        }
+
+        public static bool intersection(Line2D p_line_1, Line2D p_line_2, ref Vector2 p_intersection)
+        {
+
+          Vector2 line1_point = p_line_1.Point;
+          Vector2 line1_direction = p_line_1.Direction;
+
+          Vector2 line2_point = p_line_2.Point;
+          Vector2 line2_direction = p_line_2.Direction;
+
+          Vector<float> to_solve = Vector<float>.Build.Dense(new float[] { line1_point.x - line2_point.x, line1_point.y - line2_point.y });
+          Matrix<float> unknownsMatrix = Matrix<float>.Build.DenseOfArray(new float[,] {
+            { line2_direction.x, -line1_direction.x },
+            { line2_direction.y, -line1_direction.y }
+          });
+
+          Vector<float> solved = Vector<float>.Build.Random(2);
+          unknownsMatrix.Solve(to_solve, solved);
+
+          if (float.IsNaN(solved[0])) return false;  //SAME LINE
+          if (float.IsInfinity(solved[0])) return false;  //DO NOT INTERSECT
+
+          p_intersection = line2_point + solved[0] * line2_direction;
+
+          return true;
+        }
+
+        ///<summary>Checks for intersection. Case is defined as a point with an infinite line running in 1 direction from point</summary>
+        public static bool intersectsCastToLine(Line2D p_cast, Line2D p_line, ref Vector2 p_intersection)
+        {
+          Vector2 intersect = new Vector2();
+          if (!intersection(p_cast, p_line, ref intersect)) return false;
+
+          Vector2 inter_minus_cast_point = intersect - p_cast.Point;
+
+          Vector2 direction = p_cast.Direction;
+          // Debug.Log(direction);
+
+          if (Mathf.Sign(inter_minus_cast_point.x) != Mathf.Sign(direction.x)) return false;
+          if (Mathf.Sign(inter_minus_cast_point.y) != Mathf.Sign(direction.y)) return false;
+
+          // Debug.Log(inter_minus_cast_point);
+          // Debug.Log(direction);
+
+          p_intersection = intersect;
+          return true;
+        }
+
+        public static Vector2 projection(Vector2 p_point, Line2D p_normal)
+        {
+          Vector2 norm_point = p_normal.Point;
+          return Vector2Calc.projection(p_point - norm_point, p_normal.Direction) + norm_point;
+        }
+
+      }
+
 
     }
 
     ///<summary>Calcuation functions for Vector2 and Vector3</summary>
-    namespace Vector
+    namespace Vectors
     {
 
       public static class Vector2Calc
@@ -76,10 +159,10 @@ namespace JTools
         }
 
         ///<summary>Returns Angle between two vectors. Returns a signed angle showing direction from from_angle  </summary>
-        public static float getAngle(Vector2 p_from_angle, Vector2 p_to_angle)
+        public static float getAngle(Vector2 p_to_angle, Vector2 p_from_angle)
         {
-          float angle = Vector2.Angle(p_from_angle, p_to_angle);
-          Vector3 cross = Vector3.Cross(p_from_angle, p_to_angle);
+          float angle = Vector2.Angle(p_to_angle, p_from_angle);
+          Vector3 cross = Vector3.Cross(p_to_angle, p_from_angle);
           angle = cross.z > 0 ? -angle : angle;
           return angle;
         }
@@ -92,9 +175,9 @@ namespace JTools
         }
 
         ///<summary>Rotates a direction vector around the origin by degrees. CounterClockwise </summary>
-        public static Vector3 rotateDirectionVector(Vector3 p_direction, float p_degrees)
+        public static Vector2 rotateDirectionVector(Vector3 p_direction, float p_degrees)
         {
-          return Quaternion.Euler(0, 0, p_degrees) * p_direction;
+          return fromVector3(Quaternion.Euler(0, 0, p_degrees) * p_direction);
         }
 
         ///<summary>Rotates a normalized direction vector around the origin by degrees. CounterClockwise </summary>
@@ -115,6 +198,11 @@ namespace JTools
           return new Vector2(to_clone.x, to_clone.y);
         }
 
+        ///<summary>Assumes common point is origin</summary>
+        public static Vector2 projection(Vector2 p_point, Vector2 p_normal)
+        {
+          return fromVector3(Vector3.Project(Vector3Calc.fromVec2(p_point), Vector3Calc.fromVec2(p_normal)));
+        }
       }
 
       public static class Vector3Calc
@@ -206,17 +294,20 @@ namespace JTools
         }
 
 
-        public static T[] shallowClone<T>(T[] p_array){
-          return (T[]) p_array.Clone();
+        public static T[] shallowClone<T>(T[] p_array)
+        {
+          return (T[])p_array.Clone();
         }
 
-        public static T[] deepClone<T>(ICloneable<T>[] p_array){
+        public static T[] deepClone<T>(ICloneable<T>[] p_array)
+        {
           List<T> clone = new List<T>();
 
-          foreach(ICloneable<T> cloneable in p_array){
+          foreach (ICloneable<T> cloneable in p_array)
+          {
             clone.Add(cloneable.Clone());
           }
-          
+
           return clone.ToArray();
         }
       }
@@ -237,8 +328,9 @@ namespace JTools
         }
 
         ///<summary>Return System.Array of enums.T must be an enum type </summary>
-        public static System.Array getValues<T>(){
-          return System.Enum.GetValues(typeof(T));         
+        public static System.Array getValues<T>()
+        {
+          return System.Enum.GetValues(typeof(T));
         }
 
       }
@@ -347,37 +439,64 @@ namespace JTools
           return true;
         }
 
-        public static bool isSize(Matrix<float> p_matrix, int p_rows, int p_columns){
+        public static bool isSize(Matrix<float> p_matrix, int p_rows, int p_columns)
+        {
           return p_matrix.RowCount == p_rows && p_matrix.ColumnCount == p_columns;
         }
 
-        public static Matrix<T> shallowClone<T>(Matrix<T> p_clone) where T : struct, System.IEquatable<T>, System.IFormattable {
+        public static Matrix<T> shallowClone<T>(Matrix<T> p_clone) where T : struct, System.IEquatable<T>, System.IFormattable
+        {
           Matrix<T> clone = Matrix<T>.Build.Dense(p_clone.RowCount, p_clone.ColumnCount);
 
-          for(int i = 0; i< p_clone.RowCount; i++){
-            for(int j = 0; j<p_clone.ColumnCount; j++){
-              clone[i,j] = p_clone[i,j];
+          for (int i = 0; i < p_clone.RowCount; i++)
+          {
+            for (int j = 0; j < p_clone.ColumnCount; j++)
+            {
+              clone[i, j] = p_clone[i, j];
             }
           }
 
           return clone;
         }
 
-        public static float sum(Matrix<float> p_sum_matrix){
+        public static float sum(Matrix<float> p_sum_matrix)
+        {
           float sum = 0;
 
-          for(int i = 0; i< p_sum_matrix.RowCount; i++){
-            for(int j = 0; j<p_sum_matrix.ColumnCount; j++){
-              sum += p_sum_matrix[i,j];
+          for (int i = 0; i < p_sum_matrix.RowCount; i++)
+          {
+            for (int j = 0; j < p_sum_matrix.ColumnCount; j++)
+            {
+              sum += p_sum_matrix[i, j];
             }
           }
 
           return sum;
         }
 
+        public static Matrix<float> columnNormalize(Matrix<float> p_matrix)
+        {
+          Matrix<float> matrix = p_matrix.Clone();
+
+          for (int i = 0; i < matrix.ColumnCount; i++)
+          {
+            float columnTotal = 0;
+
+            for (int j = 0; j < matrix.RowCount; j++)
+            {
+              columnTotal += matrix[j, i];
+            }
+
+            for (int j = 0; j < matrix.RowCount; j++)
+            {
+              matrix[j, i] /= columnTotal;
+            }
+          }
+
+          return matrix;
+        }
+
       }
-
-
     }
 
     ///<summary>Calculation functions for random number generation</summary>
@@ -415,34 +534,62 @@ namespace JTools
       }
     }
 
-    namespace DataStructures{
+    namespace DataStructures
+    {
 
-        public static class HashSetCalc{
-         
-          public static HashSet<T> ShallowClone<T>(HashSet<T> set){
-            HashSet<T> new_set = new HashSet<T>();
+      public static class HashSetCalc
+      {
 
-            foreach(T element in set){
-              new_set.Add(element);
-            }
+        public static HashSet<T> ShallowClone<T>(HashSet<T> set)
+        {
+          HashSet<T> new_set = new HashSet<T>();
 
-            return new_set;
+          foreach (T element in set)
+          {
+            new_set.Add(element);
           }
 
-          public static HashSet<T> DeepClone<T>(HashSet<ICloneable<T>> set){
-            HashSet<T> new_set = new HashSet<T>();
-
-            foreach(ICloneable<T> element in set){
-              new_set.Add(element.Clone());
-            }
-
-            return new_set;
-          }
-
+          return new_set;
         }
 
+        public static HashSet<T> DeepClone<T>(HashSet<ICloneable<T>> set)
+        {
+          HashSet<T> new_set = new HashSet<T>();
 
-      
+          foreach (ICloneable<T> element in set)
+          {
+            new_set.Add(element.Clone());
+          }
+
+          return new_set;
+        }
+
+      }
+
+
+
+
+    }
+
+    namespace ActiavationFunctions{
+
+      ///<summary>Returns a value between 0 and 1<summary>
+      public delegate float DActivationFunction(float p_input);
+
+      public static class ActivationFactory{
+
+        ///<summary>Give x-width, y-width, zero centered(The center of the signmoid = 0 rather than bottom), pos x quadrant(All x values will be > 0, so x of 0 returns close to 0)</summary>
+        public static DActivationFunction generateSigmoid(float p_x_width, float p_y_width, bool p_zero_centered, bool p_pos_x_quadrant, bool p_inverse){
+          float centering_offset = p_zero_centered ? p_y_width/2 : 0;
+          float pos_x_quadrant_offset = p_pos_x_quadrant ? 4 : 0;
+          float p_inverse_mod = p_inverse ? -1f : 1f;          
+
+          return (float p_input) => {
+            return (p_y_width/(1+Mathf.Exp(p_inverse_mod*pos_x_quadrant_offset-(p_inverse_mod*8/p_x_width)*p_input)))-centering_offset;
+          };
+        }
+
+      }
 
     }
 

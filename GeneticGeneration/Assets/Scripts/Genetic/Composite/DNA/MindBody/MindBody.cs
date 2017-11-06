@@ -4,8 +4,8 @@ using System.Collections.Generic;
 using Genetic.Base;
 using JTools.Interfaces;
 
-using Genetic.Numerical.Base;
-using Genetic.Numerical.TraitGenes;
+using Genetic.Traits.Base;
+using Genetic.Traits.TraitGenes;
 using Genetic.Behaviour.DecisionNets;
 
 namespace Genetic{
@@ -29,7 +29,7 @@ namespace Genetic{
       }
     }
 
-    public class MindBodyDNA<T> : ADNA<MindBodyDNA<T>>, IControllerExpressable<T, MindBody>, ICloneable<MindBodyDNA<T>> where T : Controller
+    public class MindBodyDNA<T> : ADNA<MindBodyDNA<T>>, IControllerExpressable<T, MindBody>, ICloneable<MindBodyDNA<T>> where T : AController
     {
       int m_species_id;
 
@@ -69,7 +69,7 @@ namespace Genetic{
       }
     }
 
-    public class MindBodySpecies<T> : ISpecies<ADNA<MindBodyDNA<T>>> where T : Controller
+    public class MindBodySpecies<T> : ISpecies<ADNA<MindBodyDNA<T>>> where T : AController
     {
       private int m_id;
 
