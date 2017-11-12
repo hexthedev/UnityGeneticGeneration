@@ -19,16 +19,16 @@ namespace Genetic
   {
     namespace TraitGenes
     {
-      public class TraitGenesDNA :  ADNA<TraitGenesDNA>, IExpressable<Dictionary<ETrait, float>>, ICloneable<TraitGenesDNA>
+      public class TraitGenesDNA :  ADNA<TraitGenesDNA>, IExpressable<Dictionary<string, float>>, ICloneable<TraitGenesDNA>
       {
         int m_species;
-        private Dictionary<ETrait, Gene> m_traits = new Dictionary<ETrait, Gene>();
+        private Dictionary<string, Gene> m_traits = new Dictionary<string, Gene>();
 
         ///<summary> Create a Random selection of trait genes</summary>
-        public TraitGenesDNA(int p_species, HashSet<ETrait> p_traits, int p_size, Range<float> p_range, int p_mutation_iterations, Range<float> p_mutation_range)
+        public TraitGenesDNA(int p_species, HashSet<string> p_traits, int p_size, Range<float> p_range, int p_mutation_iterations, Range<float> p_mutation_range)
         {
           m_species = p_species;
-          foreach (ETrait trait in p_traits)
+          foreach (string trait in p_traits)
           {
             m_traits.Add(trait, new Gene(p_size, p_range, p_mutation_iterations, p_mutation_range));
           }
@@ -36,11 +36,11 @@ namespace Genetic
         }
 
         ///<summary> Manually create TraitGenesDNA. FOR TESTING ONLY -- inputs is mutable</summary>
-        public TraitGenesDNA(int p_species, Dictionary<ETrait, Gene> p_chromos)
+        public TraitGenesDNA(int p_species, Dictionary<string, Gene> p_chromos)
         {
-          m_traits = new Dictionary<ETrait, Gene>();
+          m_traits = new Dictionary<string, Gene>();
 
-          foreach(ETrait trait in p_chromos.Keys){
+          foreach(string trait in p_chromos.Keys){
             m_traits.Add(trait, p_chromos[trait].Clone());
           }
         }
@@ -48,17 +48,17 @@ namespace Genetic
         ///<summary> Mutate each traits genes</summary>
         public override TraitGenesDNA mutate()
         {
-//          Debug.Log("mut" + this.m_traits[ETrait.SPEED]);
+//          Debug.Log("mut" + this.m_traits[string.SPEED]);
 
           TraitGenesDNA mutated = new TraitGenesDNA(m_species, m_traits);
 
-          foreach(ETrait trait in m_traits.Keys){
+          foreach(string trait in m_traits.Keys){
             Gene mut_gene = mutated.m_traits[trait].mutate();
             mutated.m_traits.Remove(trait);
             mutated.m_traits.Add(trait, mut_gene);
           }
 
-//Debug.Log("mutd" + mutated.m_traits[ETrait.SPEED]);
+//Debug.Log("mutd" + mutated.m_traits[string.SPEED]);
           
           return mutated;
         }
@@ -68,21 +68,21 @@ namespace Genetic
         {
 
           TraitGenesDNA crossovered = new TraitGenesDNA(m_species, m_traits);
-          crossovered.m_traits = new Dictionary<ETrait, Gene>();
+          crossovered.m_traits = new Dictionary<string, Gene>();
 
-          foreach(ETrait trait in m_traits.Keys){
+          foreach(string trait in m_traits.Keys){
             crossovered.m_traits.Add(trait, m_traits[trait].crossover(p_crossover_object.m_traits[trait]));
           }
 
           return crossovered;
         }
 
-        ///<summary> Translate DNA into Dictionary of ETraits to floats</summary>
-        public Dictionary<ETrait, float> express()
+        ///<summary> Translate DNA into Dictionary of strings to floats</summary>
+        public Dictionary<string, float> express()
         {
-          Dictionary<ETrait, float> born = new Dictionary<ETrait, float>();
+          Dictionary<string, float> born = new Dictionary<string, float>();
 
-          foreach(ETrait trait in m_traits.Keys){
+          foreach(string trait in m_traits.Keys){
             born.Add(trait, m_traits[trait].GeneValue);
           }
 
@@ -98,7 +98,7 @@ namespace Genetic
         {
           string to_return = "TraitDNA: [";
           
-          foreach(ETrait trait in m_traits.Keys){
+          foreach(string trait in m_traits.Keys){
             to_return += trait.ToString() + ":" + m_traits[trait].GeneValue + ",";
           }
 
@@ -117,13 +117,13 @@ namespace Genetic
       public class TraitGenesSpecies : ISpecies<ADNA<TraitGenesDNA>>
       {
         int m_id;
-        HashSet<ETrait> m_traits;
+        HashSet<string> m_traits;
         int m_size;
         Range<float> m_range;        
         int m_mutation_iterations;
         Range<float> m_mutation_range;
 
-        public TraitGenesSpecies(int p_id, HashSet<ETrait> p_traits, int p_size, Range<float> p_range, int p_mutation_iterations, Range<float> p_mutation_range){
+        public TraitGenesSpecies(int p_id, HashSet<string> p_traits, int p_size, Range<float> p_range, int p_mutation_iterations, Range<float> p_mutation_range){
           m_id = p_id;
           m_traits = HashSetCalc.ShallowClone(p_traits);
           m_size = p_size;

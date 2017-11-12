@@ -5,7 +5,7 @@ using UnityEngine.UI;
 using JTools.Calc.Base;
 using JTools.Calc.Vectors;
 
-using JTools.Gameplay;
+using JTools.DataStructures.ObjectLogger;
 public class MiniMap : MonoBehaviour {
 
 	private Texture2D m_tex;
@@ -34,32 +34,32 @@ public class MiniMap : MonoBehaviour {
 
 		m_tex.SetPixels(colors);
 
-		GameObject[] player = ObjectLogger.getByType(EObjectTypes.PLAYER);
+//		GameObject[] player = ObjectLogger.getByType(EObjectTypes.PLAYER);
 
-		foreach(GameObject x in player){
-			Vector2 position = Vector2Calc.fromVector3(x.transform.position);
-			position *= 5;
-			position.x += 66;
-			position.y += 47;
+		// foreach(GameObject x in player){
+		// 	Vector2 position = Vector2Calc.fromVector3(x.transform.position);
+		// 	position *= 5;
+		// 	position.x += 66;
+		// 	position.y += 47;
 
-			Debug.Log(position);
+		// 	Debug.Log(position);
 
-			m_tex.SetPixel( Mathf.RoundToInt(position.x), Mathf.RoundToInt(position.y), Color.red);
-		}
+		// 	m_tex.SetPixel( Mathf.RoundToInt(position.x), Mathf.RoundToInt(position.y), Color.red);
+		// }
 
 
-		GameObject[] enemies = ObjectLogger.getByType(EObjectTypes.ENEMY);
+//		GameObject[] enemies = ObjectLogger.getByType(EObjectTypes.ENEMY);
 
-		foreach(GameObject x in enemies){
-			Vector2 position = Vector2Calc.fromVector3(x.transform.position);
-			position *= 5;
-			position.x += 66;
-			position.y += 47;
+		// foreach(GameObject x in enemies){
+		// 	Vector2 position = Vector2Calc.fromVector3(x.transform.position);
+		// 	position *= 5;
+		// 	position.x += 66;
+		// 	position.y += 47;
 
-			Debug.Log(position);
+		// 	Debug.Log(position);
 
-			m_tex.SetPixel( Mathf.RoundToInt(position.x), Mathf.RoundToInt(position.y), Color.green);
-		}
+		// 	m_tex.SetPixel( Mathf.RoundToInt(position.x), Mathf.RoundToInt(position.y), Color.green);
+		// }
 
 
 		m_tex.Apply();

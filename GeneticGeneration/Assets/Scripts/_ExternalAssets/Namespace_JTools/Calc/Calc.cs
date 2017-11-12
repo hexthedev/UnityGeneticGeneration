@@ -31,8 +31,8 @@ namespace JTools
           m_max = p_max;
         }
 
-        public T Min { get { return m_min; } }
-        public T Max { get { return m_max; } }
+        public T Min { get { return m_min; } set { m_min = value;} }
+        public T Max { get { return m_max; } set { m_max = value;} }
 
         public Range<T> Clone()
         {
@@ -207,6 +207,10 @@ namespace JTools
         {
           return fromVector3(Vector3.Project(Vector3Calc.fromVec2(p_point), Vector3Calc.fromVec2(p_normal)));
         }
+
+        public static float proximity(Vector2 p_point1, Vector2 p_point2){
+          return (p_point1 - p_point2).magnitude;
+        }
       }
 
       public static class Vector3Calc
@@ -221,6 +225,10 @@ namespace JTools
         public static Vector3 VectorAbs(Vector3 p_vector)
         {
           return new Vector3(Mathf.Abs(p_vector.x), Mathf.Abs(p_vector.y), Mathf.Abs(p_vector.z));
+        }
+
+        public static Vector3 randomDirection(){
+          return new Vector3( Rand.RandomCalc.Rand(new Range<float>(-1f, 1f)), Rand.RandomCalc.Rand(new Range<float>(-1f, 1f)), Rand.RandomCalc.Rand(new Range<float>(-1f, 1f)) );
         }
 
 
@@ -566,6 +574,25 @@ namespace JTools
           }
 
           return new_set;
+        }
+
+      }
+
+      public static class DictionaryCalc
+      {
+
+        public static string print<T1,T2>(Dictionary<T1,T2> p_dic){
+          string to_print = "Dictionary:[\n";
+
+          foreach(T1 element in p_dic.Keys){
+            to_print += "   " +element + "," + p_dic[element] + "\n";
+          }
+
+          return to_print + "]\n";
+        }
+
+        public static T1[] getKeys<T1,T2>(Dictionary<T1,T2> p_dic){
+          return new List<T1>(p_dic.Keys).ToArray();
         }
 
       }

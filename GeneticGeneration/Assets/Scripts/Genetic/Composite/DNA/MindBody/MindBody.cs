@@ -14,12 +14,12 @@ namespace Genetic{
 
     public struct MindBody : IBrain
     {
-      public MindBody(Dictionary<ETrait, float> p_body, DecisionNet p_mind){
+      public MindBody(Dictionary<string, float> p_body, DecisionNet p_mind){
         m_body = p_body;
         m_mind = p_mind;
       }
 
-      public Dictionary<ETrait, float> m_body;
+      public Dictionary<string, float> m_body;
       
       public DecisionNet m_mind;
 
