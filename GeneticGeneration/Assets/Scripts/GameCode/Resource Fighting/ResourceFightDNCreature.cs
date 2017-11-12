@@ -6,10 +6,13 @@ using Genetic.Base;
 using Genetic.Composite;
 using Genetic.Traits.Base;
 
+using JTools.Interfaces;
+
 using JTools.Events;
 
 using JTools.Calc.Base;
 using JTools.Calc.Vectors;
+using JTools.Calc.Bool;
 using JTools.Calc.ActiavationFunctions;
 
 using JTools.DataStructures.ObjectLogger;
@@ -43,13 +46,17 @@ public class ResourceFightDNCreature : AController, IBrainInit, IDamagable {
 	private IntervalEventManager m_im;
 	private PriorityList m_actions;
 	private CooldownLogger m_cooldowns;
+	
+	//Trait translations and useful info
 	private LimitedNumber m_health;
 	private LimitedNumber m_energy;
 
+	private float m_speed;
+	private float m_damage;
+	private float m_attack_speed;
+
 	private float m_sense_angle;		//Senses
 	private float m_sense_proximity;
-
-
 	private bool m_brain_stop;	//Stops Decision net
 
 
@@ -87,14 +94,12 @@ public class ResourceFightDNCreature : AController, IBrainInit, IDamagable {
 
 		//Set forward to correct forward vector
 		m_forward = Vector2Calc.fromAngle(gameObject.transform.rotation.eulerAngles.z+90);
-		
-		// if(m_cooldowns.isCooldownOver("SHOOT")) shoot();
-		// if(m_cooldowns.isCooldownOver("SENSE")) sense("BULLET");
-		if(m_cooldowns.isCooldownOver("GATHER")) gather();
 
-		if(m_energy.isMin()) damage(Time.fixedDeltaTime);
-		
-		if(!m_brain_stop){
+		energyConsumer(Time.fixedDeltaTime * 0.2f);
+		consumeMoveEnergy(Time.fixedDeltaTime);
+
+		if(!m_brain_stop){		
+			
 			//Call fixed update of Controller to do one brain iteration
 			base.FixedUpdate();
 
@@ -121,8 +126,11 @@ public class ResourceFightDNCreature : AController, IBrainInit, IDamagable {
 		m_traits = mindbody.m_body;
 		InitializeBrain(mindbody.m_mind);
 
-		m_health = new LimitedNumber( m_traits["HEALTH"]*10, new Range<float>(0, m_traits["HEALTH"]*10) );
-		m_energy = new LimitedNumber( m_traits["ENERGY"]*20, new Range<float>(0, m_traits["ENERGY"]*20) );
+		m_health = new LimitedNumber( m_traits["HEALTH"]*5 );
+		m_energy = new LimitedNumber( m_traits["ENERGY"]*10);
+		m_speed = m_traits["SPEED"];
+		m_damage = m_traits["DAMAGE"];
+		m_attack_speed = m_traits["ATTACKSPEED"];
 
 		m_controller = p_controller;
 	}
@@ -158,16 +166,16 @@ public class ResourceFightDNCreature : AController, IBrainInit, IDamagable {
 	//----------------------------------------------------------
 	// Concrete Actions
 	private void shoot(){
-		if(m_traits["ATTACKSPEED"] < 0) {
+		if(m_attack_speed < 0) {
 			m_cooldowns.activate("SHOOT", float.PositiveInfinity);
 			return;
 		}
 
-		m_cooldowns.activate("SHOOT", m_traits["ATTACKSPEED"]/2);
+		m_cooldowns.activate("SHOOT", m_attack_speed);
 		Bullet bullet =  Instantiate(m_bullet, transform.position + Vector3Calc.fromVec2(m_forward)*0.24f, transform.rotation ).GetComponent<Bullet>();
-		bullet.Initalize(m_forward, m_traits["DAMAGE"], gameObject);
+		bullet.Initalize(m_forward, m_damage, gameObject);
 
-		m_energy.add(-10f);
+		energyConsumer(2f);
 		Debug.Log(m_energy);
 	}
 
@@ -205,6 +213,7 @@ public class ResourceFightDNCreature : AController, IBrainInit, IDamagable {
 	}
 
 	private void gather(){
+		//Get list of gatherable resources
 		GameObject[] obs = sense("RESOURCE");
 		
 		List<GameObject> resources = new List<GameObject>();
@@ -216,8 +225,10 @@ public class ResourceFightDNCreature : AController, IBrainInit, IDamagable {
 			}
 		}
 
+		//If there are none, return
 		if(resources.Count == 0) return;
 
+		//Get the closest resource in gather arc
 		float closeness = float.PositiveInfinity;
 		GameObject to_harvest = null;
 
@@ -228,11 +239,18 @@ public class ResourceFightDNCreature : AController, IBrainInit, IDamagable {
 			to_harvest = o;
 		}
 
+		//Gather the resource
 		m_brain_stop = true;
 		m_cooldowns.activate("GATHER", 2f);
 
-		GameObject line = LineCreator.createLine( this_position, to_harvest.transform.position, Color.green, 0.01f );
-		DIntervalListener energy_suck = () => {			m_energy.add(0.2f); Debug.Log(m_energy);		};
+		GameObject line = LineCreator.createLine( this_position + (Vector3Calc.fromVec2(m_forward)*0.1f), to_harvest.transform.position, Color.green, 0.05f );
+		
+		Resource harvesting = to_harvest.GetComponent<Resource>();
+		DIntervalListener energy_suck = () => {			
+			float harvest_power = m_energy.Max - m_energy.Value;
+			if(harvest_power > 0.1f) harvest_power = 0.1f;			
+			if(to_harvest != null) m_energy.add( harvesting.collect( harvest_power ) );
+		};
 
 		m_im.addListener(0.1f, energy_suck );
 
@@ -241,10 +259,48 @@ public class ResourceFightDNCreature : AController, IBrainInit, IDamagable {
 			m_brain_stop = false;
 			Destroy(line);
 		});
-
 	}
 
+	private void move(Vector2 p_move){
+		m_rb.velocity += p_move * Time.fixedDeltaTime;
+		speedCorrection();
+	}
 
+	private void burstMove(Vector2 p_move, float p_burst_time){
+		m_rb.velocity = p_move;
+		m_brain_stop = true;
+
+		m_tm.addTimeout( p_burst_time, () => {
+			m_brain_stop = false;
+		});
+	}
+
+	private void speedCorrection(){
+		if(m_rb.velocity.magnitude > m_speed){
+			m_rb.velocity = m_rb.velocity.normalized * m_speed;
+		}
+	}
+
+	public void consumeMoveEnergy(float p_time){
+		if(m_speed == 0) return;
+
+		if(m_rb.velocity.magnitude <=m_speed){
+			energyConsumer(( m_rb.velocity.magnitude/m_speed )*p_time );	
+		} else {
+			energyConsumer(Mathf.Pow(( m_rb.velocity.magnitude/m_speed ), 2)  *p_time );
+		}
+	}
+
+	private void energyConsumer(float p_consume){
+
+		float over_depletion = m_energy.Value - p_consume;
+		m_energy.add(-p_consume);
+
+		if(over_depletion < 0){
+			damage(-over_depletion);
+		}
+
+	}
 
 
 

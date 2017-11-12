@@ -91,6 +91,7 @@ public class ResourceFightGameController : MonoBehaviour {
 
 	void spawnResource(){
 		GameObject obj = Instantiate( m_resource_prefab, Vector3Calc.randomDirection()*5, Quaternion.identity);
+		obj.GetComponent<Resource>().Initalize( RandomCalc.Rand(new Range<float>(1f,2f) ) );
 		ObjectLogger.log(obj, "RESOURCE");
 	}
 

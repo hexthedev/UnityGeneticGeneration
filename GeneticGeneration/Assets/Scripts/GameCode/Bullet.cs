@@ -3,7 +3,9 @@ using System.Collections.Generic;
 using UnityEngine;
 
 using JTools.Events;
+using JTools.Interfaces;
 using JTools.DataStructures.ObjectLogger;
+
 
 public class Bullet : MonoBehaviour {
 

@@ -23,6 +23,18 @@ namespace JTools
 
         private Range<float> m_limits;
 
+        public float Min { get { return m_limits.Min; } }
+        public float Max { get { return m_limits.Max; } }
+        
+
+        ///<suimmary>Special Constructor for limited numbers that go from 0 to a max value</summary>
+        public LimitedNumber(float p_start_value)
+        {
+          m_value = p_start_value;
+          m_limits = new Range<float>(0, p_start_value);
+        }
+
+
         public LimitedNumber(float p_start_value, Range<float> p_limits)
         {
           m_value = p_start_value;

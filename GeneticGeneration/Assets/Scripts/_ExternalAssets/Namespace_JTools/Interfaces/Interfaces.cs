@@ -13,6 +13,19 @@ namespace JTools{
 		public interface ICloneable<T>{
 			T Clone();
 		}
+
+		public interface IDamagable {
+
+			void damage(float p_damage);
+
+		}
+
+		public interface IResource {
+
+			float collect(float p_collect_power);
+
+		}
+
   }
 
 }
