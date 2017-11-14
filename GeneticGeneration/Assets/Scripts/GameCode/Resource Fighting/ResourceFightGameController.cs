@@ -36,9 +36,9 @@ public class ResourceFightGameController : MonoBehaviour {
 		//Instantiate controller
 		m_evolution = new DNABasedEvolutionManager<MindBodyDNA<ResourceFightDNCreature>>(
 			 new MindBodySpecies<ResourceFightDNCreature>(0,
-			 	new TraitGenesSpecies(0, new HashSet<string> {"SPEED", "HEALTH", "DAMAGE", "ENERGY", "ATTACKSPEED"}, 4, new Range<float>(0.25f, 1f), 4, new Range<float>(-0.5f, 0.5f)),
+			 	new TraitGenesSpecies(0, new HashSet<string> {"SPEED", "HEALTH", "DAMAGE", "ENERGY", "ATTACKSPEED"}, 1, new Range<float>(2f, 2f), 0, new Range<float>(0f, 0f)),
 				new DecisionNetSpecies<ResourceFightDNCreature>( 0, ResourceFightDNCreature.getInputFactorys(), ResourceFightDNCreature.getOutputFactorys(), new Range<float>(0.8f, 1.2f) )
-			 ), 0.1f, 10, (float p_fitness) => { return p_fitness * 0.95f; }, 1f 
+			 ), 0.1f, 20, (float p_fitness) => { return p_fitness * 0.95f; }, 1f 
 		);
 	
 		//Fill with 20 random
@@ -52,17 +52,35 @@ public class ResourceFightGameController : MonoBehaviour {
 		for(int i = 0; i<5; i++){
 			spawnResource();
 		}
+
+		for(int i = 0; i<50; i++){
+			spawnCreature();
+		}
 		
-		//spawnCreature();
-		spawnCreature();
+		// spawnCreature();
+		// spawnCreature();
 		
 
-		// m_interval.addListener(1f, () => {
-		// 	for(int i = 0; i<1; i++){
-		// 		spawn();
-		// 	}
-	 	// } );
+		m_interval.addListener(5f, () => {
+			for(int i = 0; i<5; i++){
+				spawnCreature();
+			}
+	 	} );
 	
+		m_interval.addListener(10f, () => {
+			for(int i = 0; i<1; i++){
+				spawnResource();
+			}
+	 	} );
+	
+		m_interval.addListener(30f, () => {
+			GameObject[] obs = ObjectLogger.getByType("CREATURE");
+
+			foreach(GameObject ob in obs){
+				ob.GetComponent<ResourceFightDNCreature>().logFitness();
+			}
+
+		});
 	}
 	
 	// Update is called once per frame
@@ -90,8 +108,8 @@ public class ResourceFightGameController : MonoBehaviour {
 	}
 
 	void spawnResource(){
-		GameObject obj = Instantiate( m_resource_prefab, Vector3Calc.randomDirection()*5, Quaternion.identity);
-		obj.GetComponent<Resource>().Initalize( RandomCalc.Rand(new Range<float>(1f,2f) ) );
+		GameObject obj = Instantiate( m_resource_prefab, Vector3Calc.randomDirection()*8f, Quaternion.identity);
+		obj.GetComponent<Resource>().Initalize( RandomCalc.Rand(new Range<float>(10f,100f) ) );
 		ObjectLogger.log(obj, "RESOURCE");
 	}
 

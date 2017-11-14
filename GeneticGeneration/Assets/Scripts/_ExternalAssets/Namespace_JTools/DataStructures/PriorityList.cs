@@ -52,7 +52,7 @@ namespace JTools
         {
           foreach (string key in m_list.Keys)
           {
-            m_list[key].activate();
+            if(m_list.ContainsKey(key)) m_list[key].activate();
           }
         }
       }

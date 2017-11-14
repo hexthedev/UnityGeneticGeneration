@@ -43,6 +43,6 @@ public class Resource : MonoBehaviour, IResource
 
   private void UpdateText()
   {
-    m_resource_left_text.text = "" + Mathf.Round(m_resource_left.Value * 10) / 10f;
+    m_resource_left_text.text = "" + Mathf.Round(m_resource_left.Value);
   }
 }

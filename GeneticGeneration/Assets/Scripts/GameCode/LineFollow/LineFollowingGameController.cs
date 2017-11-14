@@ -27,7 +27,7 @@ public class LineFollowingGameController : MonoBehaviour {
 			 new MindBodySpecies<LineFollowingDNCreature>(0,
 			 	new TraitGenesSpecies(0, new HashSet<string> {"SPEED"}, 4, new Range<float>(0.25f, 1f), 4, new Range<float>(-0.5f, 0.5f)),
 				new DecisionNetSpecies<LineFollowingDNCreature>( 0, LineFollowingDNCreature.getInputFactorys(), LineFollowingDNCreature.getOutputFactorys(), new Range<float>(0.8f, 1.2f) )
-			 ), 0.1f, 10, (float p_fitness) => { return p_fitness * 0.95f; }, 1f 
+			 ), 0.1f, 100, (float p_fitness) => { return p_fitness * 0.95f; }, 1f 
 		);
 	
 		for(int i = 0; i<20; i++){
@@ -37,7 +37,7 @@ public class LineFollowingGameController : MonoBehaviour {
 		m_interval = new IntervalEventManager();
 
 		m_interval.addListener(0.25f, () => {
-			for(int i = 0; i<1; i++){
+			for(int i = 0; i<10; i++){
 				spawn();
 			}
 	 	} );

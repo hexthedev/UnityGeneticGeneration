@@ -4,13 +4,16 @@ using UnityEngine;
 
 
 
+
 namespace JTools{
 	namespace Prototyping{
 		namespace LineCreator{
 
-			static class LineCreator{
+			using JTools.Prototyping.Destroyer;
 
-				public static GameObject createLine(Vector3 p_point1, Vector3 p_point2, Color p_color, float p_width){
+			static class LineCreator{			
+
+				public static GameObject createLine(Vector3 p_point1, Vector3 p_point2, Color p_color, float p_width, float p_time_to_death){
 
 					GameObject ob = new GameObject();
 					LineRenderer lineRenderer = ob.AddComponent<LineRenderer>();
@@ -27,6 +30,9 @@ namespace JTools{
             new GradientAlphaKey[] { new GradientAlphaKey(alpha, 0.0f), new GradientAlphaKey(alpha, 1f) }
             );
         	lineRenderer.colorGradient = gradient;
+
+					Destroyer des = ob.AddComponent<Destroyer>();
+					des.DestroyIn(p_time_to_death);
 
 					return ob;
 				}

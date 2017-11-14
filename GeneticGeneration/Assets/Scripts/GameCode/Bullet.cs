@@ -33,7 +33,7 @@ public class Bullet : MonoBehaviour {
 
 		m_timeout = new TimeoutEventManager();
 		
-		m_timeout.addTimeout(10f, ()=>{ ObjectLogger.unlog(gameObject,"BULLET"); Destroy(gameObject);  });
+		m_timeout.addTimeout(2f, ()=>{ ObjectLogger.unlog(gameObject,"BULLET"); Destroy(gameObject);  });
 	}
 
 	// Update is called once per frame

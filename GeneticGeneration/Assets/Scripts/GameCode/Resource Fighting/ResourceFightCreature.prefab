@@ -23,9 +23,9 @@ GameObject:
   - component: {fileID: 50386083858642262}
   - component: {fileID: 61581057745024818}
   - component: {fileID: 114424948870234786}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: ResourceFightCreature
-  m_TagString: Untagged
+  m_TagString: Creature
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -54,7 +54,7 @@ Rigidbody2D:
   m_Simulated: 1
   m_UseFullKinematicContacts: 0
   m_UseAutoMass: 0
-  m_Mass: 1
+  m_Mass: 50
   m_LinearDrag: 0
   m_AngularDrag: 0.05
   m_GravityScale: 1
@@ -134,8 +134,8 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
-  m_Sprite: {fileID: 21300000, guid: 093f90354ec4df441b0ee87010c22566, type: 3}
-  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_Sprite: {fileID: 21300000, guid: b63b0007993ebbe40a09dd574487561c, type: 3}
+  m_Color: {r: 0.4705882, g: 1, b: 0.49614605, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
