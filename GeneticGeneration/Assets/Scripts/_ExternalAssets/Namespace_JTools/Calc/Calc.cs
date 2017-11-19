@@ -7,6 +7,8 @@ using MathNet.Numerics.Random;   //WARNING, requires TaskParallelle to work
 using JTools.Interfaces;
 using JTools.Calc.Vectors;
 using JTools.Calc.Base;
+using JTools.Calc.ActiavationFunctions;
+
 
 namespace JTools
 {
@@ -506,6 +508,14 @@ namespace JTools
           }
 
           return matrix;
+        }
+
+        public static void activate(DActivationFunction activator, Matrix<float> p_matrix){
+          for(int i = 0; i<p_matrix.RowCount; i++){
+            for(int j=0; j<p_matrix.ColumnCount; j++){
+              p_matrix[i,j] = activator(p_matrix[i,j]);
+            }
+          }
         }
 
       }
