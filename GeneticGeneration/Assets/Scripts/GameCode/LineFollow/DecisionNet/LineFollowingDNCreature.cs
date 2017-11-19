@@ -16,7 +16,7 @@ using JTools.Calc.ActiavationFunctions;
 public class LineFollowingDNCreature : AController, IBrainInit {
 
 	//Global References
-	LineFollowingGameController m_controller;
+	LineFollowingDNGameController m_controller;
 
 	//DNA, Brain and Traits
 	MindBodyDNA<LineFollowingDNCreature> m_dna;
@@ -79,7 +79,7 @@ public class LineFollowingDNCreature : AController, IBrainInit {
 	//----------------------------------------------------------
 	//Construction
 
-	public void Initialize(MindBodyDNA<LineFollowingDNCreature> p_dna, LineFollowingGameController p_controller, Line2D p_goalLine){
+	public void Initialize(MindBodyDNA<LineFollowingDNCreature> p_dna, LineFollowingDNGameController p_controller, Line2D p_goalLine){
 		m_is_initialized = true;
 		m_dna = p_dna.Clone();
 

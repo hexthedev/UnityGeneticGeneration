@@ -13,7 +13,7 @@ using JTools.Calc.Vectors;
 using JTools.Events;
 using UnityEngine;
 
-public class LineFollowingGameController : MonoBehaviour {
+public class LineFollowingDNGameController : MonoBehaviour {
 
 	public GameObject m_prefab;
 	public DNABasedEvolutionManager<MindBodyDNA<LineFollowingDNCreature>> m_evolution;
