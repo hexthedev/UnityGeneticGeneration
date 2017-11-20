@@ -34,7 +34,7 @@ public class ResourceFightDNCreature : AController, IBrainInit, IDamagable
   private ResourceFightGameController m_controller;
 
   //DNA, Brain and Traits
-  private MindBodyDNA<ResourceFightDNCreature> m_dna;
+  private MindBodyDNDNA<ResourceFightDNCreature> m_dna;
   private Dictionary<string, float> m_traits;
   private IBrain m_brain;
 
@@ -135,14 +135,14 @@ public class ResourceFightDNCreature : AController, IBrainInit, IDamagable
   //----------------------------------------------------------
   //Construction
 
-  public void Initialize(MindBodyDNA<ResourceFightDNCreature> p_dna, ResourceFightGameController p_controller)
+  public void Initialize(MindBodyDNDNA<ResourceFightDNCreature> p_dna, ResourceFightGameController p_controller)
   {
     m_is_initialized = true;
     ObjectLogger.log(gameObject, "CREATURE");
 
     m_dna = p_dna.Clone();
 
-    MindBody mindbody = p_dna.express(this);
+    MindBodyDN mindbody = p_dna.express(this);
 
     m_traits = mindbody.m_body;
     InitializeBrain(mindbody.m_mind);

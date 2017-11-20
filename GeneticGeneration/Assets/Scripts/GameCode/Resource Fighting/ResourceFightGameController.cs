@@ -26,7 +26,7 @@ public class ResourceFightGameController : MonoBehaviour {
 	
 
 	//Evolution Manager
-	public DNABasedEvolutionManager<MindBodyDNA<ResourceFightDNCreature>> m_evolution;
+	public DNABasedEvolutionManager<MindBodyDNDNA<ResourceFightDNCreature>> m_evolution;
 
 	//Other Tools
 	IntervalEventManager m_interval;
@@ -34,8 +34,8 @@ public class ResourceFightGameController : MonoBehaviour {
 
 	void Start () {
 		//Instantiate controller
-		m_evolution = new DNABasedEvolutionManager<MindBodyDNA<ResourceFightDNCreature>>(
-			 new MindBodySpecies<ResourceFightDNCreature>(0,
+		m_evolution = new DNABasedEvolutionManager<MindBodyDNDNA<ResourceFightDNCreature>>(
+			 new MindBodySpeciesDN<ResourceFightDNCreature>(0,
 			 	new TraitGenesSpecies(0, new HashSet<string> {"SPEED", "HEALTH", "DAMAGE", "ENERGY", "ATTACKSPEED"}, 1, new Range<float>(2f, 2f), 0, new Range<float>(0f, 0f)),
 				new DecisionNetSpecies<ResourceFightDNCreature>( 0, ResourceFightDNCreature.getInputFactorys(), ResourceFightDNCreature.getOutputFactorys(), new Range<float>(0.8f, 1.2f) )
 			 ), 0.1f, 20, (float p_fitness) => { return p_fitness * 0.95f; }, 1f 
@@ -114,7 +114,7 @@ public class ResourceFightGameController : MonoBehaviour {
 	}
 
 	//Logs DNA and fitness in evolution controller
-	public void logDNA(MindBodyDNA<ResourceFightDNCreature> dna, float fitness){
+	public void logDNA(MindBodyDNDNA<ResourceFightDNCreature> dna, float fitness){
 		m_evolution.addDNA(dna, fitness);
 	}
 }

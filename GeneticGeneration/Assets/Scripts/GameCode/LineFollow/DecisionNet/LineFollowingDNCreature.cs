@@ -19,7 +19,7 @@ public class LineFollowingDNCreature : AController, IBrainInit {
 	LineFollowingDNGameController m_controller;
 
 	//DNA, Brain and Traits
-	MindBodyDNA<LineFollowingDNCreature> m_dna;
+	MindBodyDNDNA<LineFollowingDNCreature> m_dna;
 	Dictionary<string, float> m_traits;
 	IBrain m_brain;
 
@@ -79,11 +79,11 @@ public class LineFollowingDNCreature : AController, IBrainInit {
 	//----------------------------------------------------------
 	//Construction
 
-	public void Initialize(MindBodyDNA<LineFollowingDNCreature> p_dna, LineFollowingDNGameController p_controller, Line2D p_goalLine){
+	public void Initialize(MindBodyDNDNA<LineFollowingDNCreature> p_dna, LineFollowingDNGameController p_controller, Line2D p_goalLine){
 		m_is_initialized = true;
 		m_dna = p_dna.Clone();
 
-		MindBody mindbody = p_dna.express(this);
+		MindBodyDN mindbody = p_dna.express(this);
 
 		m_traits = mindbody.m_body;
 		InitializeBrain(mindbody.m_mind);
