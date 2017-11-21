@@ -324,7 +324,20 @@ namespace JTools
 
           return clone.ToArray();
         }
+
+        public delegate T DInitializer<T>();
+        public static T[] functionInitialize<T>(int size, DInitializer<T> func ){
+          T[] array = new T[size];
+
+          for(int i = 0; i<size; i++){
+            array[i] = func();
+          }
+
+          return array;
+        }
       }
+
+      
 
     }
 

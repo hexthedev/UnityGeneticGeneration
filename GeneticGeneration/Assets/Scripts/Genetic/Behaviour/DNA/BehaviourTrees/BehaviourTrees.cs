@@ -166,18 +166,146 @@ namespace Genetic
 
 
       //BT DNA IMPLEMENTATION
+      public class ABTDNATree<T> : Tree<ABTDNANode> where T:AController
+      {
+        public DInputFactory<T>[] m_input_factories;
+        public DOutputFactory<T>[] m_output_factories;
+        public ABTDNATree(DInputFactory<T>[] p_input_factories, DOutputFactory<T>[] p_output_factories, ATreeNode<ABTDNANode> p_root) : base(p_root)
+        {
+          m_input_factories = ArrayCalc.shallowClone(p_input_factories);
+          m_output_factories = ArrayCalc.shallowClone(p_output_factories);
+        }
+
+        public static ABTDNATree<T> random(Range<float> p_weight_values, Range<float> p_threshold_range, DInputFactory<T>[] p_input_factories, DOutputFactory<T>[] p_output_factories, ATreeNode<ABTDNANode> p_root){
+
+          ABTDNANode node = new ABTDNANode(
+            EBTNodeTypes.DETECTOR, 
+            ArrayCalc.functionInitialize(p_output_factories.Length, ()=> { return RandomCalc.Rand(p_weight_values); } ),
+            ArrayCalc.randomIndex(p_input_factories),
+            RandomCalc.Rand(p_threshold_range),
+            null          
+          );
+
+          ABTDNATree<T> tree = new ABTDNATree<T>(p_input_factories, p_output_factories, node);
+          randomPopulate(node, p_output_factories.Length, p_weight_values, p_input_factories.Length-1, p_threshold_range);
+
+          return tree;
+        } 
+
+        private static void randomPopulate(ABTDNANode node, int p_out_value_number, Range<float> p_out_value_range, 
+          int p_max_input_index, Range<float> p_threshold_range){
+
+          if(node == null) return;
+
+          node.addChild(ABTDNANode.randomNode(p_out_value_number, p_out_value_range, p_max_input_index, p_threshold_range, node), 0);
+          randomPopulate(node.getChild(0).m_self, p_out_value_number, p_out_value_range, p_max_input_index, p_threshold_range);
+
+          if(node.Type == EBTNodeTypes.DETECTOR){
+            node.addChild(ABTDNANode.randomNode(p_out_value_number, p_out_value_range, p_max_input_index, p_threshold_range, node), 1);
+            randomPopulate(node.getChild(1).m_self, p_out_value_number, p_out_value_range, p_max_input_index, p_threshold_range);
+          }
+        } 
 
 
-      //NEED TO WRITE THE ABTDNATREE which will be randomly generated and do mutation and crossover opertations. 
-      //Last part of the puzzle then should be able to test
+        public BTree expressConcrete(T p_controller){
 
+          //THE NULL THING HERE MIGHT ERROR
+          BTree tree = new BTree( 
+            ArrayCalc.map(m_input_factories, ( DInputFactory<T> fact ) => { return fact(p_controller); } ),
+            ArrayCalc.map(m_output_factories, ( DOutputFactory<T> fact ) => { return fact(p_controller); } ),
+            null
+          );
+
+          ABTNode node = m_root.m_self.generateNode(tree, null);
+          tree.setRoot(node);
+
+          recursiveNodeGeneration(m_root.m_self, node, p_controller, tree);
+
+          return tree;
+        }
+
+        private void recursiveNodeGeneration(ABTDNANode p_dna_node, ABTNode p_concrete_node, T p_controller, BTree p_tree){
+          if(p_dna_node == null) return;
+
+          for(int i = 0; i<p_dna_node.numChildren; i++){
+
+            if(!p_dna_node.existsChild(i)) continue;
+            p_concrete_node.addChild(p_dna_node.getChild(i).m_self.generateNode(p_tree, p_concrete_node) ,i);
+
+            recursiveNodeGeneration(p_dna_node.getChild(i).m_self, p_concrete_node.getChild(i).m_self, p_controller, p_tree);
+          }
+        }
+
+        public ABTDNATree<T> Clone(){
+          return new ABTDNATree<T>(ArrayCalc.shallowClone(m_input_factories), ArrayCalc.shallowClone(m_output_factories), recClone(m_root, null) );
+        }
+
+        private ATreeNode<ABTDNANode> recClone(ATreeNode<ABTDNANode> p_cloning, ATreeNode<ABTDNANode> p_parent){
+          ABTDNANode node = p_cloning.m_self.Clone( p_parent );
+
+          for(int i = 0; i<p_cloning.numChildren; i++){
+            if(p_cloning.existsChild(i)) continue;
+
+            node.addChild( recClone(p_cloning.getChild(i), node).m_self ); 
+          }
+
+          return node;
+        }
+
+
+        public ABTDNATree<T> crossover(ABTDNATree<T> p_crossover_object){
+
+          ABTDNATree<T> master_tree = Clone();
+          ABTDNATree<T> slave_tree = p_crossover_object.Clone();       
+
+          ABTDNANode master_node = randomNode(master_tree.m_root.m_self, master_tree.m_root.m_self);
+          ABTDNANode slave_node = randomNode(slave_tree.m_root.m_self, slave_tree.m_root.m_self);
+
+          int index = RandomCalc.Rand(new Range<int>(0, master_node.numChildren) );
+          
+          master_node.addChild(slave_node ,index);
+          slave_node.setParent(master_node);
+
+          return master_tree;
+        }
+
+        private ABTDNANode randomNode(ABTDNANode p_cur_node, ABTDNANode p_root_node){
+          if(p_cur_node == null) return randomNode(p_root_node, p_root_node);
+
+          bool test = BoolCalc.random();
+
+          if(test){
+            return p_cur_node;
+          } else {
+            return randomNode( p_cur_node.getChild( RandomCalc.Rand(new Range<int>(0, p_cur_node.numChildren))).m_self, p_root_node );
+          }
+        }
+
+        public ABTDNATree<T> mutate(Range<float> p_mutation_range){
+          ABTDNATree<T> tree = Clone();
+          tree.mutateRecurse(tree.m_root.m_self, p_mutation_range);
+          return tree;
+        }
+
+        private void mutateRecurse(ABTDNANode p_node, Range<float> p_mutation_range){
+          p_node.mutate(p_mutation_range);
+
+          for(int i = 0; i<p_node.numChildren; i++){
+            if(!p_node.existsChild(i)) continue;
+
+            mutateRecurse( p_node.getChild(i).m_self, p_mutation_range); 
+          }
+        }
+
+      }
 
       public class ABTDNANode : ATreeNode<ABTDNANode>
       {
-        EBTNodeTypes m_type; 
-        float[] m_out_values; 
-        int m_input_index; 
-        float m_threshold;
+        private EBTNodeTypes m_type; 
+        public EBTNodeTypes Type { get{ return m_type; } }
+        private float[] m_out_values; 
+        private int m_input_index; 
+        private float m_threshold;
 
 
         public ABTDNANode(EBTNodeTypes p_type, float[] p_outvalues, int p_input_index, float p_threshold, ATreeNode<ABTDNANode> p_parent) : base(p_parent)
@@ -197,12 +325,12 @@ namespace Genetic
           }
         }
 
-        protected override void addChild(ABTDNANode p_child)
+        public override void addChild(ABTDNANode p_child)
         {
           m_children.Add(p_child);
         }
 
-        protected override void addChild(ABTDNANode p_child, int p_index)
+        public override void addChild(ABTDNANode p_child, int p_index)
         {
           m_children[p_index] = p_child;
         }
@@ -210,6 +338,10 @@ namespace Genetic
         protected override ABTDNANode setSelf()
         {
           return this;
+        }
+
+        public void setParent(ABTDNANode p_parent){
+          m_parent = p_parent;
         }
 
         public ABTNode generateNode(BTree p_tree, ATreeNode<ABTNode> p_parent){
@@ -221,6 +353,47 @@ namespace Genetic
             Debug.LogError("Bad node generation, no Type");
             return null;
           }
+        }
+
+        public static ABTDNANode randomNode(int p_out_value_number, Range<float> p_out_value_range, int p_max_input_index, Range<float> p_threshold_range, ABTDNANode p_parent){
+          int rand = RandomCalc.Rand(new Range<int>(0,2));
+
+          switch(rand){
+            case 0:
+              return null; 
+            case 1: 
+              return new ABTDNANode(
+                EBTNodeTypes.ACTION, 
+                ArrayCalc.functionInitialize( p_out_value_number, ()=>{ return RandomCalc.Rand(p_out_value_range); } ),
+                0,
+                0,
+                p_parent
+              );
+            case 2: 
+              return new ABTDNANode(
+                EBTNodeTypes.DETECTOR,
+                null,
+                RandomCalc.Rand(new Range<int>(0, p_max_input_index)),
+                RandomCalc.Rand(p_threshold_range),
+                p_parent
+              );
+          }
+
+          return null;
+        }
+
+        public void mutate(Range<float> p_mutation_range){
+          if(m_type == EBTNodeTypes.DETECTOR )m_threshold *= RandomCalc.Rand(p_mutation_range);
+
+          if(m_type == EBTNodeTypes.ACTION){
+            for(int i = 0; i<m_out_values.Length; i++){
+              m_out_values[i] *= RandomCalc.Rand(p_mutation_range);
+            }
+          }
+        }
+
+        public ABTDNANode Clone( ATreeNode<ABTDNANode> p_parent){
+          return new ABTDNANode(m_type, ArrayCalc.shallowClone(m_out_values), m_input_index, m_threshold, p_parent);
         }
       }
 
@@ -242,6 +415,10 @@ namespace Genetic
         {
           m_inputs = p_inputs;
           m_outputs = p_outputs;
+        }
+
+        public void setRoot(ATreeNode<ABTNode> p_root){
+          m_root = p_root;
         }
 
         ///<summary>Index means nothing in this case Maybe need to redesign the inheritance</summary>
@@ -279,12 +456,12 @@ namespace Genetic
           }
         }
 
-        protected override void addChild(ABTNode p_child)
+        public override void addChild(ABTNode p_child)
         {
           m_children.Add(p_child);
         }
 
-        protected override void addChild(ABTNode p_child, int p_index)
+        public override void addChild(ABTNode p_child, int p_index)
         {
           m_children[p_index] = p_child;
         }
@@ -320,12 +497,12 @@ namespace Genetic
           return getChild(index) == null ? Root.iterate() : getChild(index).m_self.iterate();
         }
 
-        protected override void addChild(ABTNode p_child)
+        public override void addChild(ABTNode p_child)
         {
           m_children.Add(p_child);
         }
 
-        protected override void addChild(ABTNode p_child, int p_index)
+        public override void addChild(ABTNode p_child, int p_index)
         {
           if(m_children.Count <= p_index) Debug.LogError("Index out of range adding children Detector Node");
           m_children[p_index] = p_child;

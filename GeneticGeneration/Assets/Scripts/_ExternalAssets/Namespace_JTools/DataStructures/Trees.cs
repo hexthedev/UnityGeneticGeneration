@@ -73,9 +73,9 @@ namespace JTools
 
         public int numChildren{ get { return m_children.Count; } }
 
-        protected abstract void addChild(T p_child);
+        public abstract void addChild(T p_child);
         
-        protected abstract void addChild(T p_child, int p_index);
+        public abstract void addChild(T p_child, int p_index);
 
         public ATreeNode<T> getChild(int p_index){
           if(p_index >= numChildren ) Debug.LogError("Tree Node getChild index does not exist");
@@ -83,7 +83,7 @@ namespace JTools
           return m_children[p_index];
         }
 
-        public T Clone()
+        public virtual T Clone()
         {
           return m_self.Clone();
         }
