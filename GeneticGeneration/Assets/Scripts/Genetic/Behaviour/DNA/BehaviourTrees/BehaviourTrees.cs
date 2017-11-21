@@ -176,6 +176,7 @@ namespace Genetic
           m_output_factories = ArrayCalc.shallowClone(p_output_factories);
         }
 
+        //generate a random ABTDNATree based on input info
         public static ABTDNATree<T> random(Range<float> p_weight_values, Range<float> p_threshold_range, DInputFactory<T>[] p_input_factories, DOutputFactory<T>[] p_output_factories, ATreeNode<ABTDNANode> p_root){
 
           ABTDNANode node = new ABTDNANode(
@@ -186,8 +187,13 @@ namespace Genetic
             null          
           );
 
+          node.addChild( ABTDNANode.randomActionNode( p_output_factories.Length, p_weight_values, node), 0 );
+          node.addChild( ABTDNANode.randomActionNode( p_output_factories.Length, p_weight_values, node), 1 );
+
           ABTDNATree<T> tree = new ABTDNATree<T>(p_input_factories, p_output_factories, node);
-          randomPopulate(node, p_output_factories.Length, p_weight_values, p_input_factories.Length-1, p_threshold_range);
+
+          randomPopulate(node.getChild(0).m_self, p_output_factories.Length, p_weight_values, p_input_factories.Length-1, p_threshold_range);
+          randomPopulate(node.getChild(1).m_self, p_output_factories.Length, p_weight_values, p_input_factories.Length-1, p_threshold_range);
 
           return tree;
         } 
@@ -206,7 +212,7 @@ namespace Genetic
           }
         } 
 
-
+        //Express the dna tree as a concrete tree
         public BTree expressConcrete(T p_controller){
 
           //THE NULL THING HERE MIGHT ERROR
@@ -236,6 +242,7 @@ namespace Genetic
           }
         }
 
+        //Clone the tree recursively
         public ABTDNATree<T> Clone(){
           return new ABTDNATree<T>(ArrayCalc.shallowClone(m_input_factories), ArrayCalc.shallowClone(m_output_factories), recClone(m_root, null) );
         }
@@ -253,6 +260,7 @@ namespace Genetic
         }
 
 
+        //Clone Trees, choose random slice, give master tree the slice of other tree as child 
         public ABTDNATree<T> crossover(ABTDNATree<T> p_crossover_object){
 
           ABTDNATree<T> master_tree = Clone();
@@ -281,6 +289,7 @@ namespace Genetic
           }
         }
 
+        //Clone tree, mutate all nodes, return
         public ABTDNATree<T> mutate(Range<float> p_mutation_range){
           ABTDNATree<T> tree = Clone();
           tree.mutateRecurse(tree.m_root.m_self, p_mutation_range);
@@ -301,13 +310,14 @@ namespace Genetic
 
       public class ABTDNANode : ATreeNode<ABTDNANode>
       {
+        //DNA nodes can represent 2 kinds of nodes
         private EBTNodeTypes m_type; 
         public EBTNodeTypes Type { get{ return m_type; } }
         private float[] m_out_values; 
         private int m_input_index; 
         private float m_threshold;
 
-
+        //Only some parameters have meaning
         public ABTDNANode(EBTNodeTypes p_type, float[] p_outvalues, int p_input_index, float p_threshold, ATreeNode<ABTDNANode> p_parent) : base(p_parent)
         {
           m_type = p_type;
@@ -344,6 +354,7 @@ namespace Genetic
           m_parent = p_parent;
         }
 
+        //generates the concrete version of the node
         public ABTNode generateNode(BTree p_tree, ATreeNode<ABTNode> p_parent){
           if(m_type == EBTNodeTypes.ACTION){
             return new BTActionNode(m_out_values, p_tree, p_parent);
@@ -355,6 +366,7 @@ namespace Genetic
           }
         }
 
+        //returns a completely random node
         public static ABTDNANode randomNode(int p_out_value_number, Range<float> p_out_value_range, int p_max_input_index, Range<float> p_threshold_range, ABTDNANode p_parent){
           int rand = RandomCalc.Rand(new Range<int>(0,2));
 
@@ -362,13 +374,7 @@ namespace Genetic
             case 0:
               return null; 
             case 1: 
-              return new ABTDNANode(
-                EBTNodeTypes.ACTION, 
-                ArrayCalc.functionInitialize( p_out_value_number, ()=>{ return RandomCalc.Rand(p_out_value_range); } ),
-                0,
-                0,
-                p_parent
-              );
+              return randomActionNode(p_out_value_number, p_out_value_range, p_parent);
             case 2: 
               return new ABTDNANode(
                 EBTNodeTypes.DETECTOR,
@@ -382,6 +388,18 @@ namespace Genetic
           return null;
         }
 
+        //returns a random action node
+        public static ABTDNANode randomActionNode(int p_out_value_number, Range<float> p_out_value_range, ABTDNANode p_parent){
+          return new ABTDNANode(
+            EBTNodeTypes.ACTION, 
+            ArrayCalc.functionInitialize( p_out_value_number, ()=>{ return RandomCalc.Rand(p_out_value_range); } ),
+            0,
+            0,
+            p_parent
+          );
+        }
+
+        //Mutates the node
         public void mutate(Range<float> p_mutation_range){
           if(m_type == EBTNodeTypes.DETECTOR )m_threshold *= RandomCalc.Rand(p_mutation_range);
 
@@ -392,6 +410,7 @@ namespace Genetic
           }
         }
 
+        //CLones the node giving it parent passed in
         public ABTDNANode Clone( ATreeNode<ABTDNANode> p_parent){
           return new ABTDNANode(m_type, ArrayCalc.shallowClone(m_out_values), m_input_index, m_threshold, p_parent);
         }
@@ -408,15 +427,18 @@ namespace Genetic
       //CONCRETE BT TREE IMPLMENTATION
       public class BTree : Tree<ABTNode>
       {
+        //Concrete inputs
         public DInput[] m_inputs;
         public DOutput[] m_outputs;
 
+        //Construct with root
         public BTree(DInput[] p_inputs,  DOutput[] p_outputs, ATreeNode<ABTNode> p_root) : base(p_root)
         {
           m_inputs = p_inputs;
           m_outputs = p_outputs;
         }
 
+        //Need to set root sometimes after the fact. Because all nodes have ref to tree
         public void setRoot(ATreeNode<ABTNode> p_root){
           m_root = p_root;
         }
@@ -426,6 +448,7 @@ namespace Genetic
           traverse();
         }
 
+        //iterate does something and returns a node with will be activated next iteration
         public void traverse(){
           ATreeNode<ABTNode> m_current_node = CurrentNode.m_self.iterate(); //Should never return null
         }
@@ -433,6 +456,7 @@ namespace Genetic
 
       public class BTActionNode : ABTNode
       {
+        //Ref to Tree and out values
         BTree m_tree;
         float[] m_out_values;
 
@@ -443,6 +467,7 @@ namespace Genetic
           addChild(null);
         }
 
+        //iteration gives out values to controller with outputs lined up with index
         public override ATreeNode<ABTNode> iterate()
         {
           for(int i = 0; i<m_out_values.Length; i++){
@@ -474,6 +499,7 @@ namespace Genetic
 
       public class BTDetectorNode : ABTNode
       {
+        //Tree, detector and threshold for detection
         BTree m_tree;
         int m_detector_index;
         float m_threshold;
@@ -488,13 +514,14 @@ namespace Genetic
           addChild(null);
         }
 
+        //Detector iteration continues onwards
         public override ATreeNode<ABTNode> iterate()
         {
           //NEEDS FIXING
           bool rand = m_tree.m_inputs[m_detector_index]() > m_threshold;
           int index = rand ? 1 : 0;
 
-          return getChild(index) == null ? Root.iterate() : getChild(index).m_self.iterate();
+          return getChild(index) == null ? Root : getChild(index).m_self.iterate();
         }
 
         public override void addChild(ABTNode p_child)
@@ -516,10 +543,11 @@ namespace Genetic
 
       //T ATreeNode of type controller
       public abstract class ABTNode : ATreeNode<ABTNode> {
-        protected ABTNode(ATreeNode<ABTNode> p_parent) : base(p_parent)
-        {
-        }
+        
+        //There are two types which need to be in same tree. This is a wrapper
+        protected ABTNode(ATreeNode<ABTNode> p_parent) : base(p_parent) { }
 
+        //iterate is how we traverse and make behaviour happen
         public abstract ATreeNode<ABTNode> iterate();
       } 
     }
