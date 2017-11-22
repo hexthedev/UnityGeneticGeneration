@@ -25,7 +25,7 @@ namespace JTools
 
         public int CurrentChildren { get { return m_current_node.numChildren;} }
 
-        public ATreeNode<T> CurrentNode { get { return m_current_node; } }
+        public ATreeNode<T> CurrentNode { get { return m_current_node; } set { m_current_node = value; } }
 
         public virtual void traverse( int p_index ){
           if(p_index >= CurrentChildren ) Debug.LogError("Tree Traversal index does not exist");
@@ -67,7 +67,7 @@ namespace JTools
 
         public bool existsChild(int p_index)
         {
-          if(m_children.Count >= p_index || p_index < 0) return false;
+          if( p_index >= m_children.Count || p_index < 0) return false;
           return m_children[p_index] != null;
         }
 

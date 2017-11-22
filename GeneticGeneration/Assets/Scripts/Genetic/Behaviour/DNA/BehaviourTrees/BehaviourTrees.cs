@@ -20,144 +20,144 @@ namespace Genetic
   {
     namespace BehaviourTrees
     {
-			public class BehaviourTree : IBrain{
-				DInput[] m_inputs;
-        DOutput[] m_outputs;
-        Matrix<float> m_weights;
+			// public class BehaviourTree : IBrain{
+			// 	DInput[] m_inputs;
+      //   DOutput[] m_outputs;
+      //   Matrix<float> m_weights;
 
-        public BehaviourTree(DInput[] p_inputs, DOutput[] p_outputs, Matrix<float> p_weights){
-          if(!MatrixCalc.isSize(p_weights, p_inputs.Length,  p_outputs.Length)) Debug.LogError("Constructing DecisionNet with wrong sized matrix");
+      //   public BehaviourTree(DInput[] p_inputs, DOutput[] p_outputs, Matrix<float> p_weights){
+      //     if(!MatrixCalc.isSize(p_weights, p_inputs.Length,  p_outputs.Length)) Debug.LogError("Constructing DecisionNet with wrong sized matrix");
 
-          m_inputs = p_inputs;
-          m_outputs = p_outputs;
-          m_weights = MatrixCalc.shallowClone(p_weights);
+      //     m_inputs = p_inputs;
+      //     m_outputs = p_outputs;
+      //     m_weights = MatrixCalc.shallowClone(p_weights);
 
-        }
+      //   }
 
-        public void brainAction()
-        {
-          performOutputs(getInputValueMatrix()*m_weights);
-        }
+      //   public void brainAction()
+      //   {
+      //     performOutputs(getInputValueMatrix()*m_weights);
+      //   }
 
-        private void performOutputs(Matrix<float> p_output_values){
-          if(!MatrixCalc.isSize(p_output_values, 1, m_outputs.Length)) Debug.LogError("Trying to perform outputs in Decision net with malformed output_values matrix");
+      //   private void performOutputs(Matrix<float> p_output_values){
+      //     if(!MatrixCalc.isSize(p_output_values, 1, m_outputs.Length)) Debug.LogError("Trying to perform outputs in Decision net with malformed output_values matrix");
 
-          for(int i = 0; i<m_outputs.Length; i++){
-            m_outputs[i](p_output_values[0,i]);
-          }          
-        }
+      //     for(int i = 0; i<m_outputs.Length; i++){
+      //       m_outputs[i](p_output_values[0,i]);
+      //     }          
+      //   }
 
-        private Matrix<float> getInputValueMatrix(){
-          Matrix<float> input_values = Matrix<float>.Build.Dense(1, m_inputs.Length);
+      //   private Matrix<float> getInputValueMatrix(){
+      //     Matrix<float> input_values = Matrix<float>.Build.Dense(1, m_inputs.Length);
           
-          for(int i = 0; i<m_inputs.Length; i++){
-            input_values[0, i] = m_inputs[i]();
-          }
+      //     for(int i = 0; i<m_inputs.Length; i++){
+      //       input_values[0, i] = m_inputs[i]();
+      //     }
 
-          return input_values;
-        }
+      //     return input_values;
+      //   }
 
-        public override string ToString(){
-          return "DECISION NET :: Inputs: " + m_inputs.Length + " - Outputs: " + m_outputs.Length + " - Weight Sum: " + MatrixCalc.sum(m_weights);
-        }
+      //   public override string ToString(){
+      //     return "DECISION NET :: Inputs: " + m_inputs.Length + " - Outputs: " + m_outputs.Length + " - Weight Sum: " + MatrixCalc.sum(m_weights);
+      //   }
 
-        //MAYBE ADD LEARNING TO THIS MODEL EVENTUALLY
-      }
+      //   //MAYBE ADD LEARNING TO THIS MODEL EVENTUALLY
+      // }
 
-      ///<summary> In this case T is the controller </summary>
-      public class BehaviourTreeDNA<T> : ADNA<BehaviourTreeDNA<T>>, IControllerExpressable<T, BehaviourTree>, ICloneable<BehaviourTreeDNA<T>> where T:AController
-      {
-        int m_id;
-				DInputFactory<T>[] m_inputs;
-				DOutputFactory<T>[] m_outputs;
-        Range<float> m_mutation_multiplier;
+      // ///<summary> In this case T is the controller </summary>
+      // public class BehaviourTreeDNA<T> : ADNA<BehaviourTreeDNA<T>>, IControllerExpressable<T, BehaviourTree>, ICloneable<BehaviourTreeDNA<T>> where T:AController
+      // {
+      //   int m_id;
+			// 	DInputFactory<T>[] m_inputs;
+			// 	DOutputFactory<T>[] m_outputs;
+      //   Range<float> m_mutation_multiplier;
 
-				public BehaviourTreeDNA(int p_id, DInputFactory<T>[] p_inputs, DOutputFactory<T>[] p_outputs, Range<float> p_mutation_multiplier){
-					m_id = p_id;
-					m_inputs = ArrayCalc.shallowClone(p_inputs);
-					m_outputs = ArrayCalc.shallowClone(p_outputs);
-          m_mutation_multiplier = p_mutation_multiplier;
-				}	
+			// 	public BehaviourTreeDNA(int p_id, DInputFactory<T>[] p_inputs, DOutputFactory<T>[] p_outputs, Range<float> p_mutation_multiplier){
+			// 		m_id = p_id;
+			// 		m_inputs = ArrayCalc.shallowClone(p_inputs);
+			// 		m_outputs = ArrayCalc.shallowClone(p_outputs);
+      //     m_mutation_multiplier = p_mutation_multiplier;
+			// 	}	
 
-				public BehaviourTreeDNA<T> Clone()
-        {
-          return new BehaviourTreeDNA<T>(m_id, m_inputs, m_outputs, m_mutation_multiplier);
-        }
+			// 	public BehaviourTreeDNA<T> Clone()
+      //   {
+      //     return new BehaviourTreeDNA<T>(m_id, m_inputs, m_outputs, m_mutation_multiplier);
+      //   }
 
-        public override BehaviourTreeDNA<T> crossover(BehaviourTreeDNA<T> p_crossover_object)
-        {
-          BehaviourTreeDNA<T> crossovered = Clone();
-          crossovered.m_weights = MatrixCalc.crossover(m_weights, p_crossover_object.m_weights);
-          return crossovered;
-        }
+      //   public override BehaviourTreeDNA<T> crossover(BehaviourTreeDNA<T> p_crossover_object)
+      //   {
+      //     BehaviourTreeDNA<T> crossovered = Clone();
+      //     crossovered.m_weights = MatrixCalc.crossover(m_weights, p_crossover_object.m_weights);
+      //     return crossovered;
+      //   }
 
-        public override BehaviourTreeDNA<T> getSelf()
-        {
-          return this;
-        }
+      //   public override BehaviourTreeDNA<T> getSelf()
+      //   {
+      //     return this;
+      //   }
 
-        public override BehaviourTreeDNA<T> mutate()
-        {
-          BehaviourTreeDNA<T> mutated = Clone();
-          mutated.m_weights = MatrixCalc.elementwiseRandomMultiply(m_weights, m_mutation_multiplier);
-          mutated.m_weights = MatrixCalc.columnNormalize(mutated.m_weights);
-          return mutated;
-        }
+      //   public override BehaviourTreeDNA<T> mutate()
+      //   {
+      //     BehaviourTreeDNA<T> mutated = Clone();
+      //     mutated.m_weights = MatrixCalc.elementwiseRandomMultiply(m_weights, m_mutation_multiplier);
+      //     mutated.m_weights = MatrixCalc.columnNormalize(mutated.m_weights);
+      //     return mutated;
+      //   }
 
-        public BehaviourTree express(T p_controller)
-        {
-          DInput[] inputs = new DInput[m_inputs.Length];
+      //   public BehaviourTree express(T p_controller)
+      //   {
+      //     DInput[] inputs = new DInput[m_inputs.Length];
 
-          for(int i = 0; i<m_inputs.Length; i++){
-            inputs[i] = m_inputs[i](p_controller);
-          }
+      //     for(int i = 0; i<m_inputs.Length; i++){
+      //       inputs[i] = m_inputs[i](p_controller);
+      //     }
 
-          DOutput[] outputs = new DOutput[m_outputs.Length];
+      //     DOutput[] outputs = new DOutput[m_outputs.Length];
 
-          for(int i = 0; i<outputs.Length; i++){
-            outputs[i] = m_outputs[i](p_controller);
-          }
+      //     for(int i = 0; i<outputs.Length; i++){
+      //       outputs[i] = m_outputs[i](p_controller);
+      //     }
           
-          return new BehaviourTree(inputs, outputs, m_weights);
-        }
+      //     return new BehaviourTree(inputs, outputs, m_weights);
+      //   }
 
-        public override string ToString(){
-          return "BEHAVIOUR NET DNA:: ID: " + m_id + " - Inputs: " + m_inputs.Length + " - Outputs: " + m_outputs.Length + " - Weights: " + MatrixCalc.sum(m_weights) + " - Mutation Rate: " + m_mutation_multiplier.Min + " to " + m_mutation_multiplier.Max;
-        }
+      //   public override string ToString(){
+      //     return "BEHAVIOUR NET DNA:: ID: " + m_id + " - Inputs: " + m_inputs.Length + " - Outputs: " + m_outputs.Length + " - Weights: " + MatrixCalc.sum(m_weights) + " - Mutation Rate: " + m_mutation_multiplier.Min + " to " + m_mutation_multiplier.Max;
+      //   }
         
-      }
+      // }
 
 
 
-      ///<summary> In this case T is the controller </summary>
-      public class BehaviourTreeSpecies<T> : ISpecies<ADNA<BehaviourTreeDNA<T>>> where T:AController
-      {
-        private int m_id;
-				private DInputFactory<T>[] m_inputs;
-				private DOutputFactory<T>[] m_outputs;
+      // ///<summary> In this case T is the controller </summary>
+      // public class BehaviourTreeSpecies<T> : ISpecies<ADNA<BehaviourTreeDNA<T>>> where T:AController
+      // {
+      //   private int m_id;
+			// 	private DInputFactory<T>[] m_inputs;
+			// 	private DOutputFactory<T>[] m_outputs;
 
-				private Range<float> m_threshold_range = new Range<float>(0.1f, 0.9f);
-        private Range<float> m_mutation_multiplier;
+			// 	private Range<float> m_threshold_range = new Range<float>(0.1f, 0.9f);
+      //   private Range<float> m_mutation_multiplier;
 
-        public BehaviourTreeSpecies(int p_id, DInputFactory<T>[] p_inputs, DOutputFactory<T>[] p_outputs, Range<float> p_mutation_multiplier)
-        {	
-					m_id = p_id;
-					m_inputs = p_inputs;
-					m_outputs = p_outputs;
-          m_mutation_multiplier = p_mutation_multiplier;
-        }
+      //   public BehaviourTreeSpecies(int p_id, DInputFactory<T>[] p_inputs, DOutputFactory<T>[] p_outputs, Range<float> p_mutation_multiplier)
+      //   {	
+			// 		m_id = p_id;
+			// 		m_inputs = p_inputs;
+			// 		m_outputs = p_outputs;
+      //     m_mutation_multiplier = p_mutation_multiplier;
+      //   }
 
-        public int ID { get { return m_id; } }
+      //   public int ID { get { return m_id; } }
 
-        public override string ToString(){
-          return "BEHAVIOUR TREE SPECIES:: ID: " + m_id + " - Inputs: " + m_inputs.Length + " - Ouputs: " + m_outputs.Length + " - Mutation Range: " + m_mutation_multiplier.Min + " to " + m_mutation_multiplier.Max;
-        }
+      //   public override string ToString(){
+      //     return "BEHAVIOUR TREE SPECIES:: ID: " + m_id + " - Inputs: " + m_inputs.Length + " - Ouputs: " + m_outputs.Length + " - Mutation Range: " + m_mutation_multiplier.Min + " to " + m_mutation_multiplier.Max;
+      //   }
 
-        public ADNA<BehaviourTreeDNA<T>> randomInstance()
-        {
-          return new BehaviourTreeDNA<T>(m_id, m_inputs, m_outputs, m_mutation_multiplier);
-        }
-      }
+      //   public ADNA<BehaviourTreeDNA<T>> randomInstance()
+      //   {
+      //     return new BehaviourTreeDNA<T>(m_id, m_inputs, m_outputs, m_mutation_multiplier);
+      //   }
+      // }
 
 
 
@@ -177,7 +177,7 @@ namespace Genetic
         }
 
         //generate a random ABTDNATree based on input info
-        public static ABTDNATree<T> random(Range<float> p_weight_values, Range<float> p_threshold_range, DInputFactory<T>[] p_input_factories, DOutputFactory<T>[] p_output_factories, ATreeNode<ABTDNANode> p_root){
+        public static ABTDNATree<T> random(Range<float> p_weight_values, Range<float> p_threshold_range, DInputFactory<T>[] p_input_factories, DOutputFactory<T>[] p_output_factories){
 
           ABTDNANode node = new ABTDNANode(
             EBTNodeTypes.DETECTOR, 
@@ -185,7 +185,7 @@ namespace Genetic
             ArrayCalc.randomIndex(p_input_factories),
             RandomCalc.Rand(p_threshold_range),
             null          
-          );
+          );      
 
           node.addChild( ABTDNANode.randomActionNode( p_output_factories.Length, p_weight_values, node), 0 );
           node.addChild( ABTDNANode.randomActionNode( p_output_factories.Length, p_weight_values, node), 1 );
@@ -193,27 +193,35 @@ namespace Genetic
           ABTDNATree<T> tree = new ABTDNATree<T>(p_input_factories, p_output_factories, node);
 
           randomPopulate(node.getChild(0).m_self, p_output_factories.Length, p_weight_values, p_input_factories.Length-1, p_threshold_range);
-          randomPopulate(node.getChild(1).m_self, p_output_factories.Length, p_weight_values, p_input_factories.Length-1, p_threshold_range);
+          randomPopulate(node.getChild(1).m_self, p_output_factories.Length, p_weight_values, p_input_factories.Length-1, p_threshold_range);         
 
           return tree;
         } 
 
-        private static void randomPopulate(ABTDNANode node, int p_out_value_number, Range<float> p_out_value_range, 
+        private static void randomPopulate(ABTDNANode p_node, int p_out_value_number, Range<float> p_out_value_range, 
           int p_max_input_index, Range<float> p_threshold_range){
 
-          if(node == null) return;
+          Debug.Log("Random Pop");
 
-          node.addChild(ABTDNANode.randomNode(p_out_value_number, p_out_value_range, p_max_input_index, p_threshold_range, node), 0);
-          randomPopulate(node.getChild(0).m_self, p_out_value_number, p_out_value_range, p_max_input_index, p_threshold_range);
+          if(p_node == null) return;
 
-          if(node.Type == EBTNodeTypes.DETECTOR){
-            node.addChild(ABTDNANode.randomNode(p_out_value_number, p_out_value_range, p_max_input_index, p_threshold_range, node), 1);
-            randomPopulate(node.getChild(1).m_self, p_out_value_number, p_out_value_range, p_max_input_index, p_threshold_range);
+          p_node.addChild(ABTDNANode.randomNode(p_out_value_number, p_out_value_range, p_max_input_index, p_threshold_range, p_node), 0);            
+          if(!p_node.existsChild(0)) return;
+          randomPopulate(p_node.getChild(0).m_self, p_out_value_number, p_out_value_range, p_max_input_index, p_threshold_range);
+
+          if(p_node.Type == EBTNodeTypes.DETECTOR){
+            p_node.addChild(ABTDNANode.randomNode(p_out_value_number, p_out_value_range, p_max_input_index, p_threshold_range, p_node), 1);
+            if(!p_node.existsChild(1)) return;
+            randomPopulate(p_node.getChild(1).m_self, p_out_value_number, p_out_value_range, p_max_input_index, p_threshold_range);
           }
         } 
 
         //Express the dna tree as a concrete tree
         public BTree expressConcrete(T p_controller){
+          Debug.Log(m_root.m_self);
+          Debug.Log(m_root.m_self.getChild(0));
+          Debug.Log(m_root.m_self.getChild(1));
+          
 
           //THE NULL THING HERE MIGHT ERROR
           BTree tree = new BTree( 
@@ -230,12 +238,13 @@ namespace Genetic
           return tree;
         }
 
-        private void recursiveNodeGeneration(ABTDNANode p_dna_node, ABTNode p_concrete_node, T p_controller, BTree p_tree){
+        private void recursiveNodeGeneration(ABTDNANode p_dna_node, ABTNode p_concrete_node, T p_controller, BTree p_tree){                   
           if(p_dna_node == null) return;
 
           for(int i = 0; i<p_dna_node.numChildren; i++){
 
             if(!p_dna_node.existsChild(i)) continue;
+
             p_concrete_node.addChild(p_dna_node.getChild(i).m_self.generateNode(p_tree, p_concrete_node) ,i);
 
             recursiveNodeGeneration(p_dna_node.getChild(i).m_self, p_concrete_node.getChild(i).m_self, p_controller, p_tree);
@@ -306,6 +315,13 @@ namespace Genetic
           }
         }
 
+
+        //Size
+        public string size(){
+          return m_root.m_self.size(0);
+        }
+
+
       }
 
       public class ABTDNANode : ATreeNode<ABTDNANode>
@@ -325,7 +341,7 @@ namespace Genetic
           if(p_type == EBTNodeTypes.ACTION){
             m_out_values = ArrayCalc.shallowClone(p_outvalues);
             addChild(null);
-          } else if(p_type == EBTNodeTypes.ACTION){
+          } else if(p_type == EBTNodeTypes.DETECTOR){
             m_input_index = p_input_index;
             m_threshold = p_threshold;
             addChild(null);
@@ -390,6 +406,7 @@ namespace Genetic
 
         //returns a random action node
         public static ABTDNANode randomActionNode(int p_out_value_number, Range<float> p_out_value_range, ABTDNANode p_parent){
+          
           return new ABTDNANode(
             EBTNodeTypes.ACTION, 
             ArrayCalc.functionInitialize( p_out_value_number, ()=>{ return RandomCalc.Rand(p_out_value_range); } ),
@@ -413,6 +430,19 @@ namespace Genetic
         //CLones the node giving it parent passed in
         public ABTDNANode Clone( ATreeNode<ABTDNANode> p_parent){
           return new ABTDNANode(m_type, ArrayCalc.shallowClone(m_out_values), m_input_index, m_threshold, p_parent);
+        }
+
+
+
+
+        public string size(int depth){
+          string x = depth + "-" + m_type.ToString() + " ";
+
+          for(int i = 0; i<numChildren;i++){
+            if(existsChild(i)) x += getChild(i).m_self.size(depth+1);
+          }
+
+          return x;
         }
       }
 
@@ -441,6 +471,7 @@ namespace Genetic
         //Need to set root sometimes after the fact. Because all nodes have ref to tree
         public void setRoot(ATreeNode<ABTNode> p_root){
           m_root = p_root;
+          m_current_node = p_root;
         }
 
         ///<summary>Index means nothing in this case Maybe need to redesign the inheritance</summary>
@@ -450,8 +481,15 @@ namespace Genetic
 
         //iterate does something and returns a node with will be activated next iteration
         public void traverse(){
-          ATreeNode<ABTNode> m_current_node = CurrentNode.m_self.iterate(); //Should never return null
+          // Debug.Log("Traverse");
+          CurrentNode = CurrentNode.m_self.iterate(); //Should never return null
+          // Debug.Log(CurrentNode.m_self.size(0));
         }
+
+        public string size(){
+          return m_root.m_self.size(0);
+        }
+
       }
 
       public class BTActionNode : ABTNode
@@ -474,10 +512,11 @@ namespace Genetic
             m_tree.m_outputs[i](m_out_values[i]);
           }
 
-          if(m_children[0] == null){
+          if(!existsChild(0)){
             return Root;
           } else {
-            return m_children[0];
+            //Debug.Log(getChild(0).m_self.size(0));
+            return getChild(0);
           }
         }
 
@@ -494,6 +533,12 @@ namespace Genetic
         protected override ABTNode setSelf()
         {
           return this;
+        }
+
+        public override string size(int depth){
+          string x = depth + "-" + EBTNodeTypes.ACTION.ToString() + "(" + m_out_values[0] +") ";
+          if(existsChild(0)) x += getChild(0).m_self.size(depth+1);
+          return x;
         }
       }
 
@@ -517,11 +562,10 @@ namespace Genetic
         //Detector iteration continues onwards
         public override ATreeNode<ABTNode> iterate()
         {
-          //NEEDS FIXING
           bool rand = m_tree.m_inputs[m_detector_index]() > m_threshold;
-          int index = rand ? 1 : 0;
+          int index = rand ? 1 : 0;        
 
-          return getChild(index) == null ? Root : getChild(index).m_self.iterate();
+          return !existsChild(index) ? Root : getChild(index).m_self.iterate();
         }
 
         public override void addChild(ABTNode p_child)
@@ -539,6 +583,15 @@ namespace Genetic
         {
           return this;
         }
+
+        public override string size(int depth){
+          string x = depth + "-" + EBTNodeTypes.DETECTOR.ToString() + "( " + m_threshold + ") ";
+
+          if(existsChild(0)) x += getChild(0).m_self.size(depth+1);
+          if(existsChild(1)) x += getChild(1).m_self.size(depth+1);
+          
+          return x;
+        }
       }
 
       //T ATreeNode of type controller
@@ -549,6 +602,8 @@ namespace Genetic
 
         //iterate is how we traverse and make behaviour happen
         public abstract ATreeNode<ABTNode> iterate();
+
+        public abstract string size(int depth);
       } 
     }
 
