@@ -13,13 +13,13 @@ using JTools.Calc.Lines;
 using JTools.Calc.ActiavationFunctions;
 
 
-public class LineFollowingDNCreature : AController, IBrainInit {
+public class LineFollowingDTCreature : AController, IBrainInit {
 
 	//Global References
-	LineFollowingDNGameController m_controller;
+	LineFollowingDTGameController m_controller;
 
 	//DNA, Brain and Traits
-	MindBodyDNDNA<LineFollowingDNCreature> m_dna;
+	MindBodyDTDNA<LineFollowingDTCreature> m_dna;
 	Dictionary<string, float> m_traits;
 	IBrain m_brain;
 
@@ -79,11 +79,11 @@ public class LineFollowingDNCreature : AController, IBrainInit {
 	//----------------------------------------------------------
 	//Construction
 
-	public void Initialize(MindBodyDNDNA<LineFollowingDNCreature> p_dna, LineFollowingDNGameController p_controller, Line2D p_goalLine){
+	public void Initialize(MindBodyDTDNA<LineFollowingDTCreature> p_dna, LineFollowingDTGameController p_controller, Line2D p_goalLine){
 		m_is_initialized = true;
 		m_dna = p_dna.Clone();
 
-		MindBodyDN mindbody = p_dna.express(this);
+		MindBodyDT mindbody = p_dna.express(this);
 
 		m_traits = mindbody.m_body;
 		InitializeBrain(mindbody.m_mind);
@@ -138,17 +138,17 @@ public class LineFollowingDNCreature : AController, IBrainInit {
 
 	//----------------------------------------------------------
 	//INPUTS
-	public static DInputFactory<LineFollowingDNCreature>[] getInputFactorys(){
-		return new DInputFactory<LineFollowingDNCreature>[] {zeroInput, closenessToLine, closenessToLineFromForwardCast, lineIsRight, lineIsLeft};
+	public static DInputFactory<LineFollowingDTCreature>[] getInputFactorys(){
+		return new DInputFactory<LineFollowingDTCreature>[] {zeroInput, closenessToLine, closenessToLineFromForwardCast, lineIsRight, lineIsLeft};
 	}
 
-	public static DInputFactory<LineFollowingDNCreature> zeroInput = (LineFollowingDNCreature p_creature) => {
+	public static DInputFactory<LineFollowingDTCreature> zeroInput = (LineFollowingDTCreature p_creature) => {
 		return () => { 			
 			return 0;
 		};
 	};
 
-	public static DInputFactory<LineFollowingDNCreature> closenessToLine = (LineFollowingDNCreature p_creature) => {
+	public static DInputFactory<LineFollowingDTCreature> closenessToLine = (LineFollowingDTCreature p_creature) => {
 		DActivationFunction activator = ActivationFactory.generateSigmoid(2, 1, false, true, true);
 		
 		return () => { 			
@@ -161,7 +161,7 @@ public class LineFollowingDNCreature : AController, IBrainInit {
 		};
 	};
 
-	public static DInputFactory<LineFollowingDNCreature> closenessToLineFromForwardCast = (LineFollowingDNCreature p_creature) => {
+	public static DInputFactory<LineFollowingDTCreature> closenessToLineFromForwardCast = (LineFollowingDTCreature p_creature) => {
 		DActivationFunction activator = ActivationFactory.generateSigmoid(4, 1, false, true, true);
 
 		return () => { 			
@@ -173,7 +173,7 @@ public class LineFollowingDNCreature : AController, IBrainInit {
 		};
 	};
 
-	public static DInputFactory<LineFollowingDNCreature> lineIsRight = (LineFollowingDNCreature p_creature) => {
+	public static DInputFactory<LineFollowingDTCreature> lineIsRight = (LineFollowingDTCreature p_creature) => {
 		return () => { 			
 			Vector3 creature_position = p_creature.gameObject.transform.position;
 			Vector2 projVector = Line2D.projection(creature_position, p_creature.m_goalLine)-Vector2Calc.fromVector3(creature_position);
@@ -183,7 +183,7 @@ public class LineFollowingDNCreature : AController, IBrainInit {
 		};
 	};
 
-		public static DInputFactory<LineFollowingDNCreature> lineIsLeft = (LineFollowingDNCreature p_creature) => {
+		public static DInputFactory<LineFollowingDTCreature> lineIsLeft = (LineFollowingDTCreature p_creature) => {
 		return () => { 			
 			Vector3 creature_position = p_creature.gameObject.transform.position;
 			Vector2 projVector = Line2D.projection(creature_position, p_creature.m_goalLine)-Vector2Calc.fromVector3(creature_position);
@@ -197,48 +197,48 @@ public class LineFollowingDNCreature : AController, IBrainInit {
 
 	//----------------------------------------------------------
 	//OUTPUTS
-	public static DOutputFactory<LineFollowingDNCreature>[] getOutputFactorys(){
-		return new DOutputFactory<LineFollowingDNCreature>[] {rotateLeft, rotateRight, rotateDont, moveForward, moveDont, moveStop, moveBackwards};
+	public static DOutputFactory<LineFollowingDTCreature>[] getOutputFactorys(){
+		return new DOutputFactory<LineFollowingDTCreature>[] {rotateLeft, rotateRight, rotateDont, moveForward, moveDont, moveStop, moveBackwards};
 	}
 
-	public static DOutputFactory<LineFollowingDNCreature> moveForward = (LineFollowingDNCreature p_creature) => {
+	public static DOutputFactory<LineFollowingDTCreature> moveForward = (LineFollowingDTCreature p_creature) => {
 		return (float p_value) => { 			
 			p_creature.m_actions.add("Move", p_value, () => { p_creature.gameObject.GetComponent<Rigidbody2D>().velocity = p_creature.m_forward*p_creature.m_traits["SPEED"]; });
 		};
 	};
 
-	public static DOutputFactory<LineFollowingDNCreature> moveDont = (LineFollowingDNCreature p_creature) => {
+	public static DOutputFactory<LineFollowingDTCreature> moveDont = (LineFollowingDTCreature p_creature) => {
 		return (float p_value) => { 			
 			p_creature.m_actions.add("Move", p_value, () => {});
 		};
 	};
 
-	public static DOutputFactory<LineFollowingDNCreature> moveStop = (LineFollowingDNCreature p_creature) => {
+	public static DOutputFactory<LineFollowingDTCreature> moveStop = (LineFollowingDTCreature p_creature) => {
 		return (float p_value) => { 			
 			p_creature.m_actions.add("Move", p_value, () => {p_creature.gameObject.GetComponent<Rigidbody2D>().velocity = Vector2.zero;});
 		};
 	};
 
-	public static DOutputFactory<LineFollowingDNCreature> moveBackwards = (LineFollowingDNCreature p_creature) => {
+	public static DOutputFactory<LineFollowingDTCreature> moveBackwards = (LineFollowingDTCreature p_creature) => {
 		return (float p_value) => { 			
 			p_creature.m_actions.add("Move", p_value, () => { p_creature.gameObject.GetComponent<Rigidbody2D>().velocity = p_creature.m_forward*p_creature.m_traits["SPEED"]*-0.5f; });
 		};
 	};
 
-	public static DOutputFactory<LineFollowingDNCreature> rotateDont = (LineFollowingDNCreature p_creature) => {
+	public static DOutputFactory<LineFollowingDTCreature> rotateDont = (LineFollowingDTCreature p_creature) => {
 		return (float p_value) => { 			
 			p_creature.m_actions.add("Rotate", p_value, () => { });
 		};
 	};
 
 
-	public static DOutputFactory<LineFollowingDNCreature> rotateLeft = (LineFollowingDNCreature p_creature) => {
+	public static DOutputFactory<LineFollowingDTCreature> rotateLeft = (LineFollowingDTCreature p_creature) => {
 		return (float p_value) => { 			
 			p_creature.m_actions.add("Rotate", p_value, () => { p_creature.transform.Rotate(0,0,-10);});
 		};
 	};
 
-		public static DOutputFactory<LineFollowingDNCreature> rotateRight = (LineFollowingDNCreature p_creature) => {
+		public static DOutputFactory<LineFollowingDTCreature> rotateRight = (LineFollowingDTCreature p_creature) => {
 		return (float p_value) => { 			
 			p_creature.m_actions.add("Rotate", p_value, () => { p_creature.transform.Rotate(0,0,10);});
 		};
