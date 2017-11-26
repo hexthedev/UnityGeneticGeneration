@@ -12,16 +12,12 @@ namespace Genetic{
 
   namespace Composite{
 
-    public struct MindBodyNN : IBrain
+    public class MindBodyNN : AMindBody<NeuralNet>, IBrain
     {
       public MindBodyNN(Dictionary<string, float> p_body, NeuralNet p_mind){
         m_body = p_body;
         m_mind = p_mind;
       }
-
-      public Dictionary<string, float> m_body;
-      
-      public NeuralNet m_mind;
 
       public void brainAction()
       {

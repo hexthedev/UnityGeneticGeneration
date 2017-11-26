@@ -12,22 +12,20 @@ namespace Genetic{
 
   namespace Composite{
 
-    public struct MindBodyDN : IBrain
+    public class MindBodyDN : AMindBody<DecisionNet>, IBrain
     {
+
       public MindBodyDN(Dictionary<string, float> p_body, DecisionNet p_mind){
         m_body = p_body;
         m_mind = p_mind;
       }
-
-      public Dictionary<string, float> m_body;
-      
-      public DecisionNet m_mind;
 
       public void brainAction()
       {
         m_mind.brainAction();
       }
     }
+
 
     public class MindBodyDNDNA<T> : ADNA<MindBodyDNDNA<T>>, IControllerExpressable<T, MindBodyDN>, ICloneable<MindBodyDNDNA<T>> where T : AController
     {

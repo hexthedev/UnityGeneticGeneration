@@ -160,7 +160,7 @@ namespace Genetic
         private static void randomPopulate(ABTDNANode p_node, int p_out_value_number, Range<float> p_out_value_range, 
           int p_max_input_index, Range<float> p_threshold_range, int p_depth){
 
-          if(p_node == null || p_depth == 10) return;
+          if(p_node == null || p_depth == 5) return;
 
           p_node.addChild(ABTDNANode.randomNode(p_out_value_number, p_out_value_range, p_max_input_index, p_threshold_range, p_node), 0);            
           if(!p_node.existsChild(0)) return;
@@ -236,7 +236,23 @@ namespace Genetic
           master_node.addChild(slave_node ,index);
           slave_node.setParent(master_node);
 
+          recDepthDelete(master_tree.m_root.m_self, 0, 5);
+
           return master_tree;
+        }
+
+        private void recDepthDelete(ABTDNANode p_node, int p_depth, int p_depth_limit){
+
+          if(p_depth == p_depth_limit){
+            for(int i = 0; i<p_node.numChildren; i++){
+              p_node.addChild(null, i);
+            }
+          } else {
+            for(int i = 0; i<p_node.numChildren; i++){
+              if(p_node.existsChild(i)) recDepthDelete( p_node.getChild(i).m_self, p_depth+1, p_depth_limit );
+            }
+          }
+
         }
 
         private ABTDNANode randomNode(ABTDNANode p_cur_node, ABTDNANode p_root_node){
@@ -469,6 +485,8 @@ namespace Genetic
             m_tree.m_outputs[i](m_out_values[i]);
           }
 
+          Debug.Log(m_out_values.Length);
+
           if(!existsChild(0)){
             return Root;
           } else {
@@ -519,10 +537,10 @@ namespace Genetic
         //Detector iteration continues onwards
         public override ATreeNode<ABTNode> iterate()
         {
-          bool rand = m_tree.m_inputs[m_detector_index]() > m_threshold;
-          int index = rand ? 1 : 0;        
+          bool dec = m_tree.m_inputs[m_detector_index]() > m_threshold;
+          int index = dec ? 1 : 0;        
 
-          return !existsChild(index) ? Root : getChild(index).m_self.iterate();
+          return !existsChild(index) ? Root : getChild(index).m_self;
         }
 
         public override void addChild(ABTNode p_child)

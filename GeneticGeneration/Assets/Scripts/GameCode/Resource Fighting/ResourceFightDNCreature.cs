@@ -92,7 +92,7 @@ public class ResourceFightDNCreature : AController, IBrainInit, IDamagable
   }
 
   // Using Fixed update because it's easy to speed up. When in real time, should probably split decision making into Update() from action activation in FixedUpdate()
-  protected override void FixedUpdate()
+  void FixedUpdate()
   {
 
     if (!m_is_initialized) Debug.LogError("Creatures require initilization after Instantiation");
@@ -111,7 +111,7 @@ public class ResourceFightDNCreature : AController, IBrainInit, IDamagable
       if(m_decision_time){
         m_actions.flush();
         //Call fixed update of Controller to do one brain iteration
-        base.FixedUpdate();
+        setBehaviours();
         m_decision_time = false;
       }
 
@@ -165,7 +165,7 @@ public class ResourceFightDNCreature : AController, IBrainInit, IDamagable
   //----------------------------------------------------------
   // Lifetime Functions
 
-  protected override void act()
+  protected override void setBehaviours()
   {
     m_brain.brainAction();
   }

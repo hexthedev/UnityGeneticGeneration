@@ -45,7 +45,7 @@ namespace Genetic{
 			///<summary>DNA will be added by fitness and sorted</summary>
 			public void addDNA(ADNA<T> p_dna, float fitness){
 				m_gene_pool.add(fitness, p_dna);
-				Debug.Log(m_gene_pool);
+				// Debug.Log(m_gene_pool);
 			} 
 
 			public void addRandom(){

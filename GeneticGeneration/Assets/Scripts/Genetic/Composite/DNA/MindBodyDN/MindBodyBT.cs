@@ -12,16 +12,13 @@ namespace Genetic{
 
   namespace Composite{
 
-    public struct MindBodyBT : IBrain
+    public class MindBodyBT : AMindBody<BehaviourTree>, IBrain
     {
+
       public MindBodyBT(Dictionary<string, float> p_body, BehaviourTree p_mind){
         m_body = p_body;
         m_mind = p_mind;
       }
-
-      public Dictionary<string, float> m_body;
-      
-      public BehaviourTree m_mind;
 
       public void brainAction()
       {

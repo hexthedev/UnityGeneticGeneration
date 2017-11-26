@@ -20,11 +20,7 @@ namespace Genetic{
 
     ///<summary>Instance of a Controller. Consists of the Act action, a cooldown Timeout manager and a Fixed update call to act (ALWAYS CALL BASE FOR START AND UPDATE OVERRIDES)</summary>
     public abstract class AController: MonoBehaviour{
-  
-      protected virtual void FixedUpdate(){
-        act();
-      }
-      protected abstract void act();
+      protected abstract void setBehaviours();
 
     }
 

@@ -13,63 +13,29 @@ using JTools.Calc.Vectors;
 using JTools.Events;
 using UnityEngine;
 
-public class LineFollowingDNGameController : MonoBehaviour {
+public class LineFollowingDNGameController : ALineFollowingGameController<
+  LineFollowingDNCreature,
+  LineFollowingDNGameController,
+  MindBodyDNDNA<LineFollowingDNCreature>,
+  MindBodyDN,
+  DecisionNet>
+{
 
-	public GameObject m_prefab;
-	public DNABasedEvolutionManager<MindBodyDNDNA<LineFollowingDNCreature>> m_evolution;
-	IntervalEventManager m_interval;
-	Line2D m_goalLine = new Line2D(new Vector2(15,15), new Vector2(1,-0.5f));
-
-	public float m_time;
-
-	void Start () {
-		m_evolution = new DNABasedEvolutionManager<MindBodyDNDNA<LineFollowingDNCreature>>(
+  protected override DNABasedEvolutionManager<MindBodyDNDNA<LineFollowingDNCreature>> createManager()
+  {
+    return new DNABasedEvolutionManager<MindBodyDNDNA<LineFollowingDNCreature>>(
 			 new MindBodySpeciesDN<LineFollowingDNCreature>(0,
 			 	new TraitGenesSpecies(0, new HashSet<string> {"SPEED"}, 4, new Range<float>(0.25f, 1f), 4, new Range<float>(-0.5f, 0.5f)),
 				new DecisionNetSpecies<LineFollowingDNCreature>( 0, LineFollowingDNCreature.getInputFactorys(), LineFollowingDNCreature.getOutputFactorys(), new Range<float>(0.8f, 1.2f) )
-			 ), 0.1f, 100, (float p_fitness) => { return p_fitness * 0.95f; }, 1f 
+			 ), 0.1f, 50, (float p_fitness) => { return p_fitness * 0.95f; }, 1f 
 		);
-	
-		for(int i = 0; i<20; i++){
-			m_evolution.addRandom();
-		}
+  }
 
-		m_interval = new IntervalEventManager();
+  protected override LineFollowingDNGameController getSelf()
+  {
+    return this;
+  }
 
-		m_interval.addListener(0.25f, () => {
-			for(int i = 0; i<10; i++){
-				spawn();
-			}
-	 	} );
-
-		m_interval.addListener(0.1f, () => {
-			m_goalLine.rotate(1f);
-		});
-
-	
-	
-	
-	
-	
-	}
-	
-	// Update is called once per frame
-	void FixedUpdate () {
-		m_interval.tick(Time.fixedDeltaTime);
-		m_evolution.tick(Time.fixedDeltaTime);
-
-		m_time+=Time.fixedDeltaTime;
-	}
-
-	void spawn(){
-		GameObject obj = Instantiate(m_prefab, Vector3.zero, /*Quaternion.identity*/ Quaternion.Euler(0,0,Random.Range(0,360)));
-		LineFollowingDNCreature cre = obj.GetComponent<LineFollowingDNCreature>();		
-		cre.Initialize(m_evolution.birth(), this, m_goalLine);
-	}
-
-	public void logDNA(MindBodyDNDNA<LineFollowingDNCreature> dna, float fitness){
-		m_evolution.addDNA(dna, fitness);
-	}
 }
 
 
