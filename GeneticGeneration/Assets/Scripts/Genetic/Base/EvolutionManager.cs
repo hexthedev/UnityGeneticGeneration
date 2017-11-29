@@ -18,6 +18,7 @@ namespace Genetic{
 
 			private ISpecies<ADNA<T>> m_species;
 			public FitnessList<ADNA<T>> m_gene_pool;
+			public int Size {get { return m_gene_pool.Size; }}
 			private float m_mutation_chance_percentage;
 			private int m_creatures_birthed = 0;
 			private IntervalEventManager m_interval;
@@ -130,6 +131,7 @@ namespace Genetic{
 			private List<FitnessObject<T>> m_objects;
 
 			int m_size;
+			public int Size { get { return m_size; } }
 
 			public FitnessList(int p_size)
 			{

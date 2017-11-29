@@ -12,7 +12,7 @@ public class CSVWriter {
 	public CSVWriter(string p_file_name){
 		m_file_path = m_base_path + p_file_name + ".csv";
 
-		createNewFile();
+		if(!File.Exists(m_file_path)) createNewFile();
 	}
 
 	private void createNewFile(){
@@ -24,6 +24,10 @@ public class CSVWriter {
 		if(!File.Exists(m_file_path)){
 			File.Create(m_file_path).Close();
 		}		
+	}
+
+	public void WriteCSVData(string data){
+		File.AppendAllText(m_file_path, data);
 	}
 
 	public void WriteCSVRow(string[] data){

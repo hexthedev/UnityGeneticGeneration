@@ -13,6 +13,7 @@ using JTools.Calc.ActiavationFunctions;
 using MathNet.Numerics.LinearAlgebra;
 
 using Genetic.Base;
+using JTools.Calc.Bool;
 
 namespace Genetic
 {
@@ -150,7 +151,10 @@ namespace Genetic
           NeuralNetDNA<T> mutated = Clone();
           
           for(int i = 0; i<m_weights.Length; i++){
-            mutated.m_weights[i] =  MatrixCalc.elementwiseRandomMultiply(m_weights[i], m_mutation_multiplier);
+    
+            bool test = BoolCalc.random();
+            Range<float> mut = test ? m_mutation_multiplier : new Range<float>( -m_mutation_multiplier.Min, -m_mutation_multiplier.Max );
+            mutated.m_weights[i] =  MatrixCalc.elementwiseRandomMultiply(m_weights[i], mut);
           }
 
           return mutated;

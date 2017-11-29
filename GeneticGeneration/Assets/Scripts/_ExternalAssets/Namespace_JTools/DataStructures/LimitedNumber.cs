@@ -27,7 +27,7 @@ namespace JTools
         public float Max { get { return m_limits.Max; } }
         
 
-        ///<suimmary>Special Constructor for limited numbers that go from 0 to a max value</summary>
+        ///<summary>Special Constructor for limited numbers that go from 0 to a max value</summary>
         public LimitedNumber(float p_start_value)
         {
           m_value = p_start_value;

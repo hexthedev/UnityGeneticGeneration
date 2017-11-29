@@ -20,13 +20,27 @@ public class LineFollowingBTGameController : ALineFollowingGameController<
 	MindBodyBT, 
 	BehaviourTree>{
 
+	private string AIkey = "BehaviourTree";
+
+  protected override void setUpData(){
+    if(DataCollector.Open) DataCollector.closeCSV();
+    DataCollector.setTitle(AIkey + lineFollowCONFIG.DataSuffix);
+    DataCollector.startCSV();
+  }
+
+	protected override void setUpAI(){
+		if(!(lineFollowCONFIG.AIkey == AIkey)){
+			lineFollowCONFIG.loadScene();
+		}
+	}
+	
 	protected override DNABasedEvolutionManager<MindBodyBTDNA<LineFollowingBTCreature>> createManager(){
 
 		return new DNABasedEvolutionManager<MindBodyBTDNA<LineFollowingBTCreature>>(
-			 new MindBodyBTSpecies<LineFollowingBTCreature>(0,
-			 	new TraitGenesSpecies(0, new HashSet<string> {"SPEED"}, 4, new Range<float>(0.25f, 1f), 4, new Range<float>(-0.5f, 0.5f)),
-				new BehaviourTreeSpecies<LineFollowingBTCreature>(0, LineFollowingBTCreature.getInputFactorys(), LineFollowingBTCreature.getOutputFactorys(), new Range<float>(0.5f, 1.1f))
-			 ), 0.1f, 100, (float p_fitness) => { return p_fitness * 0.95f; }, 1f 
+			 	new MindBodyBTSpecies<LineFollowingBTCreature>(0,
+			 	new TraitGenesSpecies(0, new HashSet<string> {"SPEED"}, lineFollowCONFIG.TraitGeneSize, lineFollowCONFIG.TraitRange, 4, lineFollowCONFIG.TraitMutationAddition),
+				new BehaviourTreeSpecies<LineFollowingBTCreature>(0, LineFollowingBTCreature.getInputFactorys(), LineFollowingBTCreature.getOutputFactorys(), lineFollowCONFIG.BehaviourMutationMultiplier)
+			 ),lineFollowCONFIG.GenMutationChance, lineFollowCONFIG.GenGenepoolSize, (float p_fitness) => { return p_fitness * lineFollowCONFIG.GenDNAAgeingMultiplier; }, lineFollowCONFIG.GenDNAAgeingLatency 
 		);
 
 	}

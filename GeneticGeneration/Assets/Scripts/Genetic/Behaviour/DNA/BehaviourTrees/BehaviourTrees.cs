@@ -160,7 +160,7 @@ namespace Genetic
         private static void randomPopulate(ABTDNANode p_node, int p_out_value_number, Range<float> p_out_value_range, 
           int p_max_input_index, Range<float> p_threshold_range, int p_depth){
 
-          if(p_node == null || p_depth == 5) return;
+          if(p_node == null || p_depth == 10) return;
 
           p_node.addChild(ABTDNANode.randomNode(p_out_value_number, p_out_value_range, p_max_input_index, p_threshold_range, p_node), 0);            
           if(!p_node.existsChild(0)) return;
@@ -236,7 +236,7 @@ namespace Genetic
           master_node.addChild(slave_node ,index);
           slave_node.setParent(master_node);
 
-          recDepthDelete(master_tree.m_root.m_self, 0, 5);
+          recDepthDelete(master_tree.m_root.m_self, 0, 10);
 
           return master_tree;
         }
@@ -484,8 +484,6 @@ namespace Genetic
           for(int i = 0; i<m_out_values.Length; i++){
             m_tree.m_outputs[i](m_out_values[i]);
           }
-
-          Debug.Log(m_out_values.Length);
 
           if(!existsChild(0)){
             return Root;
