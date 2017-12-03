@@ -6,7 +6,6 @@ using JTools.Interfaces;
 
 using Genetic.Traits.Base;
 using Genetic.Traits.TraitGenes;
-using Genetic.Behaviour.BehaviourTrees;
 
 namespace Genetic{
 

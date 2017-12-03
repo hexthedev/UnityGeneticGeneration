@@ -40,9 +40,6 @@ public static class lineFollowCONFIG {
 			case "DecisionNet":
 				SceneManager.LoadScene( "LineFollowDNScene" );
 				break;
-			case "BehaviourTree":
-				SceneManager.LoadScene( "LineFollowBTScene" );
-				break;
 			case "DecisionTree":
 				SceneManager.LoadScene( "LineFollowDTScene" );
 			break;
@@ -52,7 +49,7 @@ public static class lineFollowCONFIG {
 		}
 	}
 
-	private static string[] AIkeys = { "DecisionNet", "BehaviourTree", "DecisionTree", "NeuralNet" };
+	private static string[] AIkeys = { "DecisionNet", "DecisionTree", "NeuralNet" };
 
 	public static void nextAiKey(){
 		int index = 0;

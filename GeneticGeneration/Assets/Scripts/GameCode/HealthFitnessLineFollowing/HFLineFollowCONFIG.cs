@@ -40,9 +40,6 @@ public static class HFlineFollowCONFIG {
 			case "DecisionNet":
 				SceneManager.LoadScene( "HFLineFollowDNScene" );
 				break;
-			case "BehaviourTree":
-				SceneManager.LoadScene( "HFLineFollowBTScene" );
-				break;
 			case "DecisionTree":
 				SceneManager.LoadScene( "HFLineFollowDTScene" );
 			break;
@@ -52,7 +49,7 @@ public static class HFlineFollowCONFIG {
 		}
 	}
 
-	private static string[] AIkeys = { "DecisionNet", "BehaviourTree", "DecisionTree", "NeuralNet" };
+	private static string[] AIkeys = { "DecisionNet", "DecisionTree", "NeuralNet" };
 
 	public static void nextAiKey(){
 		int index = 0;

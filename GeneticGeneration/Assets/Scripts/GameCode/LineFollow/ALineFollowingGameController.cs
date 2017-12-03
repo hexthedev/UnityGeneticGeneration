@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 
 using Genetic.Base;
-using Genetic.Behaviour.BehaviourTrees;
 using Genetic.Composite;
 using Genetic.Traits.Base;
 using Genetic.Traits.TraitGenes;
